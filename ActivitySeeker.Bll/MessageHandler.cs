@@ -24,7 +24,7 @@ public class MessageHandler
                 Chat chat = new();
                 try
                 {
-                    chat = update.Message.Chat;
+                    chat = update.Message?.Chat;
                     //await _queryContext.DoLoadCounters(CurrentState);
 
                     if (update.Message.Text.Equals("/start"))
