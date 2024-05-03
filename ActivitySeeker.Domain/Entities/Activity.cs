@@ -1,16 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ActivitySeeker.Domain.Entities;
 
 [Table("activity", Schema = "activity_seeker")]
 public class Activity
 {
-    public Activity()
-    {
-        ActivityType = new ActivityType();
-    }
-    
-    [Column("id")]
+    [Key]
     public Guid Id { get; set; }
 
     [Column("name")]
@@ -27,7 +23,7 @@ public class Activity
 
     #region Навигационные свойства
 
-    public ActivityType ActivityType { get; set; }
+    public ActivityType ActivityType { get; set; } = null!;
 
     #endregion
 }
