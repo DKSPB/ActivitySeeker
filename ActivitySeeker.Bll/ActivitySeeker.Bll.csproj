@@ -7,9 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="Telegram.Bot">
-        <HintPath>..\..\..\.nuget\packages\telegram.bot\19.0.0\lib\net6.0\Telegram.Bot.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\ActivitySeeker.Domain\ActivitySeeker.Domain.csproj" />
     </ItemGroup>
 
 </Project>
