@@ -16,7 +16,7 @@ public class ActivityType
     [Column("type_name")]
     public string TypeName { get; set; } = default!;
 
-    #region Навигационные свойства
+    #region Navigation properties
 
     public IEnumerable<Activity>? Activities { get; set; }
 
