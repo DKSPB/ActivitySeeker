@@ -1,4 +1,4 @@
-using ActivitySeeker.Bll;
+using ActivitySeeker.Api.TelegramBot;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -23,6 +23,7 @@ namespace ActivitySeeker.Api
             builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
 
             builder.Services.AddScoped<ActivitySeekerContext>();
+            builder.Services.AddScoped<MessageHandler>();
             builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
             {
                 TelegramBotClientOptions options = new(botConfiguration.BotToken);
@@ -33,8 +34,34 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<MessageHandler>();
             builder.Services.AddHostedService<ConfigureWebhook>();
 
-            builder.Services.AddControllers();
-            
+            #region настройки сериализатора
+
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.Converters.Add(new StringEnumConverter(new SnakeCaseNamingStrategy()));
+            serializerSettings.Formatting = Formatting.Indented;
+            serializerSettings.ContractResolver = new DefaultContractResolver
+            {
+                NamingStrategy = new SnakeCaseNamingStrategy(true, true),
+            };
+            serializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+            serializerSettings.NullValueHandling = NullValueHandling.Include;
+            //serializerSettings.DateFormatString = "dd.MM.yyyy HH:mm";
+
+            builder.Services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ContractResolver = serializerSettings.ContractResolver;
+                    options.SerializerSettings.Converters = serializerSettings.Converters;
+                    options.SerializerSettings.MissingMemberHandling = serializerSettings.MissingMemberHandling;
+                    options.SerializerSettings.NullValueHandling = serializerSettings.NullValueHandling;
+                    options.SerializerSettings.DateFormatString = serializerSettings.DateFormatString;
+                });
+            builder.Services.AddSingleton(serializerSettings);
+
+            JsonConvert.DefaultSettings = () => serializerSettings;
+
+            #endregion
+
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();

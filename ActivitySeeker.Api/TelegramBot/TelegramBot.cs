@@ -1,6 +1,6 @@
 using Telegram.Bot;
 
-namespace ActivitySeeker.Api;
+namespace ActivitySeeker.Api.TelegramBot;
 
 public class TelegramBot
 {
@@ -16,7 +16,7 @@ public class TelegramBot
         string botToken = GetBotToken();
         string pathToApi = "api/message";
         string webhook = string.Concat(GetWebhookUrl(), pathToApi);
-        
+
         TelegramBotClient botClient = new TelegramBotClient(botToken);
         await botClient.SetWebhookAsync(webhook);
 
@@ -35,7 +35,7 @@ public class TelegramBot
 
         return botToken;
     }
-    
+
     private string GetWebhookUrl()
     {
         string url = _configuration["WebhookUrl"];

@@ -1,4 +1,4 @@
-using ActivitySeeker.Bll;
+using ActivitySeeker.Api.TelegramBot;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
 
@@ -14,6 +14,7 @@ public class TelegramBotController: ControllerBase
     {
         _messageHandler = messageHandler;
     }
+
     [HttpPost]
     public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken token)
     {
