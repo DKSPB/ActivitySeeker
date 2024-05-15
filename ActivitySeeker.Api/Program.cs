@@ -1,4 +1,6 @@
 using ActivitySeeker.Api.TelegramBot;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Services;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -23,6 +25,7 @@ namespace ActivitySeeker.Api
             builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
 
             builder.Services.AddScoped<ActivitySeekerContext>();
+            builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<MessageHandler>();
             builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
             {

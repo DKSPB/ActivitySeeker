@@ -1,3 +1,4 @@
+using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -8,11 +9,13 @@ namespace ActivitySeeker.Api.TelegramBot;
 public class MessageHandler
 {
     private readonly ITelegramBotClient _botClient;
+    private readonly IUserService _userService;
     private readonly ActivitySeekerContext _context;
 
-    public MessageHandler(ITelegramBotClient botClient, ActivitySeekerContext context)
+    public MessageHandler(ITelegramBotClient botClient, IUserService userService, ActivitySeekerContext context)
     {
         _context = context;
+        _userService = userService;
         _botClient = botClient;
     }
 
@@ -27,8 +30,6 @@ public class MessageHandler
                         var chat = update.Message.Chat;
                         try
                         {
-                            //var userState = await _context.Users.FirstOrDefaultAsync(x => x.ChatId == chat.Id, cancellationToken);
-
                             if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
                             {
                                 var user = update.Message.From;
@@ -36,16 +37,14 @@ public class MessageHandler
                                 {
                                     throw new NullReferenceException("User in null");
                                 }
-                                await _context.Users.AddAsync(new Domain.Entities.User
+                                _userService.CreateOrUpdateUser(new Domain.Entities.User
                                 {
                                     Id = user.Id,
                                     UserName = user.Username?? "",
                                     ChatId = chat.Id,
                                     MessageId = update.Message.MessageId,
-                                }, cancellationToken);
+                                });
 
-                                await _context.SaveChangesAsync(cancellationToken);
-                            
                                 await _botClient.SendTextMessageAsync(
                                     chat.Id,
                                     text: "Выбери тип активности и время проведения",
@@ -68,10 +67,6 @@ public class MessageHandler
                     {
                         throw new NullReferenceException("Object Message is null");
                     }
-
-                    //await _queryContext.DoLoadCounters(CurrentState);
-
-                    //await _queryContext.SaveState(CurrentState);
 
                     return;
                 }
