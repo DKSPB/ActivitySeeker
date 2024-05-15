@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20240515075019_change_id_to_user_id")]
+    partial class change_id_to_user_id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +61,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Приглашаем всех присоединиться к тренировкам на открытом воздухе",
                             Name = "Тренеровки на открытом воздухе",
-                            StartDate = new DateTime(2024, 5, 23, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4634)
+                            StartDate = new DateTime(2024, 5, 23, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9425)
                         },
                         new
                         {
@@ -67,7 +69,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
                             Name = "Игра в настолку Бункер",
-                            StartDate = new DateTime(2024, 5, 18, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4658)
+                            StartDate = new DateTime(2024, 5, 18, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9449)
                         },
                         new
                         {
@@ -75,7 +77,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
                             Name = "Мастер-класс по изготовлению свечи",
-                            StartDate = new DateTime(2024, 5, 16, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4662)
+                            StartDate = new DateTime(2024, 5, 16, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9452)
                         },
                         new
                         {
@@ -83,7 +85,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
                             Name = "Мастер-класс по изготовлению глиняной посуды",
-                            StartDate = new DateTime(2024, 6, 15, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4665)
+                            StartDate = new DateTime(2024, 6, 15, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9455)
                         },
                         new
                         {
@@ -91,7 +93,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
                             Name = "Вархаммер 40000",
-                            StartDate = new DateTime(2024, 5, 15, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4668)
+                            StartDate = new DateTime(2024, 5, 15, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9457)
                         },
                         new
                         {
@@ -99,7 +101,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Все желающие, присоединяйтесь к нашей команде для игры в футбол",
                             Name = "Футбол в Мурино",
-                            StartDate = new DateTime(2024, 5, 17, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4671)
+                            StartDate = new DateTime(2024, 5, 17, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9460)
                         },
                         new
                         {
@@ -107,7 +109,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Fitness Hause Мурино проводит соревнования по настольному теннису!",
                             Name = "Соревнования по настольному теннису",
-                            StartDate = new DateTime(2024, 5, 20, 10, 52, 33, 334, DateTimeKind.Local).AddTicks(4672)
+                            StartDate = new DateTime(2024, 5, 20, 10, 50, 19, 325, DateTimeKind.Local).AddTicks(9462)
                         });
                 });
 
@@ -155,12 +157,12 @@ namespace ActivitySeeker.Domain.Migrations
 
             modelBuilder.Entity("ActivitySeeker.Domain.Entities.User", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
-                        .HasColumnName("id");
+                        .HasColumnName("user_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("UserId"));
 
                     b.Property<long>("ChatId")
                         .HasColumnType("bigint")
@@ -175,7 +177,7 @@ namespace ActivitySeeker.Domain.Migrations
                         .HasColumnType("text")
                         .HasColumnName("username");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("user", "activity_seeker");
                 });

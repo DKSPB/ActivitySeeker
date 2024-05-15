@@ -8,14 +8,17 @@ namespace ActivitySeeker.Domain.Entities;
 public class User
 {
     [Column("id")]
-    public Guid Id { get; set; }
+    public long Id { get; set; }
 
     [Column("chat_id")]
-    public string ChatId { get; set; } = default!;
+    public long ChatId { get; set; }
+    
+    [Column("message_id")]
+    public int MessageId { get; set; }
 
     [Column("username")]
     public string UserName { get; set; } = default!;
 
-    [Column("state", TypeName = "jsonb")]
-    public string State { get; set; } = default!;
+    //[Column("state", TypeName = "jsonb")]
+    //public string State { get; set; } = default!;
 }

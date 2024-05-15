@@ -34,7 +34,7 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<MessageHandler>();
             builder.Services.AddHostedService<ConfigureWebhook>();
 
-            #region настройки сериализатора
+            #region serialize settings
 
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.Converters.Add(new StringEnumConverter(new SnakeCaseNamingStrategy()));

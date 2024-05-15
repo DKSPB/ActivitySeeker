@@ -1,5 +1,4 @@
 using ActivitySeeker.Domain;
-using Microsoft.EntityFrameworkCore.Query;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -19,28 +18,39 @@ public class MessageHandler
 
     public async Task Handle(Update update, CancellationToken cancellationToken)
     {
-        //CurrentState = await _queryContext.LoadState();
         switch (update.Type)
         {
             case UpdateType.Message:
                 {
-                    Chat chat = new();
-
-                    try
+                    if (update.Message != null)
                     {
-                        if (update.Message != null)
+                        var chat = update.Message.Chat;
+                        try
                         {
-                            chat = update.Message.Chat;
+                            //var userState = await _context.Users.FirstOrDefaultAsync(x => x.ChatId == chat.Id, cancellationToken);
 
                             if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
                             {
+                                var user = update.Message.From;
+                                if (user is null)
+                                {
+                                    throw new NullReferenceException("User in null");
+                                }
+                                await _context.Users.AddAsync(new Domain.Entities.User
+                                {
+                                    Id = user.Id,
+                                    UserName = user.Username?? "",
+                                    ChatId = chat.Id,
+                                    MessageId = update.Message.MessageId,
+                                }, cancellationToken);
+
+                                await _context.SaveChangesAsync(cancellationToken);
+                            
                                 await _botClient.SendTextMessageAsync(
-                                chat.Id,
-                                text: "Выбери тип активности и время проведения",//CurrentState.WriteReportSettings(),
-                                replyMarkup: Keyboards.GetMainMenuKeyboard(),
-                                cancellationToken: cancellationToken);
-                                //await _botClient.SendTextMessageAsync(
-                                //    chat.Id, ":", cancellationToken: cancellationToken);
+                                    chat.Id,
+                                    text: "Выбери тип активности и время проведения",
+                                    replyMarkup: Keyboards.GetMainMenuKeyboard(),
+                                    cancellationToken: cancellationToken);
                             }
                             else
                             {
@@ -48,20 +58,20 @@ public class MessageHandler
                                     chat.Id, "Нераспознанная команда", cancellationToken: cancellationToken);
                             }
                         }
-                        else
+                        catch (Exception e)
                         {
-                            throw new NullReferenceException("Object Message is null");
+                            await _botClient.SendTextMessageAsync(
+                                chat.Id, e.Message, cancellationToken: cancellationToken);
                         }
-
-                        //await _queryContext.DoLoadCounters(CurrentState);
-
-                        //await _queryContext.SaveState(CurrentState);
                     }
-                    catch (Exception e)
+                    else
                     {
-                        await _botClient.SendTextMessageAsync(
-                            chat.Id, e.Message, cancellationToken: cancellationToken);
+                        throw new NullReferenceException("Object Message is null");
                     }
+
+                    //await _queryContext.DoLoadCounters(CurrentState);
+
+                    //await _queryContext.SaveState(CurrentState);
 
                     return;
                 }
@@ -79,6 +89,13 @@ public class MessageHandler
 
                             //await _queryContext.DoLoadCounters(CurrentState);
 
+                            await _botClient.EditMessageReplyMarkupAsync(
+                                chatId: callbackQuery.Message.Chat.Id,
+                                messageId: 0,
+                                replyMarkup: null,
+                                cancellationToken
+                            );
+                            
                             await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
                                 text: "Выбери тип активности и время проведения",//CurrentState.WriteReportSettings(),
