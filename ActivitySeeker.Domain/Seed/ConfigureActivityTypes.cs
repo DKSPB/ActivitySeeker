@@ -18,21 +18,18 @@ namespace ActivitySeeker.Domain.Seed
                 new ActivityType
                 {
                     Id = Guid.Parse("34f4633c-13d8-478b-bb9a-83396e04e48d"),
-                    TypeName = "OpenAir",
-                    TypeValue = "События на открытом воздухе"
+                    TypeName = "События на открытом воздухе",
                 },
                 new ActivityType
                 {
                     Id = Guid.Parse("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
-                    TypeName = "MasterClass",
-                    TypeValue = "Мастер-классы"
+                    TypeName = "Хобби"
                 },
 
                 new ActivityType()
                 {
                     Id = Guid.Parse("fd689706-6407-4665-a982-e39e4db3c608"),
-                    TypeName = "BoardGames",
-                    TypeValue = "Настольные игры"
+                    TypeName = "Мастер-классы"
                 }
             };
 

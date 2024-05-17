@@ -39,29 +39,7 @@ namespace ActivitySeeker.Api
 
             #region serialize settings
 
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.Converters.Add(new StringEnumConverter(new SnakeCaseNamingStrategy()));
-            serializerSettings.Formatting = Formatting.Indented;
-            serializerSettings.ContractResolver = new DefaultContractResolver
-            {
-                NamingStrategy = new SnakeCaseNamingStrategy(true, true),
-            };
-            serializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
-            serializerSettings.NullValueHandling = NullValueHandling.Include;
-            //serializerSettings.DateFormatString = "dd.MM.yyyy HH:mm";
-
-            builder.Services.AddControllers()
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ContractResolver = serializerSettings.ContractResolver;
-                    options.SerializerSettings.Converters = serializerSettings.Converters;
-                    options.SerializerSettings.MissingMemberHandling = serializerSettings.MissingMemberHandling;
-                    options.SerializerSettings.NullValueHandling = serializerSettings.NullValueHandling;
-                    options.SerializerSettings.DateFormatString = serializerSettings.DateFormatString;
-                });
-            builder.Services.AddSingleton(serializerSettings);
-
-            JsonConvert.DefaultSettings = () => serializerSettings;
+            builder.Services.AddControllers().AddNewtonsoftJson();
 
             #endregion
 

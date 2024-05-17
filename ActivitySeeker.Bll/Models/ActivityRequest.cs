@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ActivitySeeker.Bll.Models
 {
-    internal class ActivityRequest
+    public class ActivityRequest
     {
-        public List<Guid> ActvityTypeIds { get; set; } = default!;
+        public List<Guid> ActivityTypeIds { get; set; } = default!;
 
         public DateTime SearchFrom { get; set; } = DateTime.Now;
 

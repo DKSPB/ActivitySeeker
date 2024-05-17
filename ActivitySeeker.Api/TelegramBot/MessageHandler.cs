@@ -1,8 +1,12 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
+using ActivitySeeker.Domain.Entities;
+using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot;
 
@@ -37,19 +41,23 @@ public class MessageHandler
                                 {
                                     throw new NullReferenceException("User in null");
                                 }
-                                _userService.CreateOrUpdateUser(new Domain.Entities.User
-                                {
-                                    Id = user.Id,
-                                    UserName = user.Username?? "",
-                                    ChatId = chat.Id,
-                                    MessageId = update.Message.MessageId,
-                                });
 
-                                await _botClient.SendTextMessageAsync(
+                                var message = await _botClient.SendTextMessageAsync(
                                     chat.Id,
                                     text: "Выбери тип активности и время проведения",
                                     replyMarkup: Keyboards.GetMainMenuKeyboard(),
                                     cancellationToken: cancellationToken);
+
+                                var currentUser = new Domain.Entities.User
+                                {
+                                    Id = user.Id,
+                                    UserName = user.Username ?? "",
+                                    ChatId = chat.Id,
+                                    MessageId = message.MessageId,
+                                };
+                                
+                                InitializeUserDefaultData(currentUser);
+                                _userService.CreateOrUpdateUser(currentUser);
                             }
                             else
                             {
@@ -74,7 +82,9 @@ public class MessageHandler
             case UpdateType.CallbackQuery:
                 {
                     var callbackQuery = update.CallbackQuery;
-
+                    var currentUserId = callbackQuery.From.Id;
+                    var currentUser = _userService.GetUserById(currentUserId);
+                    
                     try
                     {
                         if(callbackQuery.Data.Equals("mainMenu"))
@@ -82,20 +92,21 @@ public class MessageHandler
                             await _botClient.AnswerCallbackQueryAsync(
                                 callbackQuery.Id, cancellationToken: cancellationToken);
 
-                            //await _queryContext.DoLoadCounters(CurrentState);
-
                             await _botClient.EditMessageReplyMarkupAsync(
                                 chatId: callbackQuery.Message.Chat.Id,
-                                messageId: 0,
-                                replyMarkup: null,
+                                messageId: currentUser.MessageId,
+                                replyMarkup: InlineKeyboardMarkup.Empty(),
                                 cancellationToken
                             );
                             
-                            await _botClient.SendTextMessageAsync(
+                            var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
-                                text: "Выбери тип активности и время проведения",//CurrentState.WriteReportSettings(),
+                                text: "Выбери тип активности и время проведения",
                                 replyMarkup: Keyboards.GetMainMenuKeyboard(),
                                 cancellationToken: cancellationToken);
+
+                            currentUser.MessageId = message.MessageId;
+                            _userService.CreateOrUpdateUser(currentUser);
                         }
 
                         if (callbackQuery.Data.Equals("selectActivityTypeButton"))
@@ -103,13 +114,24 @@ public class MessageHandler
                             await _botClient.AnswerCallbackQueryAsync(
                                 callbackQuery.Id, cancellationToken: cancellationToken);
 
-                            var activityTypes = _context.ActivityTypes.ToList();
+                            await _botClient.EditMessageReplyMarkupAsync(
+                                chatId: callbackQuery.Message.Chat.Id,
+                                messageId: currentUser.MessageId,
+                                replyMarkup: InlineKeyboardMarkup.Empty(),
+                                cancellationToken
+                            );
 
-                            await _botClient.SendTextMessageAsync(
+                            var userState = JsonConvert.DeserializeObject<List<ActivityTypeInfo>>(currentUser.State);
+                            var keyboard = Keyboards.GetActivityTypesKeyboard(userState);
+                            
+                            var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
                                 text: "Типы активностей:",
-                                replyMarkup: Keyboards.GetActivityTypesKeyboard(activityTypes),
+                                replyMarkup: keyboard,
                                 cancellationToken: cancellationToken);
+                            
+                            currentUser.MessageId = message.MessageId;
+                            _userService.CreateOrUpdateUser(currentUser);
                         }
 
                         if (callbackQuery.Data.Contains("activityType"))
@@ -121,12 +143,17 @@ public class MessageHandler
                             var activityTypes = _context.ActivityTypes.ToList();
                             //CurrentState.SetCurrentCounter(currentCounterId);
 
+                            var userState = JsonConvert.DeserializeObject<List<ActivityTypeInfo>>(currentUser.State);
+
+                            var changedButton = userState.First(x => x.ButtonType.Equals(selectedButton));
+                            changedButton.Selected = !changedButton.Selected;
+                            
                             await _botClient.EditMessageTextAsync(
                                 callbackQuery.Message.Chat.Id,
                                 messageId: callbackQuery.Message.MessageId,
                                 "",
                                 //text: CurrentState.WriteReportSettings(),
-                                replyMarkup: Keyboards.GetActivityTypesKeyboard(activityTypes),
+                                replyMarkup: Keyboards.GetActivityTypesKeyboard(userState),
                                 cancellationToken: cancellationToken);
                         }
 
@@ -334,5 +361,13 @@ public class MessageHandler
                     return;
                 }
         }
+    }
+
+    private void InitializeUserDefaultData(Domain.Entities.User user)
+    {
+        var activityTypesInfo = _context.ActivityTypes.Select(x => 
+            new ActivityTypeInfo(x.Id.ToString(), "activityType", x.TypeName, false)).ToList();
+
+        user.State = JsonConvert.SerializeObject(activityTypesInfo);
     }
 }

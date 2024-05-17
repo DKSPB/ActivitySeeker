@@ -26,9 +26,16 @@ public class UserService: IUserService
             userExists.MessageId = user.MessageId;
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
+            userExists.State = user.State;
 
             _context.Users.Update(userExists);
         }
         _context.SaveChanges();
+    }
+
+    public User GetUserById(long id)
+    {
+        var user = _context.Users.Find(id);
+        return user ?? throw new NullReferenceException($"Пользователь с таким идентификатором {id} не найден");
     }
 }

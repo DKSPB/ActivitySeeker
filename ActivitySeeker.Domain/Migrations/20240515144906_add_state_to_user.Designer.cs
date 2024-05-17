@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20240515144906_add_state_to_user")]
+    partial class add_state_to_user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +61,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Приглашаем всех присоединиться к тренировкам на открытом воздухе",
                             Name = "Тренеровки на открытом воздухе",
-                            StartDate = new DateTime(2024, 5, 25, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7216)
+                            StartDate = new DateTime(2024, 5, 23, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5926)
                         },
                         new
                         {
@@ -67,7 +69,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
                             Name = "Игра в настолку Бункер",
-                            StartDate = new DateTime(2024, 5, 20, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7243)
+                            StartDate = new DateTime(2024, 5, 18, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5945)
                         },
                         new
                         {
@@ -75,7 +77,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
                             Name = "Мастер-класс по изготовлению свечи",
-                            StartDate = new DateTime(2024, 5, 18, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7246)
+                            StartDate = new DateTime(2024, 5, 16, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5948)
                         },
                         new
                         {
@@ -83,7 +85,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
                             Name = "Мастер-класс по изготовлению глиняной посуды",
-                            StartDate = new DateTime(2024, 6, 17, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7248)
+                            StartDate = new DateTime(2024, 6, 15, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5950)
                         },
                         new
                         {
@@ -91,7 +93,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
                             Name = "Вархаммер 40000",
-                            StartDate = new DateTime(2024, 5, 17, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7251)
+                            StartDate = new DateTime(2024, 5, 15, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5953)
                         },
                         new
                         {
@@ -99,7 +101,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Все желающие, присоединяйтесь к нашей команде для игры в футбол",
                             Name = "Футбол в Мурино",
-                            StartDate = new DateTime(2024, 5, 19, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7254)
+                            StartDate = new DateTime(2024, 5, 17, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5956)
                         },
                         new
                         {
@@ -107,7 +109,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Fitness Hause Мурино проводит соревнования по настольному теннису!",
                             Name = "Соревнования по настольному теннису",
-                            StartDate = new DateTime(2024, 5, 22, 14, 30, 35, 864, DateTimeKind.Local).AddTicks(7256)
+                            StartDate = new DateTime(2024, 5, 20, 17, 49, 5, 970, DateTimeKind.Local).AddTicks(5958)
                         });
                 });
 
@@ -123,6 +125,11 @@ namespace ActivitySeeker.Domain.Migrations
                         .HasColumnType("text")
                         .HasColumnName("type_name");
 
+                    b.Property<string>("TypeValue")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type_value");
+
                     b.HasKey("Id");
 
                     b.ToTable("activity_type", "activity_seeker");
@@ -131,17 +138,20 @@ namespace ActivitySeeker.Domain.Migrations
                         new
                         {
                             Id = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
-                            TypeName = "События на открытом воздухе"
+                            TypeName = "OpenAir",
+                            TypeValue = "События на открытом воздухе"
                         },
                         new
                         {
                             Id = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
-                            TypeName = "Хобби"
+                            TypeName = "MasterClass",
+                            TypeValue = "Мастер-классы"
                         },
                         new
                         {
                             Id = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
-                            TypeName = "Мастер-классы"
+                            TypeName = "BoardGames",
+                            TypeValue = "Настольные игры"
                         });
                 });
 

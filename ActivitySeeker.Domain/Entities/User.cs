@@ -19,6 +19,6 @@ public class User
     [Column("username")]
     public string UserName { get; set; } = default!;
 
-    //[Column("state", TypeName = "jsonb")]
-    //public string State { get; set; } = default!;
+    [Column("state")]
+    public string State { get; set; } = default!;
 }
