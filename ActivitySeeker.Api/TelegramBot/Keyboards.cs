@@ -26,15 +26,15 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
-        public static InlineKeyboardMarkup GetActivityTypesKeyboard(/*List<ActivityType> activityTypes*/List<ActivityTypeInfo> activityTypesInfo) 
+        public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityType> activityTypes) 
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
 
-            foreach (var info in activityTypesInfo)
+            foreach (var activityType in activityTypes)
             {
-                activityTypeButtons.Add(new List<InlineKeyboardButton> 
-                { 
-                    InlineKeyboardButton.WithCallbackData(info.ButtonText, info.GetData()) 
+                activityTypeButtons.Add(new List<InlineKeyboardButton>
+                {
+                    InlineKeyboardButton.WithCallbackData(activityType.TypeName, string.Concat("activityType/", activityType.Id))
                 });
             }
 
@@ -53,7 +53,7 @@ namespace ActivitySeeker.Api.TelegramBot
     /// <summary>
     /// Содержит информацию о том, выбран тип активности или нет
     /// </summary>
-    public class ActivityTypeInfo
+    /*public class ActivityTypeInfo
     {
         private const string CheckMark = "\u2705 ";
 
@@ -100,5 +100,5 @@ namespace ActivitySeeker.Api.TelegramBot
         {
             return JsonConvert.SerializeObject(new { ButtonId });
         }
-    }
+    }*/
 }

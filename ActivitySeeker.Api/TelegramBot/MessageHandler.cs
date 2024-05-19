@@ -54,9 +54,10 @@ public class MessageHandler
                                     UserName = user.Username ?? "",
                                     ChatId = chat.Id,
                                     MessageId = message.MessageId,
+                                    ActivityTypeId = Guid.Empty
+                                   
                                 };
                                 
-                                InitializeUserDefaultData(currentUser);
                                 _userService.CreateOrUpdateUser(currentUser);
                             }
                             else
@@ -82,6 +83,12 @@ public class MessageHandler
             case UpdateType.CallbackQuery:
                 {
                     var callbackQuery = update.CallbackQuery;
+
+                    if (callbackQuery is null)
+                    {
+                        throw new NullReferenceException("Callback query is null");
+                    }
+
                     var currentUserId = callbackQuery.From.Id;
                     var currentUser = _userService.GetUserById(currentUserId);
                     
@@ -121,8 +128,7 @@ public class MessageHandler
                                 cancellationToken
                             );
 
-                            var userState = JsonConvert.DeserializeObject<List<ActivityTypeInfo>>(currentUser.State);
-                            var keyboard = Keyboards.GetActivityTypesKeyboard(userState);
+                            var keyboard = Keyboards.GetActivityTypesKeyboard(_context.ActivityTypes.ToList());
                             
                             var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
@@ -139,27 +145,29 @@ public class MessageHandler
                             await _botClient.AnswerCallbackQueryAsync(
                                 callbackQuery.Id, cancellationToken: cancellationToken);
 
-                            var selectedButton = callbackQuery.Data;//.Split('/')[1];
+                            var selectedActivityTypeId = callbackQuery.Data.Split('/')[1];
                             var activityTypes = _context.ActivityTypes.ToList();
-                            //CurrentState.SetCurrentCounter(currentCounterId);
 
-                            var userState = JsonConvert.DeserializeObject<List<ActivityTypeInfo>>(currentUser.State);
+                            await _botClient.EditMessageReplyMarkupAsync(
+                                chatId: callbackQuery.Message.Chat.Id,
+                                messageId: currentUser.MessageId,
+                                replyMarkup: InlineKeyboardMarkup.Empty(),
+                                cancellationToken);
 
-                            var changedButton = userState.First(x => x.ButtonType.Equals(selectedButton));
-                            changedButton.Selected = !changedButton.Selected;
-                            
-                            await _botClient.EditMessageTextAsync(
+                            var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
-                                messageId: callbackQuery.Message.MessageId,
-                                "",
-                                //text: CurrentState.WriteReportSettings(),
-                                replyMarkup: Keyboards.GetActivityTypesKeyboard(userState),
+                                text: "Выбери тип активности и время проведения",
+                                replyMarkup: Keyboards.GetMainMenuKeyboard(),
                                 cancellationToken: cancellationToken);
+
+                            currentUser.MessageId = message.MessageId;
+                            currentUser.ActivityTypeId = Guid.Parse(selectedActivityTypeId);
+                            _userService.CreateOrUpdateUser(currentUser);
                         }
 
                         /*if (callbackQuery.Data.Equals("mainMenu"))
                         {
-                            await _botClient.AnswerCallbackQueryAsync(
+                            await _botClient.AnswerCallbackQueryAsync(nn
                                 callbackQuery.Id, cancellationToken: cancellationToken);
 
                             await _queryContext.DoLoadCounters(CurrentState);
@@ -363,11 +371,11 @@ public class MessageHandler
         }
     }
 
-    private void InitializeUserDefaultData(Domain.Entities.User user)
+    /*private void InitializeUserDefaultData(Domain.Entities.User user)
     {
         var activityTypesInfo = _context.ActivityTypes.Select(x => 
             new ActivityTypeInfo(x.Id.ToString(), "activityType", x.TypeName, false)).ToList();
 
         user.State = JsonConvert.SerializeObject(activityTypesInfo);
-    }
+    }*/
 }

@@ -26,7 +26,6 @@ public class UserService: IUserService
             userExists.MessageId = user.MessageId;
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
-            userExists.State = user.State;
 
             _context.Users.Update(userExists);
         }

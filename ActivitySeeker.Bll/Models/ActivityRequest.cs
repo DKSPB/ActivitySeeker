@@ -9,7 +9,7 @@ namespace ActivitySeeker.Bll.Models
 {
     public class ActivityRequest
     {
-        public List<Guid> ActivityTypeIds { get; set; } = default!;
+        public Guid ActivityTypeId { get; set; } = default!;
 
         public DateTime SearchFrom { get; set; } = DateTime.Now;
 
