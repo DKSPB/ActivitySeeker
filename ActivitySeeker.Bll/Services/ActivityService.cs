@@ -1,27 +1,28 @@
-﻿using ActivitySeeker.Bll.Models;
+﻿using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Bll.Services
 {
-    internal class ActivityService
+    public class ActivityService: IActivityService
     {
         private readonly ActivitySeekerContext _context;
-
         public ActivityService(ActivitySeekerContext context)
         {
             _context = context;
         }
 
-        public IEnumerable<Activity> GetActivities(ActivityRequest requestParams)
+        public LinkedList<ActivityDto> GetActivities(ActivityRequest requestParams)
         {
+            var activities = new LinkedList<ActivityDto>();
 
-            return null;
+            foreach (var activity in _context.Activities.ToList())
+            {
+                activities.AddLast(new ActivityDto(activity));
+            }
+
+            return activities;
         }
     }
 }

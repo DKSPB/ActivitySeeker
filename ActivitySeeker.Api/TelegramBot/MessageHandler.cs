@@ -7,6 +7,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using User = ActivitySeeker.Domain.Entities.User;
 
 namespace ActivitySeeker.Api.TelegramBot;
 
@@ -14,12 +15,14 @@ public class MessageHandler
 {
     private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
+    private readonly IActivityService _activityService;
     private readonly ActivitySeekerContext _context;
 
-    public MessageHandler(ITelegramBotClient botClient, IUserService userService, ActivitySeekerContext context)
+    public MessageHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivitySeekerContext context)
     {
         _context = context;
         _userService = userService;
+        _activityService = activityService;
         _botClient = botClient;
     }
 
@@ -48,13 +51,14 @@ public class MessageHandler
                                     replyMarkup: Keyboards.GetMainMenuKeyboard(),
                                     cancellationToken: cancellationToken);
 
-                                var currentUser = new Domain.Entities.User
+                                var currentUser = new User
                                 {
                                     Id = user.Id,
                                     UserName = user.Username ?? "",
                                     ChatId = chat.Id,
                                     MessageId = message.MessageId,
-                                    ActivityTypeId = Guid.Empty
+                                    ActivityTypeId = Guid.Empty,
+                                    ActivityResult = JsonConvert.SerializeObject(new LinkedList<Activity>())
                                    
                                 };
                                 
@@ -165,6 +169,65 @@ public class MessageHandler
                             _userService.CreateOrUpdateUser(currentUser);
                         }
 
+                        if (callbackQuery.Data.Equals("searchActivityButton"))
+                        {
+                            await _botClient.AnswerCallbackQueryAsync(
+                                callbackQuery.Id, cancellationToken: cancellationToken);
+
+                            var activities = _activityService.GetActivities(new ActivityRequest());
+                            var currentActivity = activities.First();
+
+                            await _botClient.EditMessageReplyMarkupAsync(
+                                chatId: callbackQuery.Message.Chat.Id,
+                                messageId: currentUser.MessageId,
+                                replyMarkup: InlineKeyboardMarkup.Empty(),
+                                cancellationToken);
+                            
+                            var message = await _botClient.SendTextMessageAsync(
+                                callbackQuery.Message.Chat.Id,
+                                text: currentActivity.Activity.Name,
+                                replyMarkup: Keyboards.GetActivityPaginationKeyboard(),
+                                cancellationToken: cancellationToken);
+                            
+                            currentUser.MessageId = message.MessageId;
+                            currentUser.ActivityResult = JsonConvert.SerializeObject(activities);
+                            _userService.CreateOrUpdateUser(currentUser);
+                        }
+
+                        if (callbackQuery.Data.Equals("next"))
+                        {
+                            await _botClient.AnswerCallbackQueryAsync(
+                                callbackQuery.Id, cancellationToken: cancellationToken);
+
+                            var activities = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(currentUser.ActivityResult);
+                            var selectedActivity = activities.FirstOrDefault(x => x.Selected);
+
+                            ActivityDto currentActivity;
+                            if (selectedActivity is null)
+                            {
+                                activities.First().Selected = true;
+                                currentActivity = activities.First();
+                            }
+                            else
+                            {
+                                var nextNode = activities.Find(selectedActivity).Next;
+                                nextNode.Previous.Value.Selected = false;
+                                nextNode.Value.Selected = true;
+                                currentActivity = nextNode.Value;
+                            }
+                            currentUser.ActivityResult = JsonConvert.SerializeObject(activities);
+                            
+                            var message = await _botClient.SendTextMessageAsync(
+                                callbackQuery.Message.Chat.Id,
+                                text: currentActivity.Activity.Name,
+                                replyMarkup: Keyboards.GetActivityPaginationKeyboard(),
+                                cancellationToken: cancellationToken);
+                            
+                            currentUser.MessageId = message.MessageId;
+
+                            _userService.CreateOrUpdateUser(currentUser);
+                        }
+                        
                         /*if (callbackQuery.Data.Equals("mainMenu"))
                         {
                             await _botClient.AnswerCallbackQueryAsync(nn

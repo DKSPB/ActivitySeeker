@@ -43,10 +43,26 @@ namespace ActivitySeeker.Api.TelegramBot
                 InlineKeyboardButton.WithCallbackData("Назад", "mainMenu")
             });
 
-            InlineKeyboardMarkup countersButtons = new InlineKeyboardMarkup(activityTypeButtons);
+            InlineKeyboardMarkup countersButtons = new (activityTypeButtons);
 
 
             return countersButtons;
+        }
+
+        public static InlineKeyboardMarkup GetActivityPaginationKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Назад", "back"),
+                    InlineKeyboardButton.WithCallbackData("Вперёд", "next")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Назад", "mainMenu")
+                }
+            });
         }
     }
     
