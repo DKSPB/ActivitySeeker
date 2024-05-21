@@ -176,6 +176,7 @@ public class MessageHandler
 
                             var activities = _activityService.GetActivities(new ActivityRequest());
                             var currentActivity = activities.First();
+                            currentActivity.Selected = true;
 
                             await _botClient.EditMessageReplyMarkupAsync(
                                 chatId: callbackQuery.Message.Chat.Id,
@@ -202,7 +203,7 @@ public class MessageHandler
                             var activities = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(currentUser.ActivityResult);
                             var selectedActivity = activities.FirstOrDefault(x => x.Selected);
 
-                            ActivityDto currentActivity;
+                            ActivityDto currentActivity = null;
                             if (selectedActivity is null)
                             {
                                 activities.First().Selected = true;
@@ -211,15 +212,67 @@ public class MessageHandler
                             else
                             {
                                 var nextNode = activities.Find(selectedActivity).Next;
-                                nextNode.Previous.Value.Selected = false;
-                                nextNode.Value.Selected = true;
-                                currentActivity = nextNode.Value;
+                                if (nextNode is not null)
+                                {
+                                    nextNode.Previous.Value.Selected = false;
+                                    nextNode.Value.Selected = true;
+                                    currentActivity = nextNode.Value;
+                                }
+                                
                             }
                             currentUser.ActivityResult = JsonConvert.SerializeObject(activities);
+
+                            await _botClient.DeleteMessageAsync(
+                                callbackQuery.Message.Chat.Id,
+                                currentUser.MessageId,
+                                cancellationToken);
                             
                             var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
-                                text: currentActivity.Activity.Name,
+                                text: currentActivity is null ? "Это все события :(" : currentActivity.Activity.Name,
+                                replyMarkup: Keyboards.GetActivityPaginationKeyboard(),
+                                cancellationToken: cancellationToken);
+                            
+                            currentUser.MessageId = message.MessageId;
+
+                            _userService.CreateOrUpdateUser(currentUser);
+                        }
+                        
+                        if (callbackQuery.Data.Equals("back"))
+                        {
+                            await _botClient.AnswerCallbackQueryAsync(
+                                callbackQuery.Id, cancellationToken: cancellationToken);
+
+                            var activities = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(currentUser.ActivityResult);
+                            var selectedActivity = activities.FirstOrDefault(x => x.Selected);
+
+                            ActivityDto currentActivity = null;
+                            if (selectedActivity is null)
+                            {
+                                activities.First().Selected = true;
+                                currentActivity = activities.First();
+                            }
+                            else
+                            {
+                                var previousNode = activities.Find(selectedActivity).Previous;
+                                if (previousNode is not null)
+                                {
+                                    previousNode.Next.Value.Selected = false;
+                                    previousNode.Value.Selected = true;
+                                    currentActivity = previousNode.Value;
+                                }
+                                
+                            }
+                            currentUser.ActivityResult = JsonConvert.SerializeObject(activities);
+
+                            await _botClient.DeleteMessageAsync(
+                                callbackQuery.Message.Chat.Id,
+                                currentUser.MessageId,
+                                cancellationToken);
+                            
+                            var message = await _botClient.SendTextMessageAsync(
+                                callbackQuery.Message.Chat.Id,
+                                text: currentActivity is null ? "Это все события :(" : currentActivity.Activity.Name,
                                 replyMarkup: Keyboards.GetActivityPaginationKeyboard(),
                                 cancellationToken: cancellationToken);
                             
