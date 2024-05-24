@@ -1,3 +1,5 @@
+using ActivitySeeker.Api.Controllers;
+using ActivitySeeker.Api.Controllers.Handlers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
@@ -98,9 +100,20 @@ public class MessageHandler
                     
                     try
                     {
+                        if (callbackQuery.Data is null)
+                        {
+                            throw new NullReferenceException("Object Data is null");
+                        }
+                        
                         if(callbackQuery.Data.Equals("mainMenu"))
                         {
-                            await _botClient.AnswerCallbackQueryAsync(
+                            AbstractHandler mainMenuHandler = new MainMenuHandler(_botClient, _userService, cancellationToken, currentUser);
+                            
+                            var mainMenuKeyboard = Keyboards.GetMainMenuKeyboard();
+                            var messageText = "Выбери тип активности и время проведения";
+                            
+                            await mainMenuHandler.HandleAsync(callbackQuery, mainMenuKeyboard, messageText);
+                            /*await _botClient.AnswerCallbackQueryAsync(
                                 callbackQuery.Id, cancellationToken: cancellationToken);
 
                             await _botClient.EditMessageReplyMarkupAsync(
@@ -117,12 +130,17 @@ public class MessageHandler
                                 cancellationToken: cancellationToken);
 
                             currentUser.MessageId = message.MessageId;
-                            _userService.CreateOrUpdateUser(currentUser);
+                            _userService.CreateOrUpdateUser(currentUser);*/
                         }
 
                         if (callbackQuery.Data.Equals("selectActivityTypeButton"))
                         {
-                            await _botClient.AnswerCallbackQueryAsync(
+                            AbstractHandler selectActivityTypeHandler = new MainMenuHandler(_botClient, _userService, cancellationToken, currentUser);
+                            var selectActivityTypeKeyboard =
+                                Keyboards.GetActivityTypesKeyboard(_context.ActivityTypes.ToList());
+                            var messageText = "Типы активностей:";
+                            await selectActivityTypeHandler.HandleAsync(callbackQuery, selectActivityTypeKeyboard, messageText);
+                            /*await _botClient.AnswerCallbackQueryAsync(
                                 callbackQuery.Id, cancellationToken: cancellationToken);
 
                             await _botClient.EditMessageReplyMarkupAsync(
@@ -132,7 +150,7 @@ public class MessageHandler
                                 cancellationToken
                             );
 
-                            var keyboard = Keyboards.GetActivityTypesKeyboard(_context.ActivityTypes.ToList());
+                            //var keyboard = Keyboards.GetActivityTypesKeyboard(_context.ActivityTypes.ToList());
                             
                             var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
@@ -141,18 +159,22 @@ public class MessageHandler
                                 cancellationToken: cancellationToken);
                             
                             currentUser.MessageId = message.MessageId;
-                            _userService.CreateOrUpdateUser(currentUser);
+                            _userService.CreateOrUpdateUser(currentUser);*/
                         }
 
                         if (callbackQuery.Data.Contains("activityType"))
                         {
-                            await _botClient.AnswerCallbackQueryAsync(
-                                callbackQuery.Id, cancellationToken: cancellationToken);
+                            AbstractHandler listOfActivitiesHandler = new ListOfActivitiesHandler(_botClient, _userService, cancellationToken, currentUser);
+                            var mainMenuKeyboard = Keyboards.GetMainMenuKeyboard();
+                            var messageText = "Список типов";
+                            await listOfActivitiesHandler.HandleAsync(callbackQuery, mainMenuKeyboard, messageText);
+                            //await _botClient.AnswerCallbackQueryAsync(
+                            //    callbackQuery.Id, cancellationToken: cancellationToken);
 
-                            var selectedActivityTypeId = callbackQuery.Data.Split('/')[1];
-                            var activityTypes = _context.ActivityTypes.ToList();
+                            //var selectedActivityTypeId = callbackQuery.Data.Split('/')[1];
+                            //currentUser.ActivityTypeId = Guid.Parse(selectedActivityTypeId);
 
-                            await _botClient.EditMessageReplyMarkupAsync(
+                            /*await _botClient.EditMessageReplyMarkupAsync(
                                 chatId: callbackQuery.Message.Chat.Id,
                                 messageId: currentUser.MessageId,
                                 replyMarkup: InlineKeyboardMarkup.Empty(),
@@ -160,13 +182,12 @@ public class MessageHandler
 
                             var message = await _botClient.SendTextMessageAsync(
                                 callbackQuery.Message.Chat.Id,
-                                text: "Выбери тип активности и время проведения",
+                                text: "Список типов",
                                 replyMarkup: Keyboards.GetMainMenuKeyboard(),
                                 cancellationToken: cancellationToken);
 
                             currentUser.MessageId = message.MessageId;
-                            currentUser.ActivityTypeId = Guid.Parse(selectedActivityTypeId);
-                            _userService.CreateOrUpdateUser(currentUser);
+                            _userService.CreateOrUpdateUser(currentUser);*/
                         }
 
                         if (callbackQuery.Data.Equals("searchActivityButton"))
@@ -486,12 +507,4 @@ public class MessageHandler
                 }
         }
     }
-
-    /*private void InitializeUserDefaultData(Domain.Entities.User user)
-    {
-        var activityTypesInfo = _context.ActivityTypes.Select(x => 
-            new ActivityTypeInfo(x.Id.ToString(), "activityType", x.TypeName, false)).ToList();
-
-        user.State = JsonConvert.SerializeObject(activityTypesInfo);
-    }*/
 }
