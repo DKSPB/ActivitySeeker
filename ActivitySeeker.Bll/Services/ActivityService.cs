@@ -13,6 +13,11 @@ namespace ActivitySeeker.Bll.Services
             _context = context;
         }
 
+        public List<ActivityType> GetActivityTypes()
+        {
+            return _context.ActivityTypes.ToList();
+        }
+
         public LinkedList<ActivityDto> GetActivities(ActivityRequest requestParams)
         {
             var activities = new LinkedList<ActivityDto>();

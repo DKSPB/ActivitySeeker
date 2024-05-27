@@ -1,4 +1,5 @@
 using ActivitySeeker.Api.TelegramBot;
+using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Services;
 using ActivitySeeker.Domain;
@@ -24,7 +25,12 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<ActivitySeekerContext>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IActivityService, ActivityService>();
-            builder.Services.AddScoped<MessageHandler>();
+            builder.Services.AddScoped<StartHandler>();
+            builder.Services.AddScoped<HandlerFactory>();
+            builder.Services.AddScoped<MainMenuHandler>();
+            builder.Services.AddScoped<ListOfActivitiesHandler>();
+            builder.Services.AddScoped<SelectActivityTypeHandler>();
+            //builder.Services.AddScoped<MessageHandler>();
             builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
             {
                 TelegramBotClientOptions options = new(botConfiguration.BotToken);
