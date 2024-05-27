@@ -30,7 +30,7 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<MainMenuHandler>();
             builder.Services.AddScoped<ListOfActivitiesHandler>();
             builder.Services.AddScoped<SelectActivityTypeHandler>();
-            //builder.Services.AddScoped<MessageHandler>();
+            
             builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
             {
                 TelegramBotClientOptions options = new(botConfiguration.BotToken);

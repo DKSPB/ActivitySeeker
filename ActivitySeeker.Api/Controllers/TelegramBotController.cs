@@ -13,7 +13,7 @@ public class TelegramBotController: ControllerBase
     private readonly StartHandler _startHandler;
     private readonly HandlerFactory _handlerFactory;
 
-    public TelegramBotController(/*MessageHandler messageHandler*/ HandlerFactory handlerFactory, StartHandler startHandler)
+    public TelegramBotController(HandlerFactory handlerFactory, StartHandler startHandler)
     {
         _startHandler = startHandler;
         _handlerFactory = handlerFactory;

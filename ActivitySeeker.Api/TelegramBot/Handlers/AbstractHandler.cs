@@ -10,6 +10,7 @@ public abstract class AbstractHandler
 {
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
+    protected string ResponseMessageText { get; init; } = default!;
     private ITelegramBotClient BotClient { get; set; }
     protected User CurrentUser { get; private set; } = default!;
     
@@ -36,7 +37,7 @@ public abstract class AbstractHandler
         
         var message = await BotClient.SendTextMessageAsync(
             callbackQuery.Message.Chat.Id,
-            text: GetResponseMessageText(),
+            text: ResponseMessageText,
             replyMarkup: GetKeyboard(),
             cancellationToken: cancellationToken);
 
@@ -52,8 +53,6 @@ public abstract class AbstractHandler
     }
 
     protected abstract Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken);
-
-    protected abstract string GetResponseMessageText();
 
     protected abstract InlineKeyboardMarkup GetKeyboard();
 }

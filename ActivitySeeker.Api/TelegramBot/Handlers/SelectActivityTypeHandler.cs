@@ -8,18 +8,17 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class SelectActivityTypeHandler: AbstractHandler
 {
     private const string MessageText = "Выбери тип активности:";
-    public SelectActivityTypeHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService): 
+
+    public SelectActivityTypeHandler(ITelegramBotClient botClient, IUserService userService,
+        IActivityService activityService):
         base(botClient, userService, activityService)
-    { }
+    {
+        ResponseMessageText = MessageText;
+    }
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
-    }
-
-    protected override string GetResponseMessageText()
-    {
-        return MessageText;
     }
 
     protected override InlineKeyboardMarkup GetKeyboard()
