@@ -13,6 +13,6 @@ namespace ActivitySeeker.Bll.Models
 
         public DateTime SearchFrom { get; set; } = DateTime.Now;
 
-        public DateTime? SearchTo { get; set; } = DateTime.Now;
+        public DateTime SearchTo { get; set; } = DateTime.Now;
     }
 }

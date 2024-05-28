@@ -11,5 +11,4 @@ public class ActivityDto
     public Activity Activity { get; set; }
 
     public bool Selected { get; set; } = false;
-
 }

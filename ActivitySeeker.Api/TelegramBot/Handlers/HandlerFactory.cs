@@ -15,6 +15,7 @@ public class HandlerFactory
         {
             return _serviceProvider.GetRequiredService<MainMenuHandler>();
         }
+        
         if (callbackData.Equals("selectActivityTypeButton"))
         {
             return _serviceProvider.GetRequiredService<SelectActivityTypeHandler>();
@@ -25,6 +26,11 @@ public class HandlerFactory
             return _serviceProvider.GetRequiredService<ListOfActivitiesHandler>();
         }
 
+        if (callbackData.Equals("searchActivityButton"))
+        {
+            return _serviceProvider.GetRequiredService<SearchResultHandler>();
+        }
+        
         throw new ArgumentException("Unrecognized handler");
     }
 }

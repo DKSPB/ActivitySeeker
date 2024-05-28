@@ -60,61 +60,9 @@ namespace ActivitySeeker.Api.TelegramBot
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Назад", "mainMenu")
+                    InlineKeyboardButton.WithCallbackData("Меню", "mainMenu")
                 }
             });
         }
     }
-    
-    /// <summary>
-    /// Содержит информацию о том, выбран тип активности или нет
-    /// </summary>
-    /*public class ActivityTypeInfo
-    {
-        private const string CheckMark = "\u2705 ";
-
-        private string _buttonText = default!;
-        
-        public ActivityTypeInfo(string buttonId, string buttonType, string buttonText, bool selected)
-        {
-            ButtonId = buttonId;
-            ButtonType = buttonType;
-            Selected = selected;
-            ButtonText = buttonText;
-        }
-
-        /// <summary>
-        /// Идентификатор кнопки
-        /// </summary>
-        public string ButtonId { get; set; }
-        
-        /// <summary>
-        /// текст кнопки
-        /// </summary>
-        public string ButtonText
-        {
-            get => _buttonText;
-            private set => _buttonText = Selected is false ? value : string.Concat(CheckMark, value);
-        }
-
-        /// <summary>
-        /// Тип кнопки
-        /// </summary>
-        public string ButtonType { get; set; }
-
-        /// <summary>
-        /// Выбрана кнопка или нет
-        /// </summary>
-        public bool Selected { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
-
-        public string GetData()
-        {
-            return JsonConvert.SerializeObject(new { ButtonId });
-        }
-    }*/
 }

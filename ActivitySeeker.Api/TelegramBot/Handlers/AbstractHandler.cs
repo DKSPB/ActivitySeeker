@@ -10,7 +10,7 @@ public abstract class AbstractHandler
 {
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
-    protected string ResponseMessageText { get; init; } = default!;
+    protected string ResponseMessageText { get; set; } = default!;
     private ITelegramBotClient BotClient { get; set; }
     protected User CurrentUser { get; private set; } = default!;
     

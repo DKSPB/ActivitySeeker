@@ -65,6 +65,7 @@ public class MessageHandler
                         var activities = _activityService.GetActivities(new ActivityRequest());
                         var currentActivity = activities.First();
                         currentActivity.Selected = true;
+                        currentUser.ActivityResult = JsonConvert.SerializeObject(activities);
 
                         await _botClient.EditMessageReplyMarkupAsync(
                             chatId: callbackQuery.Message.Chat.Id,

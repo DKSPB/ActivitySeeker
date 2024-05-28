@@ -1,6 +1,4 @@
-using Npgsql.PostgresTypes;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 
 namespace ActivitySeeker.Domain.Entities;
 
