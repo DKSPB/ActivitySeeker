@@ -30,7 +30,11 @@ public class HandlerFactory
         {
             return _serviceProvider.GetRequiredService<SearchResultHandler>();
         }
-        
+
+        if (callbackData.Equals("back"))
+        {
+            return _serviceProvider.GetRequiredService<PreviousHandler>();
+        }
         throw new ArgumentException("Unrecognized handler");
     }
 }

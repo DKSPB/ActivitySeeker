@@ -25,7 +25,7 @@ public class User
 
     [Column("search_to")]
     public DateTime SearchTo { get; set; }
-    
+
     [Column("activity_result")]
-    public string ActivityResult { get; set; }
+    public string ActivityResult { get; set; } = default!;
 }

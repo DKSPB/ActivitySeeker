@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Newtonsoft.Json;
 using Telegram.Bot;
@@ -39,14 +40,12 @@ public class StartHandler
                         replyMarkup: Keyboards.GetMainMenuKeyboard(),
                         cancellationToken: cancellationToken);
                     
-                    var currentUser = new User
+                    var currentUser = new UserDto
                     {
                         Id = user.Id,
                         UserName = user.Username ?? "",
                         ChatId = chat.Id,
                         MessageId = message.MessageId,
-                        ActivityTypeId = Guid.Empty,
-                        ActivityResult = JsonConvert.SerializeObject(new LinkedList<Activity>())
                     };
                     
                     _userService.CreateOrUpdateUser(currentUser);

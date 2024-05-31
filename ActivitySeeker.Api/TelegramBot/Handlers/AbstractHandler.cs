@@ -1,8 +1,8 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using User = ActivitySeeker.Domain.Entities.User;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -11,8 +11,8 @@ public abstract class AbstractHandler
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
     protected string ResponseMessageText { get; set; } = default!;
-    private ITelegramBotClient BotClient { get; set; }
-    protected User CurrentUser { get; private set; } = default!;
+    protected ITelegramBotClient BotClient { get; set; }
+    protected UserDto CurrentUser { get; private set; } = default!;
     
     protected AbstractHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService)
     {
@@ -26,12 +26,7 @@ public abstract class AbstractHandler
         
         await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);
 
-        await BotClient.EditMessageReplyMarkupAsync(
-            chatId: callbackQuery.Message.Chat.Id,
-            messageId: CurrentUser.MessageId,
-            replyMarkup: InlineKeyboardMarkup.Empty(),
-            cancellationToken
-        );
+        await EditPreviousMessage(callbackQuery, cancellationToken);
         
         await ActionsAsync(callbackQuery, cancellationToken);
         
@@ -45,7 +40,7 @@ public abstract class AbstractHandler
         UserService.CreateOrUpdateUser(CurrentUser);
     }
 
-    private User GetCurrentUser(CallbackQuery callbackQuery)
+    private UserDto GetCurrentUser(CallbackQuery callbackQuery)
     {
         var currentUserId = callbackQuery.From.Id;
         
@@ -55,4 +50,14 @@ public abstract class AbstractHandler
     protected abstract Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken);
 
     protected abstract InlineKeyboardMarkup GetKeyboard();
+
+    protected async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    {
+        await BotClient.EditMessageReplyMarkupAsync(
+            chatId: callbackQuery.Message.Chat.Id,
+            messageId: CurrentUser.MessageId,
+            replyMarkup: InlineKeyboardMarkup.Empty(),
+            cancellationToken
+        );
+    }
 }

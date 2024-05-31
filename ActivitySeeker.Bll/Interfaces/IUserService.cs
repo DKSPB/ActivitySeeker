@@ -1,10 +1,11 @@
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Bll.Interfaces;
 
 public interface IUserService
 {
-    void CreateOrUpdateUser(User user);
+    void CreateOrUpdateUser(UserDto user);
 
-    User GetUserById(long id);
+    UserDto GetUserById(long id);
 }

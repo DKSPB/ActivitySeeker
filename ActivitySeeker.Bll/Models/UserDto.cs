@@ -1,8 +1,8 @@
-using ActivitySeeker.Bll.Models;
+using System.Text;
 using ActivitySeeker.Domain.Entities;
 using Newtonsoft.Json;
 
-namespace ActivitySeeker.Bll;
+namespace ActivitySeeker.Bll.Models;
 
 public class UserDto
 {
@@ -14,17 +14,21 @@ public class UserDto
     
     public int MessageId { get; set; }
 
-    public LinkedList<ActivityDto> Result { get; set; } = new();
+    public LinkedList<ActivityDto> ActivityResult { get; set; } = default!;
 
     public ActivityRequest ActivityRequest { get; set; } = new();
 
+    public UserDto()
+    {
+        
+    }
     public UserDto(User user)
     {
         Id = user.Id;
         ChatId = user.ChatId;
         UserName = user.UserName;
         MessageId = user.MessageId;
-        Result = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(user.ActivityResult) ??
+        ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(user.ActivityResult) ??
                  new LinkedList<ActivityDto>();
         
         ActivityRequest = new ActivityRequest
@@ -46,7 +50,20 @@ public class UserDto
             ActivityTypeId = user.ActivityRequest.ActivityTypeId,
             SearchFrom = user.ActivityRequest.SearchFrom,
             SearchTo = user.ActivityRequest.SearchTo,
-            ActivityResult = JsonConvert.SerializeObject(user.Result)
+            ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
         };
+    }
+
+    public override string ToString()
+    {
+        StringBuilder stringBuilder = new ();
+
+        stringBuilder.Append("Категория активности:");
+
+        var activityTypeText = "Не выбрана";
+        stringBuilder.AppendLine(activityTypeText);
+        stringBuilder.AppendLine("Дата и время проведения:");
+        stringBuilder.AppendLine("Не выбрана");
+        return stringBuilder.ToString();
     }
 }

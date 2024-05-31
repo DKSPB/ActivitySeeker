@@ -19,7 +19,7 @@ public class ListOfActivitiesHandler: AbstractHandler
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         var selectedActivityTypeId = callbackQuery.Data.Split('/')[1];
-        CurrentUser.ActivityTypeId = Guid.Parse(selectedActivityTypeId);
+        CurrentUser.ActivityRequest.ActivityTypeId = Guid.Parse(selectedActivityTypeId);
         return Task.CompletedTask;
     }
 
