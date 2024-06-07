@@ -18,7 +18,7 @@ public class User
     public int MessageId { get; set; }
 
     [Column("activity_type_id")]
-    public Guid ActivityTypeId { get; set; }
+    public Guid? ActivityTypeId { get; set; }
 
     [Column("search_from")]
     public DateTime SearchFrom { get; set; }
@@ -28,4 +28,10 @@ public class User
 
     [Column("activity_result")]
     public string ActivityResult { get; set; } = default!;
+
+    #region Навигационные свойства
+
+    public ActivityType? ActivityType { get; set; }
+
+    #endregion
 }

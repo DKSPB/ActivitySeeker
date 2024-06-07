@@ -1,4 +1,3 @@
-using ActivitySeeker.Api.Controllers;
 using ActivitySeeker.Bll.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -6,18 +5,18 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-public class MainMenuHandler: AbstractHandler
+public class SelectTodayPeriodHandler: AbstractHandler
 {
-    private const string MessageText = "Выбери тип активности и время проведения:";
+    public SelectTodayPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 
+        : base(botClient, userService, activityService)
+    { }
 
-    public MainMenuHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService):
-        base(botClient, userService, activityService)
-    {
-        ResponseMessageText = MessageText;
-    }
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         ResponseMessageText = CurrentUser.ActivityRequest.ToString();
+        CurrentUser.ActivityRequest.SearchFrom = DateTime.Now;
+        CurrentUser.ActivityRequest.SearchTo = DateTime.Now;
+        
         return Task.CompletedTask;
     }
 

@@ -34,20 +34,20 @@ public class StartHandler
                         throw new NullReferenceException("User in null");
                     }
 
-                    var message = await _botClient.SendTextMessageAsync(
-                        chat.Id,
-                        text: "Выбери тип активности и время проведения",
-                        replyMarkup: Keyboards.GetMainMenuKeyboard(),
-                        cancellationToken: cancellationToken);
-                    
                     var currentUser = new UserDto
                     {
                         Id = user.Id,
                         UserName = user.Username ?? "",
-                        ChatId = chat.Id,
-                        MessageId = message.MessageId,
+                        ChatId = chat.Id
                     };
                     
+                    var message = await _botClient.SendTextMessageAsync(
+                        chat.Id,
+                        text: currentUser.ActivityRequest.ToString(),
+                        replyMarkup: Keyboards.GetMainMenuKeyboard(),
+                        cancellationToken: cancellationToken);
+
+                    currentUser.MessageId = message.MessageId;
                     _userService.CreateOrUpdateUser(currentUser);
                 }
                 else

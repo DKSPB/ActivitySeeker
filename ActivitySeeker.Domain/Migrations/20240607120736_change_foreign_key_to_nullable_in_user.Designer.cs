@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20240607120736_change_foreign_key_to_nullable_in_user")]
+    partial class change_foreign_key_to_nullable_in_user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +61,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Приглашаем всех присоединиться к тренировкам на открытом воздухе",
                             Name = "Тренеровки на открытом воздухе",
-                            StartDate = new DateTime(2024, 6, 15, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7280)
+                            StartDate = new DateTime(2024, 6, 15, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4152)
                         },
                         new
                         {
@@ -67,7 +69,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
                             Name = "Игра в настолку Бункер",
-                            StartDate = new DateTime(2024, 6, 10, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7307)
+                            StartDate = new DateTime(2024, 6, 10, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4174)
                         },
                         new
                         {
@@ -75,7 +77,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
                             Name = "Мастер-класс по изготовлению свечи",
-                            StartDate = new DateTime(2024, 6, 8, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7309)
+                            StartDate = new DateTime(2024, 6, 8, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4176)
                         },
                         new
                         {
@@ -83,7 +85,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
                             Name = "Мастер-класс по изготовлению глиняной посуды",
-                            StartDate = new DateTime(2024, 7, 7, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7311)
+                            StartDate = new DateTime(2024, 7, 7, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4179)
                         },
                         new
                         {
@@ -91,7 +93,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
                             Name = "Вархаммер 40000",
-                            StartDate = new DateTime(2024, 6, 7, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7315)
+                            StartDate = new DateTime(2024, 6, 7, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4181)
                         },
                         new
                         {
@@ -99,7 +101,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Все желающие, присоединяйтесь к нашей команде для игры в футбол",
                             Name = "Футбол в Мурино",
-                            StartDate = new DateTime(2024, 6, 9, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7319)
+                            StartDate = new DateTime(2024, 6, 9, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4205)
                         },
                         new
                         {
@@ -107,7 +109,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Fitness Hause Мурино проводит соревнования по настольному теннису!",
                             Name = "Соревнования по настольному теннису",
-                            StartDate = new DateTime(2024, 6, 12, 15, 8, 54, 268, DateTimeKind.Local).AddTicks(7322)
+                            StartDate = new DateTime(2024, 6, 12, 15, 7, 35, 892, DateTimeKind.Local).AddTicks(4208)
                         });
                 });
 
@@ -186,8 +188,6 @@ namespace ActivitySeeker.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ActivityTypeId");
-
                     b.ToTable("user", "activity_seeker");
                 });
 
@@ -198,15 +198,6 @@ namespace ActivitySeeker.Domain.Migrations
                         .HasForeignKey("ActivityTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ActivityType");
-                });
-
-            modelBuilder.Entity("ActivitySeeker.Domain.Entities.User", b =>
-                {
-                    b.HasOne("ActivitySeeker.Domain.Entities.ActivityType", "ActivityType")
-                        .WithMany()
-                        .HasForeignKey("ActivityTypeId");
 
                     b.Navigation("ActivityType");
                 });

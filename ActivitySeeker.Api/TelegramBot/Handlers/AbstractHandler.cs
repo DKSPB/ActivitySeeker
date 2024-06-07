@@ -51,7 +51,7 @@ public abstract class AbstractHandler
 
     protected abstract InlineKeyboardMarkup GetKeyboard();
 
-    protected async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected virtual async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         await BotClient.EditMessageReplyMarkupAsync(
             chatId: callbackQuery.Message.Chat.Id,

@@ -35,6 +35,47 @@ public class HandlerFactory
         {
             return _serviceProvider.GetRequiredService<PreviousHandler>();
         }
+
+        if (callbackData.Equals("next"))
+        {
+            return _serviceProvider.GetRequiredService<NextHandler>();
+        }
+
+        if (callbackData.Equals("activityStartPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectActivityPeriodHandler>();
+        }
+
+        if (callbackData.Equals("todayPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectTodayPeriodHandler>();
+        }
+
+        if (callbackData.Equals("tomorrowPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectTomorrowPeriodHandler>();
+        }
+
+        if (callbackData.Equals("afterTomorrowPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectAfterTomorrowPeriodHandler>();
+        }
+
+        if (callbackData.Equals("weekPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectWeekPeriodHandler>();
+        }
+
+        if (callbackData.Equals("monthPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectMonthPeriodHandler>();
+        }
+        
+        if (callbackData.Equals("userPeriodButton"))
+        {
+            return _serviceProvider.GetRequiredService<SelectUserPeriodHandler>();
+        }
+        
         throw new ArgumentException("Unrecognized handler");
     }
 }

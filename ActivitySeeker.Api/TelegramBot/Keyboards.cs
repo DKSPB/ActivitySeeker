@@ -49,6 +49,33 @@ namespace ActivitySeeker.Api.TelegramBot
             return countersButtons;
         }
 
+        public static InlineKeyboardMarkup GetPeriodActivityKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Сегодня", "todayPeriodButton")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Завтра", "tomorrowPeriodButton")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Послезавтра", "afterTomorrowPeriodButton")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("За неделю", "weekPeriodButton")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("За месяц", "monthPeriodButton")
+                }
+            });
+        }
+
         public static InlineKeyboardMarkup GetActivityPaginationKeyboard()
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>

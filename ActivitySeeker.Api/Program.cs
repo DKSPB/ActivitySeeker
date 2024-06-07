@@ -30,8 +30,16 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<MainMenuHandler>();
             builder.Services.AddScoped<ListOfActivitiesHandler>();
             builder.Services.AddScoped<SelectActivityTypeHandler>();
+            builder.Services.AddScoped<SelectActivityPeriodHandler>();
+            builder.Services.AddScoped<SelectTodayPeriodHandler>();
+            builder.Services.AddScoped<SelectTomorrowPeriodHandler>();
+            builder.Services.AddScoped<SelectAfterTomorrowPeriodHandler>();
+            builder.Services.AddScoped<SelectWeekPeriodHandler>();
+            builder.Services.AddScoped<SelectMonthPeriodHandler>();
+            builder.Services.AddScoped<SelectUserPeriodHandler>();
             builder.Services.AddScoped<SearchResultHandler>();
             builder.Services.AddScoped<PreviousHandler>();
+            builder.Services.AddScoped<NextHandler>();
             
             builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
             {

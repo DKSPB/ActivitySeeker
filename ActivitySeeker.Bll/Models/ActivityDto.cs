@@ -1,18 +1,23 @@
 using ActivitySeeker.Domain.Entities;
+using Newtonsoft.Json;
 
 namespace ActivitySeeker.Bll.Models;
 
+[JsonObject]
 public class ActivityDto
 {
     public Guid Id { get; set; }
-    
-    public string Name { get; set; }
-    
-    public string Description { get; set; }
+
+    public string Name { get; set; } = default!;
+
+    public string Description { get; set; } = default!;
     
     public DateTime StartDate { get; set; }
     
     public Guid ActivityTypeId { get; set; }
+    
+    public ActivityDto()
+    { }
     public ActivityDto(Activity activity)
     {
         Id = activity.Id;

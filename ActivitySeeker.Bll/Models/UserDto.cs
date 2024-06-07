@@ -34,6 +34,7 @@ public class UserDto
         ActivityRequest = new ActivityRequest
         {
             ActivityTypeId = user.ActivityTypeId,
+            ActivityType = user.ActivityType?.TypeName?? "Активность не выбрана",
             SearchFrom = user.SearchFrom,
             SearchTo = user.SearchTo
         };
@@ -52,18 +53,5 @@ public class UserDto
             SearchTo = user.ActivityRequest.SearchTo,
             ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
         };
-    }
-
-    public override string ToString()
-    {
-        StringBuilder stringBuilder = new ();
-
-        stringBuilder.Append("Категория активности:");
-
-        var activityTypeText = "Не выбрана";
-        stringBuilder.AppendLine(activityTypeText);
-        stringBuilder.AppendLine("Дата и время проведения:");
-        stringBuilder.AppendLine("Не выбрана");
-        return stringBuilder.ToString();
     }
 }

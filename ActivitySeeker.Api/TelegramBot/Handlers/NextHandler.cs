@@ -5,11 +5,11 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-public class PreviousHandler: AbstractHandler
+public class NextHandler: AbstractHandler
 {
     private const string MessageText = "Найденные активности:";
     
-    public PreviousHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : 
+    public NextHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : 
         base(botClient, userService, activityService)
     {
         ResponseMessageText = MessageText;
@@ -21,11 +21,11 @@ public class PreviousHandler: AbstractHandler
         {
             var currentActivity = CurrentUser.ActivityResult.First(x => x.Selected);
             
-            var previousNode = CurrentUser.ActivityResult.Find(currentActivity)?.Previous;
-            if (previousNode is not null)
+            var nextNode = CurrentUser.ActivityResult.Find(currentActivity)?.Next;
+            if (nextNode is not null)
             {
                 currentActivity.Selected = false;
-                previousNode.Value.Selected = true;
+                nextNode.Value.Selected = true;
             }
             else
             {
@@ -44,14 +44,6 @@ public class PreviousHandler: AbstractHandler
 
     protected override InlineKeyboardMarkup GetKeyboard()
     {
-        return Keyboards.GetActivityPaginationKeyboard();
-    }
-
-    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
-    {
-        await BotClient.DeleteMessageAsync(
-            callbackQuery.Message.Chat.Id,
-            CurrentUser.MessageId,
-            cancellationToken);
+        throw new NotImplementedException();
     }
 }

@@ -2,6 +2,7 @@ using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace ActivitySeeker.Bll.Services;
@@ -40,9 +41,9 @@ public class UserService: IUserService
 
     public UserDto GetUserById(long id)
     {
-        var user = _context.Users.Find(id);
-        return user is null
-            ? throw new NullReferenceException($"Пользователь с таким идентификатором {id} не найден")
-            : new UserDto(user);
+        var user = _context.Users.Include(x => x.ActivityType)
+            .First(x=>x.Id == id);
+            
+        return new UserDto(user);
     }
 }
