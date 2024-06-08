@@ -8,4 +8,6 @@ public interface IActivityService
     LinkedList<ActivityDto> GetActivities(ActivityRequest requestParams);
 
     List<ActivityType> GetActivityTypes();
+
+    ActivityType FindActivityType(Guid id);
 }

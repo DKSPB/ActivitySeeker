@@ -7,19 +7,24 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 public class ListOfActivitiesHandler: AbstractHandler
 {
-    private const string MessageText = "Выбери тип активности и время проведения";
-
     public ListOfActivitiesHandler(ITelegramBotClient botClient, IUserService userService,
         IActivityService activityService):
         base(botClient, userService, activityService)
-    {
-        ResponseMessageText = MessageText;
-    }
+    {    }
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        var selectedActivityTypeId = callbackQuery.Data.Split('/')[1];
-        CurrentUser.ActivityRequest.ActivityTypeId = Guid.Parse(selectedActivityTypeId);
+        var selectedActivityTypeId = callbackQuery.Data?.Split('/')[1];
+
+        if(selectedActivityTypeId is null )
+        {
+            throw new ArgumentNullException(nameof(selectedActivityTypeId));
+        }
+
+        var selectedActivityType = ActivityService.FindActivityType(Guid.Parse(selectedActivityTypeId));
+        CurrentUser.ActivityRequest.ActivityTypeId = selectedActivityType.Id;
+        CurrentUser.ActivityRequest.ActivityType = selectedActivityType.TypeName;
+        ResponseMessageText = CurrentUser.ActivityRequest.ToString();
         return Task.CompletedTask;
     }
 

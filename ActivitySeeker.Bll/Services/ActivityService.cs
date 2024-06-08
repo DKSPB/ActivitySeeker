@@ -18,6 +18,12 @@ namespace ActivitySeeker.Bll.Services
             return _context.ActivityTypes.ToList();
         }
 
+        public ActivityType FindActivityType(Guid id) 
+        {
+            var activityType = _context.ActivityTypes.Find(id);
+            return activityType is null ? throw new NullReferenceException($"activity type with {id} is null") : activityType;
+        }
+
         public LinkedList<ActivityDto> GetActivities(ActivityRequest requestParams)
         {
             var activities = new LinkedList<ActivityDto>();

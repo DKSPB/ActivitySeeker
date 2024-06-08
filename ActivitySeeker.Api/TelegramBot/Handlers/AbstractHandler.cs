@@ -23,13 +23,18 @@ public abstract class AbstractHandler
     public async Task HandleAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         CurrentUser = GetCurrentUser(callbackQuery);
-        
+
         await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);
 
         await EditPreviousMessage(callbackQuery, cancellationToken);
-        
+
         await ActionsAsync(callbackQuery, cancellationToken);
-        
+
+        if(callbackQuery.Message is null)
+        {
+            throw new ArgumentNullException(nameof(callbackQuery.Message));
+        }
+
         var message = await BotClient.SendTextMessageAsync(
             callbackQuery.Message.Chat.Id,
             text: ResponseMessageText,
@@ -38,6 +43,7 @@ public abstract class AbstractHandler
 
         CurrentUser.MessageId = message.MessageId;
         UserService.CreateOrUpdateUser(CurrentUser);
+
     }
 
     private UserDto GetCurrentUser(CallbackQuery callbackQuery)

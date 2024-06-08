@@ -48,7 +48,6 @@ namespace ActivitySeeker.Api
             });
             
             builder.Services.AddHttpClient();
-            builder.Services.AddScoped<MessageHandler>();
             builder.Services.AddHostedService<ConfigureWebhook>();
 
             #region serialize settings
