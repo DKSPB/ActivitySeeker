@@ -26,11 +26,11 @@ public class PreviousHandler: AbstractHandler
             {
                 currentActivity.Selected = false;
                 previousNode.Value.Selected = true;
+                ResponseMessageText = previousNode.Value.Name;
             }
             else
             {
-                const string activitiesNotFoundMessage = "Больше активностей не найдено";
-                ResponseMessageText = string.Concat(ResponseMessageText, $"\n {activitiesNotFoundMessage}");
+                ResponseMessageText = currentActivity.Name;
             }
         }
         else

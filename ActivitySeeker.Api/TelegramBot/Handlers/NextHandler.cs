@@ -20,17 +20,17 @@ public class NextHandler: AbstractHandler
         if (CurrentUser.ActivityResult.Count > 0)
         {
             var currentActivity = CurrentUser.ActivityResult.First(x => x.Selected);
-            
+
             var nextNode = CurrentUser.ActivityResult.Find(currentActivity)?.Next;
             if (nextNode is not null)
             {
                 currentActivity.Selected = false;
                 nextNode.Value.Selected = true;
+                ResponseMessageText = nextNode.Value.Name;
             }
             else
             {
-                const string activitiesNotFoundMessage = "Больше активностей не найдено";
-                ResponseMessageText = string.Concat(ResponseMessageText, $"\n {activitiesNotFoundMessage}");
+                ResponseMessageText = currentActivity.Name;
             }
         }
         else
@@ -38,12 +38,20 @@ public class NextHandler: AbstractHandler
             const string activitiesNotFoundMessage = "По вашему запросу активностей не найдено";
             ResponseMessageText = string.Concat(ResponseMessageText, $"\n {activitiesNotFoundMessage}");
         }
-
+       
         return Task.CompletedTask;
     }
 
     protected override InlineKeyboardMarkup GetKeyboard()
     {
-        throw new NotImplementedException();
+        return Keyboards.GetActivityPaginationKeyboard();
+    }
+
+    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    {
+        await BotClient.DeleteMessageAsync(
+            callbackQuery.Message.Chat.Id,
+            CurrentUser.MessageId,
+            cancellationToken);
     }
 }

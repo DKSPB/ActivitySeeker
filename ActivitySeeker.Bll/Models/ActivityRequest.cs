@@ -11,7 +11,7 @@ namespace ActivitySeeker.Bll.Models
     {
         public Guid? ActivityTypeId { get; set; }
 
-        public string ActivityType { get; set; } = "Активность не выбрана";
+        public string ActivityType { get; set; } = "Все активности";
 
         public DateTime SearchFrom { get; set; } = DateTime.Now;
 
@@ -23,7 +23,7 @@ namespace ActivitySeeker.Bll.Models
 
             stringBuilder.AppendLine($"\t\t\tВыбери тип и период проведения активностей:");
             
-            stringBuilder.AppendLine("- Категория активности:");
+            stringBuilder.AppendLine("- Тип активности:");
             stringBuilder.AppendLine(string.Concat("\t\t\t",ActivityType));
             
             stringBuilder.AppendLine("- Дата и время проведения:");

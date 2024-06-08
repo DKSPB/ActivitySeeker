@@ -22,6 +22,6 @@ public class SelectWeekPeriodHandler: AbstractHandler
 
     protected override InlineKeyboardMarkup GetKeyboard()
     {
-        return Keyboards.GetPeriodActivityKeyboard();
+        return Keyboards.GetMainMenuKeyboard();
     }
 }

@@ -30,7 +30,7 @@ public abstract class AbstractHandler
 
         await ActionsAsync(callbackQuery, cancellationToken);
 
-        if(callbackQuery.Message is null)
+        if (callbackQuery.Message is null)
         {
             throw new ArgumentNullException(nameof(callbackQuery.Message));
         }
