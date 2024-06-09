@@ -28,7 +28,12 @@ namespace ActivitySeeker.Bll.Services
         {
             var activities = new LinkedList<ActivityDto>();
 
-            foreach (var activity in _context.Activities.ToList())
+            var result = _context.Activities
+                .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
+                .Where(x => x.StartDate.CompareTo(requestParams.SearchFrom) >= 0 && x.StartDate.CompareTo(requestParams.SearchTo) <= 0)
+                .ToList();
+
+            foreach (var activity in result)
             {
                 activities.AddLast(new ActivityDto(activity));
             }
