@@ -19,7 +19,7 @@ public class SearchResultHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        var activities = ActivityService.GetActivities(new ActivityRequest());
+        var activities = ActivityService.GetActivities(CurrentUser.ActivityRequest);
 
         if (activities.Count > 0)
         {

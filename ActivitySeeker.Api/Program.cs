@@ -60,6 +60,8 @@ namespace ActivitySeeker.Api
 
             var app = builder.Build();
 
+            app.UseExceptionHandler("/ErrorHandling/ProcessError");
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
