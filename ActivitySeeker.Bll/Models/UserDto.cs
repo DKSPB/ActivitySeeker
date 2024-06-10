@@ -34,7 +34,7 @@ public class UserDto
         ActivityRequest = new ActivityRequest
         {
             ActivityTypeId = user.ActivityTypeId,
-            ActivityType = user.ActivityType?.TypeName?? "Активность не выбрана",
+            ActivityType = user.ActivityType?.TypeName?? "Все виды активности",
             SearchFrom = user.SearchFrom,
             SearchTo = user.SearchTo
         };

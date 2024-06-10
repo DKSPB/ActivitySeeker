@@ -29,6 +29,11 @@ namespace ActivitySeeker.Api.TelegramBot
         public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityType> activityTypes) 
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
+            
+            activityTypeButtons.Add(new List<InlineKeyboardButton>
+            {
+                InlineKeyboardButton.WithCallbackData("Все виды активностей", "activityType/")
+            });
 
             foreach (var activityType in activityTypes)
             {

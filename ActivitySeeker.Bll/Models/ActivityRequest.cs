@@ -11,11 +11,11 @@ namespace ActivitySeeker.Bll.Models
     {
         public Guid? ActivityTypeId { get; set; }
 
-        public string ActivityType { get; set; } = "Все активности";
+        public string ActivityType { get; set; } = "Все виды активности";
 
         public DateTime SearchFrom { get; set; } = DateTime.Now;
 
-        public DateTime SearchTo { get; set; } = DateTime.Now;
+        public DateTime SearchTo { get; set; } = DateTime.Now.AddDays(1).Date;
         
         public override string ToString()
         {
@@ -27,7 +27,7 @@ namespace ActivitySeeker.Bll.Models
             stringBuilder.AppendLine(string.Concat("\t\t\t",ActivityType));
             
             stringBuilder.AppendLine("- Дата и время проведения:");
-            stringBuilder.AppendLine($"\t\t\tСобытия, проходящие\n\t\t\tс {SearchFrom.ToString("dd.MM.yyyy HH:mm")}\n\t\t\tпо {SearchTo.ToString("dd.MM.yyyy HH:mm")}");
+            stringBuilder.AppendLine($"\t\t\tСобытия, проходящие\n\t\t\tс {SearchFrom.ToString("dd.MM.yyyy HH:mm")}\n\t\t\tдо {SearchTo.ToString("dd.MM.yyyy HH:mm")}");
             
             return stringBuilder.ToString();
         }

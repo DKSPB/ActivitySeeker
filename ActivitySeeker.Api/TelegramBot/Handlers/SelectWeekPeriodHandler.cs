@@ -15,7 +15,7 @@ public class SelectWeekPeriodHandler: AbstractHandler
     {
 
         CurrentUser.ActivityRequest.SearchFrom = DateTime.Now;
-        CurrentUser.ActivityRequest.SearchTo = DateTime.Now.AddDays(7);
+        CurrentUser.ActivityRequest.SearchTo = DateTime.Now.AddDays(7).Date;
         ResponseMessageText = CurrentUser.ActivityRequest.ToString();
         return Task.CompletedTask;
     }

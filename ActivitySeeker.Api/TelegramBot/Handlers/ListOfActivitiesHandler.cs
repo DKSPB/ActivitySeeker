@@ -21,9 +21,18 @@ public class ListOfActivitiesHandler: AbstractHandler
             throw new ArgumentNullException(nameof(selectedActivityTypeId));
         }
 
-        var selectedActivityType = ActivityService.FindActivityType(Guid.Parse(selectedActivityTypeId));
-        CurrentUser.ActivityRequest.ActivityTypeId = selectedActivityType.Id;
-        CurrentUser.ActivityRequest.ActivityType = selectedActivityType.TypeName;
+        if (string.IsNullOrEmpty(selectedActivityTypeId))
+        {
+            CurrentUser.ActivityRequest.ActivityTypeId = null;
+            CurrentUser.ActivityRequest.ActivityType = "Все виды активности";
+        }
+        else
+        {
+            var selectedActivityType = ActivityService.FindActivityType(Guid.Parse(selectedActivityTypeId));
+            CurrentUser.ActivityRequest.ActivityTypeId = selectedActivityType.Id;
+            CurrentUser.ActivityRequest.ActivityType = selectedActivityType.TypeName;
+        }
+
         ResponseMessageText = CurrentUser.ActivityRequest.ToString();
         return Task.CompletedTask;
     }

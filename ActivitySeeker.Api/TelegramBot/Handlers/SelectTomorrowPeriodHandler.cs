@@ -13,8 +13,8 @@ public class SelectTomorrowPeriodHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        CurrentUser.ActivityRequest.SearchFrom = DateTime.Now.AddDays(1);
-        CurrentUser.ActivityRequest.SearchTo = DateTime.Now.AddDays(1);
+        CurrentUser.ActivityRequest.SearchFrom = DateTime.Now.AddDays(1).Date;
+        CurrentUser.ActivityRequest.SearchTo = DateTime.Now.AddDays(2).Date;
         ResponseMessageText = CurrentUser.ActivityRequest.ToString();
         return Task.CompletedTask;
     }

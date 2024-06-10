@@ -30,7 +30,7 @@ namespace ActivitySeeker.Bll.Services
 
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
-                .Where(x => x.StartDate.CompareTo(requestParams.SearchFrom) >= 0 && x.StartDate.CompareTo(requestParams.SearchTo) <= 0)
+                .Where(x => x.StartDate.CompareTo(requestParams.SearchFrom.Date) >= 0 && x.StartDate.CompareTo(requestParams.SearchTo.AddDays(1).Date) < 0)
                 .ToList();
 
             foreach (var activity in result)

@@ -32,14 +32,19 @@ public class ErrorHandlingController : Controller
     public IActionResult ProcessError()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+        
         if (_hostEnvironment.IsDevelopment())
         {
             return Problem(
                 title: feature.Error.Message,
-                detail: feature.Error.StackTrace
+                detail: feature.Error.StackTrace,
+                statusCode: StatusCodes.Status200OK
             );
         }
-        
-        return Problem();
+        return Problem(
+            title: "Ошибка сервера",
+            detail: "Для подробной информации свяжитесь с администратором",
+            statusCode: StatusCodes.Status200OK
+        );
     }
 }
