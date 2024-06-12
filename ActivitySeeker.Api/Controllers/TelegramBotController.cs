@@ -1,6 +1,7 @@
 using ActivitySeeker.Api.TelegramBot;
 using ActivitySeeker.Api.TelegramBot.Handlers;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -12,11 +13,13 @@ public class TelegramBotController: ControllerBase
 {
     private readonly StartHandler _startHandler;
     private readonly HandlerFactory _handlerFactory;
+    private readonly SelectUserPeriodHandler _userPeriodHandler;
 
-    public TelegramBotController(HandlerFactory handlerFactory, StartHandler startHandler)
+    public TelegramBotController(HandlerFactory handlerFactory, StartHandler startHandler, SelectUserPeriodHandler userPeriodHandler)
     {
         _startHandler = startHandler;
         _handlerFactory = handlerFactory;
+        _userPeriodHandler = userPeriodHandler;
     }
 
     [HttpPost]
@@ -26,6 +29,22 @@ public class TelegramBotController: ControllerBase
         {
             case UpdateType.Message:
             {
+                if (update.Message != null)
+                {
+                    var chat = update.Message.Chat;
+                    try
+                    { 
+                    }
+                    catch (Exception e)
+                    {
+                        await _botClient.SendTextMessageAsync(
+                            chat.Id, e.Message, cancellationToken: cancellationToken);
+                    }
+                }
+                else
+                {
+                    throw new NullReferenceException("Object Message is null");
+                }
                 await _startHandler.HandleAsync(update, cancellationToken);
                 return Ok();
             }

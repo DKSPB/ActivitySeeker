@@ -1,23 +1,77 @@
-using ActivitySeeker.Bll.Interfaces;
+﻿using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
+using System.Globalization;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
-namespace ActivitySeeker.Api.TelegramBot.Handlers;
-
-public class SelectUserPeriodHandler: AbstractHandler
+namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
-    public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 
-        : base(botClient, userService, activityService)
-    { }
-
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    public class SelectUserPeriodHandler
     {
-        return Task.CompletedTask;
-    }
+        private readonly ITelegramBotClient _botClient;
+        private readonly IUserService _userService;
 
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return Keyboards.GetMainMenuKeyboard();
+        public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService)
+        {
+            _botClient = botClient;
+            _userService = userService;
+        }
+
+        public async Task HandleAsync(Update update, CancellationToken cancellationToken)
+        {
+            if (update.Message != null)
+            {
+                var chat = update.Message.Chat;
+                try
+                {
+                    if (!string.IsNullOrEmpty(update.Message.Text))
+                    {
+                        var user = update.Message.From;
+
+                        if (user is null)
+                        {
+                            throw new NullReferenceException("User in null");
+                        }
+
+
+                        var message = await _botClient.SendTextMessageAsync(
+                            chat.Id,
+                            text: "Ввведите дату, с которой хотите",
+                            replyMarkup: Keyboards.GetMainMenuKeyboard(),
+                            cancellationToken: cancellationToken);
+
+                        //currentUser.MessageId = message.MessageId;
+                        //_userService.CreateOrUpdateUser(currentUser);
+                    }
+                    else
+                    {
+                        await _botClient.SendTextMessageAsync(
+                            chat.Id, "Нераспознанная команда", cancellationToken: cancellationToken);
+                    }
+                }
+                catch (Exception e)
+                {
+                    await _botClient.SendTextMessageAsync(
+                        chat.Id, e.Message, cancellationToken: cancellationToken);
+                }
+            }
+            else
+            {
+                throw new NullReferenceException("Object Message is null");
+            }
+        }
+
+        class UserDateParse
+        {
+            DateTime _userDate;
+
+            bool ParseResult { get; set; }
+
+            void ParseUserDate (string date)
+            {
+                var format = "dd.MM.yyyy HH:mm";
+                bool ParseResult = DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _userDate);
+            }
+        }
     }
 }

@@ -77,7 +77,15 @@ namespace ActivitySeeker.Api.TelegramBot
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("За месяц", "monthPeriodButton")
-                }
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Свой период", "userPeriodButton")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Назад", "mainMenu")
+                },
             });
         }
 

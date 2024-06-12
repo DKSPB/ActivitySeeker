@@ -71,10 +71,10 @@ public class HandlerFactory
             return _serviceProvider.GetRequiredService<SelectMonthPeriodHandler>();
         }
         
-        if (callbackData.Equals("userPeriodButton"))
+        /*if (callbackData.Equals("userPeriodButton"))
         {
             return _serviceProvider.GetRequiredService<SelectUserPeriodHandler>();
-        }
+        }*/
         
         throw new ArgumentException("Unrecognized handler");
     }
