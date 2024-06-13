@@ -6,7 +6,7 @@ using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
-    public class SelectUserPeriodHandler
+    public class SelectUserPeriodHandler: IHandler
     {
         private readonly ITelegramBotClient _botClient;
         private readonly IUserService _userService;
@@ -19,46 +19,28 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         public async Task HandleAsync(Update update, CancellationToken cancellationToken)
         {
-            if (update.Message != null)
-            {
-                var chat = update.Message.Chat;
-                try
-                {
-                    if (!string.IsNullOrEmpty(update.Message.Text))
-                    {
-                        var user = update.Message.From;
-
-                        if (user is null)
-                        {
-                            throw new NullReferenceException("User in null");
-                        }
-
-
-                        var message = await _botClient.SendTextMessageAsync(
-                            chat.Id,
-                            text: "Ввведите дату, с которой хотите",
-                            replyMarkup: Keyboards.GetMainMenuKeyboard(),
-                            cancellationToken: cancellationToken);
-
-                        //currentUser.MessageId = message.MessageId;
-                        //_userService.CreateOrUpdateUser(currentUser);
-                    }
-                    else
-                    {
-                        await _botClient.SendTextMessageAsync(
-                            chat.Id, "Нераспознанная команда", cancellationToken: cancellationToken);
-                    }
-                }
-                catch (Exception e)
-                {
-                    await _botClient.SendTextMessageAsync(
-                        chat.Id, e.Message, cancellationToken: cancellationToken);
-                }
-            }
-            else
-            {
-                throw new NullReferenceException("Object Message is null");
-            }
+            var callbackQuery = update.CallbackQuery;
+            
+            await _botClient.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);
+            
+            var currentUser = GetCurrentUser(callbackQuery);
+            
+            var message = await _botClient.SendTextMessageAsync(
+                callbackQuery.Message.Chat.Id,
+                text: $"Введите дату, с которой хотите искать активностив форматах:" +
+                      $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
+                      $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}",
+                cancellationToken: cancellationToken);
+            
+            currentUser.MessageId = message.MessageId;
+            _userService.CreateOrUpdateUser(currentUser);
+        }
+        
+        private UserDto GetCurrentUser(CallbackQuery callbackQuery)
+        {
+            var currentUserId = callbackQuery.From.Id;
+        
+            return _userService.GetUserById(currentUserId);
         }
 
         class UserDateParse

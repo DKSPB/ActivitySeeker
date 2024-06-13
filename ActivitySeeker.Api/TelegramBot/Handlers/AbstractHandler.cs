@@ -6,7 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-public abstract class AbstractHandler
+public abstract class AbstractHandler: IHandler
 {
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
@@ -20,8 +20,9 @@ public abstract class AbstractHandler
         UserService = userService;
         ActivityService = activityService;
     }
-    public async Task HandleAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    public async Task HandleAsync(Update update, CancellationToken cancellationToken)
     {
+        var callbackQuery = update.CallbackQuery;
         CurrentUser = GetCurrentUser(callbackQuery);
 
         await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);

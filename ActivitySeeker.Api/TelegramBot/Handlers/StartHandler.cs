@@ -8,7 +8,7 @@ using User = ActivitySeeker.Domain.Entities.User;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-public class StartHandler
+public class StartHandler: IHandler
 {
     private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
@@ -21,13 +21,13 @@ public class StartHandler
     
     public async Task HandleAsync(Update update, CancellationToken cancellationToken)
     {
-        if (update.Message != null)
-        {
+        //if (update.Message != null)
+        //{
             var chat = update.Message.Chat;
-            try
-            {
-                if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
-                {
+           //try
+           // {
+                //if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
+                //{
                     var user = update.Message.From;
                     if (user is null)
                     {
@@ -49,22 +49,22 @@ public class StartHandler
 
                     currentUser.MessageId = message.MessageId;
                     _userService.CreateOrUpdateUser(currentUser);
-                }
-                else
-                {
-                    await _botClient.SendTextMessageAsync(
-                        chat.Id, "Нераспознанная команда", cancellationToken: cancellationToken);
-                }
-            }
-            catch (Exception e)
-            {
-                await _botClient.SendTextMessageAsync(
-                    chat.Id, e.Message, cancellationToken: cancellationToken);
-            }
-        }
-        else
-        {
-            throw new NullReferenceException("Object Message is null");
-        }
+                //}
+                //else
+                //{
+                //    await _botClient.SendTextMessageAsync(
+                //        chat.Id, "Нераспознанная команда", cancellationToken: cancellationToken);
+                //}
+            //}
+            //catch (Exception e)
+            //{
+            //    await _botClient.SendTextMessageAsync(
+            //        chat.Id, e.Message, cancellationToken: cancellationToken);
+            //}
+        //}
+        //else
+        //{
+        //    throw new NullReferenceException("Object Message is null");
+        //}
     }
 }

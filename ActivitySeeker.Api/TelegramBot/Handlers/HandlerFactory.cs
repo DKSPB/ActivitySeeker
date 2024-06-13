@@ -1,3 +1,6 @@
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 public class HandlerFactory
@@ -9,73 +12,112 @@ public class HandlerFactory
         _serviceProvider = serviceProvider;
     }
 
-    public AbstractHandler GetHandler(string callbackData)
+    public IHandler GetHandler(Update update)
     {
-        if (callbackData.Equals("mainMenu"))
+        switch (update.Type)
         {
-            return _serviceProvider.GetRequiredService<MainMenuHandler>();
-        }
-        
-        if (callbackData.Equals("selectActivityTypeButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectActivityTypeHandler>();
-        }
+            case UpdateType.Message:
+            {
+                if (update.Message != null)
+                {
+                    if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
+                    {
+                        return _serviceProvider.GetRequiredService<StartHandler>();
+                    }
+                }
+                else
+                {
+                    throw new NullReferenceException("Object Message is null");
+                }
+                
+                throw new ArgumentException("Unrecognized handler");
+            }
+            case UpdateType.CallbackQuery:
+            {
+                var callbackQuery = update.CallbackQuery;
 
-        if (callbackData.Contains("activityType"))
-        {
-            return _serviceProvider.GetRequiredService<ListOfActivitiesHandler>();
-        }
+                if (callbackQuery is null)
+                {
+                    throw new NullReferenceException("Callback query is null");
+                }
+                
+                if (callbackQuery.Data is null)
+                {
+                    throw new NullReferenceException("Object Data is null");
+                }
 
-        if (callbackData.Equals("searchActivityButton"))
-        {
-            return _serviceProvider.GetRequiredService<SearchResultHandler>();
-        }
+                var callbackData = callbackQuery.Data;
+                
+                if (callbackData.Equals("mainMenu"))
+                {
+                    return _serviceProvider.GetRequiredService<MainMenuHandler>();
+                }
+                
+                if (callbackData.Equals("selectActivityTypeButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectActivityTypeHandler>();
+                }
 
-        if (callbackData.Equals("back"))
-        {
-            return _serviceProvider.GetRequiredService<PreviousHandler>();
-        }
+                if (callbackData.Equals("searchActivityButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SearchResultHandler>();
+                }
 
-        if (callbackData.Equals("next"))
-        {
-            return _serviceProvider.GetRequiredService<NextHandler>();
-        }
+                if (callbackData.Equals("back"))
+                {
+                    return _serviceProvider.GetRequiredService<PreviousHandler>();
+                }
 
-        if (callbackData.Equals("activityStartPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectActivityPeriodHandler>();
-        }
+                if (callbackData.Equals("next"))
+                {
+                    return _serviceProvider.GetRequiredService<NextHandler>();
+                }
 
-        if (callbackData.Equals("todayPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectTodayPeriodHandler>();
-        }
+                if (callbackData.Equals("activityStartPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectActivityPeriodHandler>();
+                }
 
-        if (callbackData.Equals("tomorrowPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectTomorrowPeriodHandler>();
-        }
+                if (callbackData.Equals("todayPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectTodayPeriodHandler>();
+                }
 
-        if (callbackData.Equals("afterTomorrowPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectAfterTomorrowPeriodHandler>();
-        }
+                if (callbackData.Equals("tomorrowPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectTomorrowPeriodHandler>();
+                }
 
-        if (callbackData.Equals("weekPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectWeekPeriodHandler>();
-        }
+                if (callbackData.Equals("afterTomorrowPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectAfterTomorrowPeriodHandler>();
+                }
 
-        if (callbackData.Equals("monthPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectMonthPeriodHandler>();
+                if (callbackData.Equals("weekPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectWeekPeriodHandler>();
+                }
+
+                if (callbackData.Equals("monthPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectMonthPeriodHandler>();
+                }
+
+                if (callbackData.Equals("userPeriodButton"))
+                {
+                    return _serviceProvider.GetRequiredService<SelectUserPeriodHandler>();
+                }
+                
+                if (callbackData.Contains("activityType"))
+                {
+                    return _serviceProvider.GetRequiredService<ListOfActivitiesHandler>();
+                }
+                
+                
+
+                throw new ArgumentException("Unrecognized handler");
+            }
         }
-        
-        /*if (callbackData.Equals("userPeriodButton"))
-        {
-            return _serviceProvider.GetRequiredService<SelectUserPeriodHandler>();
-        }*/
-        
         throw new ArgumentException("Unrecognized handler");
     }
 }
