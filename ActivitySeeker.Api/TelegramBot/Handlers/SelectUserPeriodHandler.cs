@@ -8,18 +8,22 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
-    public class SelectUserPeriodHandler: IHandler
+    public class SelectUserPeriodHandler: AbstractHandler
     {
-        private readonly ITelegramBotClient _botClient;
-        private readonly IUserService _userService;
+        //private readonly ITelegramBotClient _botClient;
+        //private readonly IUserService _userService;
 
-        public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService)
-        {
-            _botClient = botClient;
-            _userService = userService;
-        }
+        //public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService)
+        //{
+        //    _botClient = botClient;
+        //    _userService = userService;
+        //}
 
-        public async Task HandleAsync(Update update, CancellationToken cancellationToken)
+        public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 
+            : base(botClient, userService, activityService)
+        { }
+        
+        /*public async Task HandleAsync(Update update, CancellationToken cancellationToken)
         {
             var callbackQuery = update.CallbackQuery;
             
@@ -44,13 +48,29 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             currentUser.MessageId = message.MessageId;
             currentUser.State = StatesEnum.PeriodFromDate;
             _userService.CreateOrUpdateUser(currentUser);
-        }
+        }*/
         
-        private UserDto GetCurrentUser(CallbackQuery callbackQuery)
+        /*private UserDto GetCurrentUser(CallbackQuery callbackQuery)
         {
             var currentUserId = callbackQuery.From.Id;
         
             return _userService.GetUserById(currentUserId);
+        }*/
+
+        protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+        {
+            CurrentUser.State = StatesEnum.PeriodFromDate;
+            
+            ResponseMessageText = $"Введите дату, с которой хотите искать активностив форматах:" +
+                                  $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
+                                  $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
+            
+            return Task.CompletedTask;
+        }
+
+        protected override InlineKeyboardMarkup GetKeyboard()
+        {
+            return InlineKeyboardMarkup.Empty();
         }
     }
 }

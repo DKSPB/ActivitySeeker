@@ -53,8 +53,8 @@ public class TelegramBotController: ControllerBase
                 {
                     throw new NullReferenceException("Object Message is null");
                 }
-                
-                throw new ArgumentException("Unrecognized handler");
+
+                return Ok();
             }
             case UpdateType.CallbackQuery:
             {
@@ -153,7 +153,7 @@ public class TelegramBotController: ControllerBase
                 throw new ArgumentException("Unrecognized handler");
             }
         }
-                
-        throw new ArgumentException("Unrecognized handler");
+
+        return Ok();
     }
 }
