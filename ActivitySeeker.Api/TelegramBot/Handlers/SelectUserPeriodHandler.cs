@@ -1,8 +1,10 @@
 ﻿using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using System.Globalization;
+using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
@@ -25,6 +27,13 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             
             var currentUser = GetCurrentUser(callbackQuery);
             
+            await _botClient.EditMessageReplyMarkupAsync(
+                chatId: callbackQuery.Message.Chat.Id,
+                messageId: currentUser.MessageId,
+                replyMarkup: InlineKeyboardMarkup.Empty(),
+                cancellationToken
+            );
+            
             var message = await _botClient.SendTextMessageAsync(
                 callbackQuery.Message.Chat.Id,
                 text: $"Введите дату, с которой хотите искать активностив форматах:" +
@@ -33,6 +42,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                 cancellationToken: cancellationToken);
             
             currentUser.MessageId = message.MessageId;
+            currentUser.State = StatesEnum.PeriodFromDate;
             _userService.CreateOrUpdateUser(currentUser);
         }
         
@@ -41,19 +51,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             var currentUserId = callbackQuery.From.Id;
         
             return _userService.GetUserById(currentUserId);
-        }
-
-        class UserDateParse
-        {
-            DateTime _userDate;
-
-            bool ParseResult { get; set; }
-
-            void ParseUserDate (string date)
-            {
-                var format = "dd.MM.yyyy HH:mm";
-                bool ParseResult = DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out _userDate);
-            }
         }
     }
 }

@@ -21,50 +21,29 @@ public class StartHandler: IHandler
     
     public async Task HandleAsync(Update update, CancellationToken cancellationToken)
     {
-        //if (update.Message != null)
-        //{
-            var chat = update.Message.Chat;
-           //try
-           // {
-                //if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
-                //{
-                    var user = update.Message.From;
-                    if (user is null)
-                    {
-                        throw new NullReferenceException("User in null");
-                    }
+        var chat = update.Message.Chat;
 
-                    var currentUser = new UserDto
-                    {
-                        Id = user.Id,
-                        UserName = user.Username ?? "",
-                        ChatId = chat.Id
-                    };
-                    
-                    var message = await _botClient.SendTextMessageAsync(
-                        chat.Id,
-                        text: currentUser.ActivityRequest.ToString(),
-                        replyMarkup: Keyboards.GetMainMenuKeyboard(),
-                        cancellationToken: cancellationToken);
+        var user = update.Message.From;
+        if (user is null)
+        {
+            throw new NullReferenceException("User in null");
+        }
 
-                    currentUser.MessageId = message.MessageId;
-                    _userService.CreateOrUpdateUser(currentUser);
-                //}
-                //else
-                //{
-                //    await _botClient.SendTextMessageAsync(
-                //        chat.Id, "Нераспознанная команда", cancellationToken: cancellationToken);
-                //}
-            //}
-            //catch (Exception e)
-            //{
-            //    await _botClient.SendTextMessageAsync(
-            //        chat.Id, e.Message, cancellationToken: cancellationToken);
-            //}
-        //}
-        //else
-        //{
-        //    throw new NullReferenceException("Object Message is null");
-        //}
+        var currentUser = new UserDto
+        {
+            Id = user.Id,
+            UserName = user.Username ?? "",
+            ChatId = chat.Id,
+            State = StatesEnum.MainMenu
+        };
+        
+        var message = await _botClient.SendTextMessageAsync(
+            chat.Id,
+            text: currentUser.ActivityRequest.ToString(),
+            replyMarkup: Keyboards.GetMainMenuKeyboard(),
+            cancellationToken: cancellationToken);
+
+        currentUser.MessageId = message.MessageId;
+        _userService.CreateOrUpdateUser(currentUser);
     }
 }

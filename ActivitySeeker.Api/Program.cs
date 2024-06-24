@@ -26,7 +26,6 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IActivityService, ActivityService>();
             builder.Services.AddScoped<StartHandler>();
-            builder.Services.AddScoped<HandlerFactory>();
             builder.Services.AddScoped<MainMenuHandler>();
             builder.Services.AddScoped<ListOfActivitiesHandler>();
             builder.Services.AddScoped<SelectActivityTypeHandler>();
@@ -37,6 +36,8 @@ namespace ActivitySeeker.Api
             builder.Services.AddScoped<SelectWeekPeriodHandler>();
             builder.Services.AddScoped<SelectMonthPeriodHandler>();
             builder.Services.AddScoped<SelectUserPeriodHandler>();
+            builder.Services.AddScoped<UserSetFromDateHandler>();
+            builder.Services.AddScoped<UserSetByDateHandler>();
             builder.Services.AddScoped<SearchResultHandler>();
             builder.Services.AddScoped<PreviousHandler>();
             builder.Services.AddScoped<NextHandler>();

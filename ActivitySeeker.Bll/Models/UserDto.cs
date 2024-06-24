@@ -13,6 +13,8 @@ public class UserDto
     public string UserName { get; set; } = default!;
     
     public int MessageId { get; set; }
+    
+    public StatesEnum State { get; set; }
 
     public LinkedList<ActivityDto> ActivityResult { get; set; } = default!;
 
@@ -28,6 +30,7 @@ public class UserDto
         ChatId = user.ChatId;
         UserName = user.UserName;
         MessageId = user.MessageId;
+        State = user.State;
         ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(user.ActivityResult) ??
                  new LinkedList<ActivityDto>();
         
@@ -48,6 +51,7 @@ public class UserDto
             ChatId = user.ChatId,
             UserName = user.UserName,
             MessageId = user.MessageId,
+            State = user.State,
             ActivityTypeId = user.ActivityRequest.ActivityTypeId,
             SearchFrom = user.ActivityRequest.SearchFrom,
             SearchTo = user.ActivityRequest.SearchTo,

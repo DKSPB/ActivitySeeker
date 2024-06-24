@@ -16,6 +16,9 @@ public class User
 
     [Column("message_id")]
     public int MessageId { get; set; }
+    
+    [Column("state")]
+    public StatesEnum State { get; set; }
 
     [Column("activity_type_id")]
     public Guid? ActivityTypeId { get; set; }

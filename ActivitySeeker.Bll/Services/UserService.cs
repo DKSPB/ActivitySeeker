@@ -27,6 +27,7 @@ public class UserService: IUserService
         else
         {
             userExists.MessageId = user.MessageId;
+            userExists.State = user.State;
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
             userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
