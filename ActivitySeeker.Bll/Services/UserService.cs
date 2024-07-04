@@ -40,11 +40,11 @@ public class UserService: IUserService
         _context.SaveChanges();
     }
 
-    public UserDto GetUserById(long id)
+    public UserDto? GetUserById(long id)
     {
         var user = _context.Users.Include(x => x.ActivityType)
-            .First(x=>x.Id == id);
+            .FirstOrDefault(x=>x.Id == id);
             
-        return new UserDto(user);
+        return user is null ? null : new UserDto(user);
     }
 }

@@ -13,15 +13,15 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Тип активности", "selectActivityTypeButton")
+                    InlineKeyboardButton.WithCallbackData("Тип активности", "SelectActivityTypeHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Время проведения", "activityStartPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("Время проведения", "SelectActivityPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Найти", "searchActivityButton")
+                    InlineKeyboardButton.WithCallbackData("Найти", "SearchResultHandler")
                 }
             });
         }
@@ -45,7 +45,7 @@ namespace ActivitySeeker.Api.TelegramBot
 
             activityTypeButtons.Add(new List<InlineKeyboardButton>
             {
-                InlineKeyboardButton.WithCallbackData("Назад", "mainMenu")
+                InlineKeyboardButton.WithCallbackData("Назад", "MainMenuHandler")
             });
 
             InlineKeyboardMarkup countersButtons = new (activityTypeButtons);
@@ -60,31 +60,31 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Сегодня", "todayPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("Сегодня", "SelectTodayPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Завтра", "tomorrowPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("Завтра", "SelectTomorrowPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Послезавтра", "afterTomorrowPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("Послезавтра", "SelectAfterTomorrowPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("За неделю", "weekPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("За неделю", "SelectWeekPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("За месяц", "monthPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("За месяц", "SelectMonthPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Свой период", "userPeriodButton")
+                    InlineKeyboardButton.WithCallbackData("Свой период", "SelectUserPeriodHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Назад", "mainMenu")
+                    InlineKeyboardButton.WithCallbackData("Назад", "MainMenuHandler")
                 },
             });
         }
@@ -95,12 +95,12 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Назад", "back"),
-                    InlineKeyboardButton.WithCallbackData("Вперёд", "next")
+                    InlineKeyboardButton.WithCallbackData("Назад", "PreviousHandler"),
+                    InlineKeyboardButton.WithCallbackData("Вперёд", "NextHandler")
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Меню", "mainMenu")
+                    InlineKeyboardButton.WithCallbackData("Меню", "MainMenuHandler")
                 }
             });
         }
