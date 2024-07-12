@@ -20,7 +20,7 @@ public class StartHandler: IHandler
         _userService = userService;
     }
     
-    public async Task HandleAsync(Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var chat = update.Message.Chat;
 
@@ -30,14 +30,18 @@ public class StartHandler: IHandler
             throw new NullReferenceException("User in null");
         }
 
-        var currentUser = new UserDto
+        if(currentUser is null)
         {
-            Id = user.Id,
-            UserName = user.Username ?? "",
-            ChatId = chat.Id,
-            State = StatesEnum.MainMenu
-        };
-        
+            currentUser = new UserDto
+            {
+                Id = user.Id,
+                UserName = user.Username ?? "",
+                ChatId = chat.Id,
+            };
+        }
+        currentUser.State = StatesEnum.MainMenu;
+
+
         var message = await _botClient.SendTextMessageAsync(
             chat.Id,
             text: currentUser.ActivityRequest.ToString(),

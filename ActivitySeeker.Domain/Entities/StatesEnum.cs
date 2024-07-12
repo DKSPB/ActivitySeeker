@@ -5,12 +5,7 @@ public enum StatesEnum
     Start,
     MainMenu,
     ActivityTypeChapter,
+    ActivityPeriodChapter,
     PeriodFromDate,
     PeriodToDate
-    /*AwaitSelectActivityType,
-    AwaitSearchPeriodChapter,
-    AwaitSearchPeriod,
-    AwaitSearchDay,
-    AwaitSearchTomorrow,
-    AwaitSearchAfterTomorrow*/
 }

@@ -25,7 +25,7 @@ public class TelegramBotController: ControllerBase
     [HttpPost]
     public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken cancellationToken)
     {
-        var handlerTypes = GetAllHandlerTypes();
+        var handlerTypes = GetAllHandlerTypes(); 
 
         switch (update.Type)
         {
@@ -39,19 +39,21 @@ public class TelegramBotController: ControllerBase
                     if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
                     {
                         IHandler handler = _serviceProvider.GetRequiredService<StartHandler>();
-                        await handler.HandleAsync(update, cancellationToken);
+                        await handler.HandleAsync(currentUser, update, cancellationToken);
                     }
 
                     if (currentUser.State == StatesEnum.PeriodFromDate)
                     {
                         IHandler handler = _serviceProvider.GetRequiredService<UserSetFromDateHandler>();
-                        await handler.HandleAsync(update, cancellationToken);
+                        await handler.HandleAsync(currentUser, update, cancellationToken);
+                        return Ok();
                     }
 
                     if (currentUser.State == StatesEnum.PeriodToDate)
                     {
                         IHandler handler = _serviceProvider.GetRequiredService<UserSetByDateHandler>();
-                        await handler.HandleAsync(update, cancellationToken);
+                        await handler.HandleAsync(currentUser,update, cancellationToken);
+                        return Ok();
                     }
                 }
                 else
@@ -75,100 +77,31 @@ public class TelegramBotController: ControllerBase
                     throw new NullReferenceException("Object Data is null");
                 }
 
+                var currentUser = _userService.GetUserById(callbackQuery.From.Id); 
+
                 var callbackData = callbackQuery.Data;
                 
                 foreach (Type handlerType in handlerTypes) 
                 {
-                    if( handlerType.Name == callbackData )
+                    if ( handlerType.Name == callbackData )
                     {
                         IHandler? handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
 
                         if (handler == null) 
                                 throw new ArgumentException("Unrecognized handler, Не получилось созать экземпляр обработчика");
 
-                        await handler.HandleAsync(update, cancellationToken);
-                        break;
+                        await handler.HandleAsync(currentUser,update, cancellationToken);
+                        return Ok();
                     }
                 }
-                /*if (callbackData.Equals("mainMenu"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<MainMenuHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
                 
-                /*if (callbackData.Equals("selectActivityTypeButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectActivityTypeHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
-
-                /*if (callbackData.Equals("searchActivityButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SearchResultHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
-
-                /*if (callbackData.Equals("back"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<PreviousHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
-
-                /*if (callbackData.Equals("next"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<NextHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
-
-                /*if (callbackData.Equals("activityStartPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectActivityPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
-
-                /*if (callbackData.Equals("todayPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectTodayPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }
-
-                if (callbackData.Equals("tomorrowPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectTomorrowPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }
-
-                if (callbackData.Equals("afterTomorrowPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectAfterTomorrowPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }
-
-                if (callbackData.Equals("weekPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectWeekPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }
-
-                if (callbackData.Equals("monthPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectMonthPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }
-
-                if (callbackData.Equals("userPeriodButton"))
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<SelectUserPeriodHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
-                }*/
-                
-                if (callbackData.Contains("activityType"))
+                if (currentUser.State == StatesEnum.ActivityTypeChapter)
                 {
                     IHandler handler = _serviceProvider.GetRequiredService<ListOfActivitiesHandler>();
-                    await handler.HandleAsync(update, cancellationToken);
+                    await handler.HandleAsync(currentUser,update, cancellationToken);
                 }
 
-                return Ok();//throw new ArgumentException("Unrecognized handler");
+                return Ok();
             }
         }
 

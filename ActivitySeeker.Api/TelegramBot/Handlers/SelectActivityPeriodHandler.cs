@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -16,6 +17,7 @@ public class SelectActivityPeriodHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
+        CurrentUser.State = StatesEnum.ActivityPeriodChapter;
         return Task.CompletedTask;
     }
 

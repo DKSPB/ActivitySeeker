@@ -17,10 +17,9 @@ public class UserSetFromDateHandler: IHandler
         _botClient = botClient;
         _userService = userService;
     }
-    public async Task HandleAsync(Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var message = update.Message;
-        var currentUser = _userService.GetUserById(message.From.Id);
 
         var fromDateText = update.Message.Text;
         var format = "dd.MM.yyyy";

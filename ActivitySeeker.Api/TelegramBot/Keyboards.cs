@@ -1,6 +1,4 @@
 ﻿using ActivitySeeker.Domain.Entities;
-using System.Diagnostics.Metrics;
-using Newtonsoft.Json;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot
@@ -32,14 +30,14 @@ namespace ActivitySeeker.Api.TelegramBot
             
             activityTypeButtons.Add(new List<InlineKeyboardButton>
             {
-                InlineKeyboardButton.WithCallbackData("Все виды активностей", "activityType/")
+                InlineKeyboardButton.WithCallbackData("Все виды активностей")
             });
 
             foreach (var activityType in activityTypes)
             {
                 activityTypeButtons.Add(new List<InlineKeyboardButton>
                 {
-                    InlineKeyboardButton.WithCallbackData(activityType.TypeName, string.Concat("activityType/", activityType.Id))
+                    InlineKeyboardButton.WithCallbackData(activityType.TypeName, activityType.Id.ToString())
                 });
             }
 

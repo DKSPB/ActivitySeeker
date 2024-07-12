@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -14,7 +15,8 @@ public class SelectActivityTypeHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        ResponseMessageText = CurrentUser.ActivityRequest.ToString();
+        ResponseMessageText = "Выберите тип активности:";
+        CurrentUser.State = StatesEnum.ActivityTypeChapter;
         return Task.CompletedTask;
     }
 

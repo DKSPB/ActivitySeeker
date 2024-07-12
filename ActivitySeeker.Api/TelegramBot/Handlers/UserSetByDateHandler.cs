@@ -1,5 +1,6 @@
 using System.Globalization;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -16,10 +17,9 @@ public class UserSetByDateHandler: IHandler
         _botClient = botClient;
         _userService = userService;
     }
-    public async Task HandleAsync(Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var message = update.Message;
-        var currentUser = _userService.GetUserById(message.From.Id);
 
         var byDateText = update.Message.Text;
         var format = "dd.MM.yyyy";

@@ -20,10 +20,10 @@ public abstract class AbstractHandler: IHandler
         UserService = userService;
         ActivityService = activityService;
     }
-    public async Task HandleAsync(Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var callbackQuery = update.CallbackQuery;
-        CurrentUser = GetCurrentUser(callbackQuery);
+        CurrentUser = currentUser;
 
         await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);
 
@@ -50,13 +50,6 @@ public abstract class AbstractHandler: IHandler
             UserService.CreateOrUpdateUser(CurrentUser);
         }   
 
-    }
-
-    private UserDto GetCurrentUser(CallbackQuery callbackQuery)
-    {
-        var currentUserId = callbackQuery.From.Id;
-        
-        return UserService.GetUserById(currentUserId);
     }
 
     protected abstract Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken);
