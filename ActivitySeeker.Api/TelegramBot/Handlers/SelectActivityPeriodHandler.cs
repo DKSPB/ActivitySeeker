@@ -6,6 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.ActivityPeriodChapter)]
 public class SelectActivityPeriodHandler: AbstractHandler
 {
     private const string MessageText = "Выбери период проведения активности:";

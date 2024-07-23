@@ -1,10 +1,12 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.TomorrowPeriod)]
 public class SelectTomorrowPeriodHandler: AbstractHandler
 {
     public SelectTomorrowPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 

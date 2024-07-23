@@ -8,6 +8,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
+    [HandlerState(StatesEnum.UserPeriod)]
     public class SelectUserPeriodHandler: AbstractHandler
     {
         public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 

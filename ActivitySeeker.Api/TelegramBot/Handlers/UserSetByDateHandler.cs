@@ -7,6 +7,7 @@ using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.PeriodToDate)]
 public class UserSetByDateHandler: IHandler
 {
     private readonly ITelegramBotClient _botClient;

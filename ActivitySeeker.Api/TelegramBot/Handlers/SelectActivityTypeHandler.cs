@@ -6,6 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.ActivityTypeChapter)]
 public class SelectActivityTypeHandler: AbstractHandler
 {
     public SelectActivityTypeHandler(ITelegramBotClient botClient, IUserService userService,
@@ -15,8 +16,8 @@ public class SelectActivityTypeHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        ResponseMessageText = "Выберите тип активности:";
-        CurrentUser.State = StatesEnum.ActivityTypeChapter;
+        ResponseMessageText = "Р’С‹Р±РµСЂРё С‚РёРї Р°РєС‚РёРІРЅРѕСЃС‚Рё:";
+        CurrentUser.State = StatesEnum.ListOfActivities;
         return Task.CompletedTask;
     }
 

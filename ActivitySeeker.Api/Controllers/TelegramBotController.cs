@@ -1,11 +1,12 @@
+using System.Reflection;
+using ActivitySeeker.Api.TelegramBot;
 using Telegram.Bot.Types;
 using Microsoft.AspNetCore.Mvc;
 using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.Enums;
-using System.Windows.Input;
-using System.Reflection;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -35,14 +36,14 @@ public class TelegramBotController: ControllerBase
                 {
                     var currentUser = _userService.GetUserById(update.Message.From.Id);
                     
-
                     if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
                     {
                         IHandler handler = _serviceProvider.GetRequiredService<StartHandler>();
                         await handler.HandleAsync(currentUser, update, cancellationToken);
+                        return Ok();
                     }
 
-                    if (currentUser.State == StatesEnum.PeriodFromDate)
+                    /*if (currentUser.State == StatesEnum.PeriodFromDate)
                     {
                         IHandler handler = _serviceProvider.GetRequiredService<UserSetFromDateHandler>();
                         await handler.HandleAsync(currentUser, update, cancellationToken);
@@ -54,6 +55,17 @@ public class TelegramBotController: ControllerBase
                         IHandler handler = _serviceProvider.GetRequiredService<UserSetByDateHandler>();
                         await handler.HandleAsync(currentUser,update, cancellationToken);
                         return Ok();
+                    }*/
+                    
+                    foreach (var handlerType in handlerTypes)
+                    {
+                        var handlerStateAttribute = handlerType.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState;
+                        if (currentUser.State == handlerStateAttribute)
+                        {
+                            var handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
+                            await handler.HandleAsync(currentUser,update, cancellationToken);
+                            return Ok();
+                        }
                     }
                 }
                 else
@@ -81,26 +93,32 @@ public class TelegramBotController: ControllerBase
 
                 var callbackData = callbackQuery.Data;
                 
-                foreach (Type handlerType in handlerTypes) 
+                foreach (var handlerType in handlerTypes) 
                 {
-                    if ( handlerType.Name == callbackData )
+                    var handlerStateAttribute = handlerType.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState;
+                    if ( handlerStateAttribute?.GetDisplayName() == callbackData )
                     {
-                        IHandler? handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
+                        var handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
 
                         if (handler == null) 
-                                throw new ArgumentException("Unrecognized handler, Не получилось созать экземпляр обработчика");
+                                throw new ArgumentException("Unrecognized handler");
 
                         await handler.HandleAsync(currentUser,update, cancellationToken);
                         return Ok();
                     }
                 }
-                
-                if (currentUser.State == StatesEnum.ActivityTypeChapter)
-                {
-                    IHandler handler = _serviceProvider.GetRequiredService<ListOfActivitiesHandler>();
-                    await handler.HandleAsync(currentUser,update, cancellationToken);
-                }
 
+                foreach (var handlerType in handlerTypes)
+                {
+                    var handlerStateAttribute = handlerType.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState;
+                    if (currentUser.State == handlerStateAttribute)
+                    {
+                        var handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
+                        await handler.HandleAsync(currentUser,update, cancellationToken);
+                        return Ok();
+                    }
+                }
+                
                 return Ok();
             }
         }

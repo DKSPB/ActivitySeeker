@@ -1,4 +1,5 @@
 ﻿using ActivitySeeker.Domain.Entities;
+using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot
@@ -11,15 +12,15 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Тип активности", "SelectActivityTypeHandler")
+                    InlineKeyboardButton.WithCallbackData("Тип активности", StatesEnum.ActivityTypeChapter.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Время проведения", "SelectActivityPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("Время проведения", StatesEnum.ActivityPeriodChapter.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Найти", "SearchResultHandler")
+                    InlineKeyboardButton.WithCallbackData("Найти", StatesEnum.Result.GetDisplayName())
                 }
             });
         }
@@ -43,7 +44,7 @@ namespace ActivitySeeker.Api.TelegramBot
 
             activityTypeButtons.Add(new List<InlineKeyboardButton>
             {
-                InlineKeyboardButton.WithCallbackData("Назад", "MainMenuHandler")
+                InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
             });
 
             InlineKeyboardMarkup countersButtons = new (activityTypeButtons);
@@ -58,31 +59,31 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Сегодня", "SelectTodayPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("Сегодня", StatesEnum.TodayPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Завтра", "SelectTomorrowPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("Завтра", StatesEnum.TomorrowPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Послезавтра", "SelectAfterTomorrowPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("Послезавтра", StatesEnum.AfterTomorrowPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("За неделю", "SelectWeekPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("За неделю", StatesEnum.WeekPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("За месяц", "SelectMonthPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("За месяц", StatesEnum.MonthPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Свой период", "SelectUserPeriodHandler")
+                    InlineKeyboardButton.WithCallbackData("Свой период", StatesEnum.UserPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Назад", "MainMenuHandler")
+                    InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
                 },
             });
         }
@@ -93,12 +94,12 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Назад", "PreviousHandler"),
-                    InlineKeyboardButton.WithCallbackData("Вперёд", "NextHandler")
+                    InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.PreviousActivity.GetDisplayName()),
+                    InlineKeyboardButton.WithCallbackData("Вперёд", StatesEnum.NextActivity.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Меню", "MainMenuHandler")
+                    InlineKeyboardButton.WithCallbackData("Меню", StatesEnum.MainMenu.GetDisplayName())
                 }
             });
         }

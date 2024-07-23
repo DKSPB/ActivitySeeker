@@ -1,12 +1,12 @@
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.Result)]
 public class SearchResultHandler: AbstractHandler
 {
     private const string MessageText = "Найденные активности:";
