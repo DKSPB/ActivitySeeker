@@ -8,7 +8,7 @@ using User = ActivitySeeker.Domain.Entities.User;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerName("/start")]
+[HandlerState(StatesEnum.Start)]
 public class StartHandler: IHandler
 {
     private readonly ITelegramBotClient _botClient;

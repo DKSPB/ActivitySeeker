@@ -36,6 +36,7 @@ public class ListOfActivitiesHandler: AbstractHandler
         }
 
         ResponseMessageText = CurrentUser.ActivityRequest.ToString();
+        CurrentUser.State = StatesEnum.MainMenu;
         return Task.CompletedTask;
     }
 

@@ -29,10 +29,10 @@ namespace ActivitySeeker.Api.TelegramBot
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
             
-            activityTypeButtons.Add(new List<InlineKeyboardButton>
+            /*activityTypeButtons.Add(new List<InlineKeyboardButton>
             {
-                InlineKeyboardButton.WithCallbackData("Все виды активностей")
-            });
+                InlineKeyboardButton.WithCallbackData("Все виды активностей", null!)
+            });*/
 
             foreach (var activityType in activityTypes)
             {
