@@ -14,6 +14,9 @@ public class Activity
 
     [Column("description")]
     public string Description { get; set; } = default!;
+
+    [Column("link")] 
+    public string? Link { get; set; }
     
     [Column("start_date")]
     public DateTime StartDate { get; set; }
