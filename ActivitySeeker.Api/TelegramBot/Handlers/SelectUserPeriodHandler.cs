@@ -26,7 +26,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             return Task.CompletedTask;
         }
 
-        protected override InlineKeyboardMarkup GetKeyboard()
+        protected override IReplyMarkup GetKeyboard()
         {
             return InlineKeyboardMarkup.Empty();
         }

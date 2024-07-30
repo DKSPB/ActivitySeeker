@@ -54,7 +54,7 @@ public abstract class AbstractHandler: IHandler
 
     protected abstract Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken);
 
-    protected abstract InlineKeyboardMarkup GetKeyboard();
+    protected abstract IReplyMarkup GetKeyboard();
 
     protected virtual async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {

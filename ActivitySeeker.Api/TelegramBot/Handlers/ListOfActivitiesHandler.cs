@@ -18,12 +18,7 @@ public class ListOfActivitiesHandler: AbstractHandler
     {
         var selectedActivityTypeId = callbackQuery.Data;
 
-        if(selectedActivityTypeId is null )
-        {
-            throw new ArgumentNullException(nameof(selectedActivityTypeId));
-        }
-
-        if (string.IsNullOrEmpty(selectedActivityTypeId))
+        if (Guid.Parse(callbackQuery.Data) == Guid.Empty)
         {
             CurrentUser.ActivityRequest.ActivityTypeId = null;
             CurrentUser.ActivityRequest.ActivityType = "Все виды активности";
