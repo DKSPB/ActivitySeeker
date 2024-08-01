@@ -25,7 +25,7 @@ public class ListOfActivitiesHandler: AbstractHandler
         }
         else
         {
-            var selectedActivityType = ActivityService.FindActivityType(Guid.Parse(selectedActivityTypeId));
+            var selectedActivityType = ActivityService.GetActivityType(Guid.Parse(selectedActivityTypeId));
             CurrentUser.ActivityRequest.ActivityTypeId = selectedActivityType.Id;
             CurrentUser.ActivityRequest.ActivityType = selectedActivityType.TypeName;
         }

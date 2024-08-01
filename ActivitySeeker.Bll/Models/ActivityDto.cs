@@ -18,6 +18,8 @@ public class ActivityDto
     
     public Guid ActivityTypeId { get; set; }
     
+    public string? Link { get; set; }
+    
     public ActivityDto()
     { }
     public ActivityDto(Activity activity)
@@ -27,6 +29,7 @@ public class ActivityDto
         Description = activity.Description;
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
+        Link = activity.Link;
     }
 
     public static Activity ToActivity(ActivityDto activityDto)
@@ -37,7 +40,8 @@ public class ActivityDto
             Name = activityDto.Name,
             Description = activityDto.Description,
             StartDate = activityDto.StartDate,
-            ActivityTypeId = activityDto.ActivityTypeId
+            ActivityTypeId = activityDto.ActivityTypeId,
+            Link = activityDto.Link
         };
     }
 

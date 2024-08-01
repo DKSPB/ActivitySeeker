@@ -22,7 +22,7 @@ public class SearchResultHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        var activities = ActivityService.GetActivities(CurrentUser.ActivityRequest);
+        var activities = ActivityService.GetActivitiesLinkedList(CurrentUser.ActivityRequest);
 
         if (activities.Count > 0)
         {
