@@ -103,5 +103,16 @@ namespace ActivitySeeker.Api.TelegramBot
                 }
             });
         }
+
+        public static InlineKeyboardMarkup GetToMainMenuKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Меню", StatesEnum.MainMenu.GetDisplayName())
+                }
+            });
+        }
     }
 }

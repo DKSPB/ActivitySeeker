@@ -14,6 +14,9 @@ public class Activity
 
     [Column("description")]
     public string Description { get; set; } = default!;
+    
+    [Column("image")]
+    public byte[]? Image { get; set; }
 
     [Column("link")] 
     public string? Link { get; set; }

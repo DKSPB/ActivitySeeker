@@ -1,4 +1,6 @@
+using System.Text;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 
 namespace ActivitySeeker.Bll.Models;
@@ -40,4 +42,13 @@ public class ActivityDto
     }
 
     public bool Selected { get; set; }
+
+    public override string ToString()
+    {
+        StringBuilder stringBuilder = new();
+        stringBuilder.Append(Name);
+        stringBuilder.Append('\n');
+        stringBuilder.Append(Description);
+        return stringBuilder.ToString();
+    }
 }

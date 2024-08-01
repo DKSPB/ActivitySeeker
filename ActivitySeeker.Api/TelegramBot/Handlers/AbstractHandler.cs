@@ -40,11 +40,7 @@ public abstract class AbstractHandler: IHandler
                 throw new ArgumentNullException(nameof(callbackQuery.Message));
             }
 
-            var message = await BotClient.SendTextMessageAsync(
-                callbackQuery.Message.Chat.Id,
-                text: ResponseMessageText,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
+            var message = await SendMessageAsync(callbackQuery.Message.Chat.Id, cancellationToken);
 
             CurrentUser.MessageId = message.MessageId;
             UserService.CreateOrUpdateUser(CurrentUser);
@@ -64,5 +60,16 @@ public abstract class AbstractHandler: IHandler
             replyMarkup: InlineKeyboardMarkup.Empty(),
             cancellationToken
         );
+    }
+
+    protected virtual async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
+    {
+        var message = await BotClient.SendTextMessageAsync(
+            chatId,
+            text: ResponseMessageText,
+            replyMarkup: GetKeyboard(),
+            cancellationToken: cancellationToken);
+
+        return message;
     }
 }
