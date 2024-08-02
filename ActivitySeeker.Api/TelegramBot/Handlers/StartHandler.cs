@@ -23,24 +23,8 @@ public class StartHandler: IHandler
     public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var chat = update.Message.Chat;
-
-        var user = update.Message.From;
-        if (user is null)
-        {
-            throw new NullReferenceException("User in null");
-        }
-
-        if(currentUser is null)
-        {
-            currentUser = new UserDto
-            {
-                Id = user.Id,
-                UserName = user.Username ?? "",
-                ChatId = chat.Id,
-            };
-        }
+        
         currentUser.State = StatesEnum.MainMenu;
-
 
         var message = await _botClient.SendTextMessageAsync(
             chat.Id,
@@ -49,6 +33,6 @@ public class StartHandler: IHandler
             cancellationToken: cancellationToken);
 
         currentUser.MessageId = message.MessageId;
-        _userService.CreateOrUpdateUser(currentUser);
+        _userService.UpdateUser(currentUser);
     }
 }

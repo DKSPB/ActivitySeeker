@@ -53,8 +53,8 @@ public class UserDto
             MessageId = user.MessageId,
             State = user.State,
             ActivityTypeId = user.ActivityRequest.ActivityTypeId,
-            SearchFrom = user.ActivityRequest.SearchFrom,
-            SearchTo = user.ActivityRequest.SearchTo,
+            SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault(),
+            SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault(),
             ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
         };
     }

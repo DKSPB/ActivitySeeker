@@ -8,6 +8,7 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.Enums;
+using User = Telegram.Bot.Types.User;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -35,7 +36,7 @@ public class TelegramBotController: ControllerBase
             {
                 if (update.Message != null)
                 {
-                    var currentUser = _userService.GetUserById(update.Message.From.Id);
+                    var currentUser = CreateUserIfNotExists(update.Message);
                     
                     if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
                     {
@@ -91,6 +92,8 @@ public class TelegramBotController: ControllerBase
         return Ok();
     }
 
+    #region Private methods
+
     /// <summary>
     /// Получить все обработчики команд кроме интерфейса и абстрактного класса
     /// </summary>
@@ -102,16 +105,68 @@ public class TelegramBotController: ControllerBase
             .SelectMany(s => s.GetTypes())
             .Where(p => type.IsAssignableFrom(p)).Where(type => type is { IsClass: true, IsAbstract: false });
     }
-
+    
+    /// <summary>
+    /// Создать экземпляр команды и выполнить на нём метод Handle
+    /// </summary>
+    /// <param name="handlerType"></param>
+    /// <param name="currentUser"></param>
+    /// <param name="update"></param>
+    /// <param name="cancellationToken"></param>
     private async Task HandleCommand(Type handlerType, UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
         await handler.HandleAsync(currentUser,update, cancellationToken);
     }
 
+    /// <summary>
+    /// Найти обработчик команды по состоянию диалога
+    /// </summary>
+    /// <param name="handlerTypes"></param>
+    /// <param name="state"></param>
+    /// <returns></returns>
     private Type? FindHandlerByState(IEnumerable<Type> handlerTypes, StatesEnum state)
     {
         return handlerTypes.FirstOrDefault(x =>
             x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState == state);
     }
+
+    /// <summary>
+    /// Создание пользователя, если о нём нет записи в БД
+    /// </summary>
+    /// <param name="message">Сообщение от пользователя</param>
+    private UserDto CreateUserIfNotExists(Message message)
+    {
+        var telegramUser = message.From;
+        if (telegramUser is null)
+        {
+            throw new NullReferenceException("Object user is null");
+        }
+
+        var user = _userService.GetUserById(telegramUser.Id);
+
+        if (user is not null)
+        {
+            return user;
+        }
+        
+        user = new UserDto
+        {
+            Id = telegramUser.Id,
+            UserName = telegramUser.Username ?? "",
+            ChatId = message.Chat.Id,
+            MessageId = message.MessageId,
+            ActivityRequest =
+            {
+                SearchFrom = DateTime.Now,
+                SearchTo = DateTime.Now.AddDays(1).Date
+            }
+        };
+        _userService.CreateUser(user);
+
+        return user;
+    }
+
+    #endregion
+    
 }

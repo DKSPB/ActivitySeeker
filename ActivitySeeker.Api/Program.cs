@@ -3,6 +3,7 @@ using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Services;
 using ActivitySeeker.Domain;
+using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 
@@ -24,6 +25,7 @@ namespace ActivitySeeker.Api
 
             builder.Services.AddScoped<ActivitySeekerContext>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
             builder.Services.AddScoped<IActivityService, ActivityService>();
             builder.Services.AddScoped<StartHandler>();
             builder.Services.AddScoped<MainMenuHandler>();

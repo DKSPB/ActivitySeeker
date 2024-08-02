@@ -47,7 +47,8 @@ namespace ActivitySeeker.Bll.Services
         {
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
-                .Where(x => x.StartDate.CompareTo(requestParams.SearchFrom.Date) >= 0 && x.StartDate.CompareTo(requestParams.SearchTo.AddDays(1).Date) < 0)
+                .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
+                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
                 .Select(x => new ActivityDto(x))
                 .ToList();
 
