@@ -20,7 +20,7 @@ public interface IActivityService
     List<ActivityDto> GetActivities(ActivityRequest requestParams);
 
     /// <summary>
-    /// Получение списка всех активностей
+    /// Получение списка всех типов активностей
     /// </summary>
     /// <returns></returns>
     List<ActivityType> GetActivityTypes();

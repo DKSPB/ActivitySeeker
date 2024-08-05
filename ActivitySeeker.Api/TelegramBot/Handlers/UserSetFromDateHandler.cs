@@ -42,7 +42,7 @@ public class UserSetFromDateHandler: IHandler
             
             currentUser.MessageId = feedbackMessage.MessageId;
             currentUser.State = StatesEnum.PeriodToDate;
-            _userService.CreateOrUpdateUser(currentUser);
+            _userService.UpdateUser(currentUser);
         }
         else
         {
@@ -54,7 +54,7 @@ public class UserSetFromDateHandler: IHandler
                 cancellationToken: cancellationToken);
             
             currentUser.MessageId = feedbackMessage.MessageId;
-            _userService.CreateOrUpdateUser(currentUser);
+            _userService.UpdateUser(currentUser);
         }
     }
 

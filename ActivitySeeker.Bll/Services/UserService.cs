@@ -16,35 +16,43 @@ public class UserService: IUserService
         _context = context;
     }
     
-    public void CreateOrUpdateUser(UserDto user)
+    /// <inheritdoc />
+    public void UpdateUser(UserDto user)
     {
-        var userExists = _context.Users.Find(user.Id);
-
-        if (userExists is null)
+        using (_context)
         {
-            _context.Users.Add(UserDto.ToUser(user));
-        }
-        else
-        {
+            var userExists = _context.Users.First(x => x.Id == user.Id);
+            
             userExists.MessageId = user.MessageId;
             userExists.State = user.State;
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
             userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
             userExists.ActivityTypeId = user.ActivityRequest.ActivityTypeId;
-            userExists.SearchFrom = user.ActivityRequest.SearchFrom;
-            userExists.SearchTo = user.ActivityRequest.SearchTo;
+            userExists.SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault();
+            userExists.SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault();
 
             _context.Users.Update(userExists);
+            _context.SaveChanges();
         }
-        _context.SaveChanges();
     }
-
+    
+    /// <inheritdoc />
+    public void CreateUser(UserDto user)
+    {
+        using (_context)
+        {
+            var userEntity = UserDto.ToUser(user);
+            _context.Users.Add(userEntity);
+            _context.SaveChanges();
+        }
+    }
+    
+    /// <inheritdoc />
     public UserDto? GetUserById(long id)
     {
-        var user = _context.Users.Include(x => x.ActivityType)
-            .FirstOrDefault(x=>x.Id == id);
-            
+        var user = _context.Users.Include(x => x.ActivityType).FirstOrDefault(x=>x.Id == id);
+        
         return user is null ? null : new UserDto(user);
     }
 }

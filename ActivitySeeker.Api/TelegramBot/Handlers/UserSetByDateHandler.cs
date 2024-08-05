@@ -40,7 +40,7 @@ public class UserSetByDateHandler: IHandler
                 cancellationToken: cancellationToken);
             
             currentUser.MessageId = feedbackMessage.MessageId;
-            _userService.CreateOrUpdateUser(currentUser);
+            _userService.UpdateUser(currentUser);
         }
         else
         {
@@ -52,7 +52,7 @@ public class UserSetByDateHandler: IHandler
                 cancellationToken: cancellationToken);
             
             currentUser.MessageId = feedbackMessage.MessageId;
-            _userService.CreateOrUpdateUser(currentUser);
+            _userService.UpdateUser(currentUser);
         }
     }
 

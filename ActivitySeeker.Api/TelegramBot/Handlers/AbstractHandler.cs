@@ -43,7 +43,7 @@ public abstract class AbstractHandler: IHandler
             var message = await SendMessageAsync(callbackQuery.Message.Chat.Id, cancellationToken);
 
             CurrentUser.MessageId = message.MessageId;
-            UserService.CreateOrUpdateUser(CurrentUser);
+            UserService.UpdateUser(CurrentUser);
         }   
 
     }
