@@ -29,18 +29,18 @@ public class UserDto
         Id = user.Id;
         ChatId = user.ChatId;
         UserName = user.UserName;
-        MessageId = user.MessageId;
-        State = user.State;
+        //MessageId = user.MessageId;
+        //State = user.State;
         ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(user.ActivityResult) ??
                  new LinkedList<ActivityDto>();
         
-        ActivityRequest = new ActivityRequest
+        /*ActivityRequest = new ActivityRequest
         {
             ActivityTypeId = user.ActivityTypeId,
             ActivityType = user.ActivityType?.TypeName?? "Все виды активности",
             SearchFrom = user.SearchFrom,
             SearchTo = user.SearchTo
-        };
+        };*/
     }
     
     public static User ToUser(UserDto user)
@@ -50,11 +50,11 @@ public class UserDto
             Id = user.Id,
             ChatId = user.ChatId,
             UserName = user.UserName,
-            MessageId = user.MessageId,
-            State = user.State,
-            ActivityTypeId = user.ActivityRequest.ActivityTypeId,
-            SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault(),
-            SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault(),
+            //MessageId = user.MessageId,
+            //State = user.State,
+            //ActivityTypeId = user.ActivityRequest.ActivityTypeId,
+            //SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault(),
+            //SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault(),
             ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
         };
     }

@@ -23,14 +23,14 @@ public class UserService: IUserService
         {
             var userExists = _context.Users.First(x => x.Id == user.Id);
             
-            userExists.MessageId = user.MessageId;
-            userExists.State = user.State;
+            //userExists.MessageId = user.MessageId;
+            //userExists.State = user.State;
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
             userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
-            userExists.ActivityTypeId = user.ActivityRequest.ActivityTypeId;
-            userExists.SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault();
-            userExists.SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault();
+            //userExists.ActivityTypeId = user.ActivityRequest.ActivityTypeId;
+            //userExists.SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault();
+            //userExists.SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault();
 
             _context.Users.Update(userExists);
             _context.SaveChanges();
@@ -51,7 +51,7 @@ public class UserService: IUserService
     /// <inheritdoc />
     public UserDto? GetUserById(long id)
     {
-        var user = _context.Users.Include(x => x.ActivityType).FirstOrDefault(x=>x.Id == id);
+        var user = _context.Users/*.Include(x => x.ActivityType)*/.FirstOrDefault(x=>x.Id == id);
         
         return user is null ? null : new UserDto(user);
     }

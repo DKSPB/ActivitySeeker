@@ -3,15 +3,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ActivitySeeker.Domain.Entities;
 
-[Table("activity_state", Schema = "activity_seeker")]
-public class ActivityState
+[Table("state", Schema = "activity_seeker")]
+public class State
 {
     [Key]
     [Column("id")]
     public Guid Id { get; set; }
     
+    [Column("user_id")]
+    public Guid UserId { get; set; }
+    
     [Column("state")]
-    public int State { get; set; }
+    public StatesEnum StateNumber { get; set; }
+    
+    [Column("message_id")]
+    public int MessageId { get; set; }
     
     [Column("activity_type_id")]
     public Guid? ActivityTypeId { get; set; }
@@ -25,6 +31,8 @@ public class ActivityState
     #region NavigationProperties
 
     public ActivityType? ActivityType { get; set; }
+
+    public User User { get; set; }
 
     #endregion
 }

@@ -7,8 +7,9 @@ namespace ActivitySeeker.Domain;
 public class ActivitySeekerContext: DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
+
+    public DbSet<State> States { get; set; } = null!;
     public DbSet<Activity> Activities { get; set; } = null!;
-    
     public DbSet<ActivityType> ActivityTypes { get; set; } = null!;
     
     public ActivitySeekerContext(DbContextOptions<ActivitySeekerContext> options) : base(options)
