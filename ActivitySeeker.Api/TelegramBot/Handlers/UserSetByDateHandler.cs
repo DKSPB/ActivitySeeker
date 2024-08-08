@@ -31,15 +31,15 @@ public class UserSetByDateHandler: IHandler
         
         if (result)
         {
-            currentUser.ActivityRequest.SearchTo = byDate;
+            currentUser.State.SearchTo = byDate;
             
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: currentUser.ActivityRequest.ToString(),
+                text: currentUser.State.ToString(),
                 replyMarkup: Keyboards.GetMainMenuKeyboard(),
                 cancellationToken: cancellationToken);
             
-            currentUser.MessageId = feedbackMessage.MessageId;
+            currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
@@ -51,7 +51,7 @@ public class UserSetByDateHandler: IHandler
                       $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}",
                 cancellationToken: cancellationToken);
             
-            currentUser.MessageId = feedbackMessage.MessageId;
+            currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
     }

@@ -16,9 +16,9 @@ public class SelectWeekPeriodHandler: AbstractHandler
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
 
-        CurrentUser.ActivityRequest.SearchFrom = DateTime.Now;
-        CurrentUser.ActivityRequest.SearchTo = DateTime.Now.AddDays(7).Date;
-        ResponseMessageText = CurrentUser.ActivityRequest.ToString();
+        CurrentUser.State.SearchFrom = DateTime.Now;
+        CurrentUser.State.SearchTo = DateTime.Now.AddDays(7).Date;
+        ResponseMessageText = CurrentUser.State.ToString();
         return Task.CompletedTask;
     }
 

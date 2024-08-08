@@ -1,7 +1,6 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -23,14 +22,14 @@ public class UserService: IUserService
         {
             var userExists = _context.Users.First(x => x.Id == user.Id);
             
-            userExists.MessageId = user.MessageId;
-            userExists.State = user.State;
+            userExists.MessageId = user.State.MessageId;
+            userExists.State = user.State.StateNumber;
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
             userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
-            userExists.ActivityTypeId = user.ActivityRequest.ActivityTypeId;
-            userExists.SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault();
-            userExists.SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault();
+            userExists.ActivityTypeId = user.State.ActivityTypeId;
+            userExists.SearchFrom = user.State.SearchFrom.GetValueOrDefault();
+            userExists.SearchTo = user.State.SearchTo.GetValueOrDefault();
 
             _context.Users.Update(userExists);
             _context.SaveChanges();

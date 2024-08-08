@@ -10,14 +10,14 @@ public interface IActivityService
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
     /// <returns>Двусвязный список активностей</returns>
-    LinkedList<ActivityDto> GetActivitiesLinkedList(ActivityRequest requestParams);
+    LinkedList<ActivityDto> GetActivitiesLinkedList(State requestParams);
 
     /// <summary>
     /// Получение списка активностей
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
     /// <returns>Список активностей</returns>
-    List<ActivityDto> GetActivities(ActivityRequest requestParams);
+    List<ActivityDto> GetActivities(State requestParams);
 
     /// <summary>
     /// Получение списка всех типов активностей

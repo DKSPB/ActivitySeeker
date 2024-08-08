@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ActivitySeeker.Bll.Models
 {
-    public class ActivityRequest
+    public class State
     {
         public Guid? ActivityTypeId { get; set; }
 
@@ -17,6 +17,10 @@ namespace ActivitySeeker.Bll.Models
 
         public DateTime? SearchTo { get; set; }
         
+        public int MessageId { get; set; }
+        
+        public StatesEnum StateNumber { get; set; }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new ();

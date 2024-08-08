@@ -28,7 +28,7 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public LinkedList<ActivityDto> GetActivitiesLinkedList(ActivityRequest requestParams)
+        public LinkedList<ActivityDto> GetActivitiesLinkedList(State requestParams)
         {
             var activities = new LinkedList<ActivityDto>();
 
@@ -43,7 +43,7 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public List<ActivityDto> GetActivities(ActivityRequest requestParams)
+        public List<ActivityDto> GetActivities(State requestParams)
         {
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)

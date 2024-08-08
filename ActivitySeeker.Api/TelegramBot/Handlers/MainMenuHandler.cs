@@ -19,7 +19,7 @@ public class MainMenuHandler: AbstractHandler
     }
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        ResponseMessageText = CurrentUser.ActivityRequest.ToString();
+        ResponseMessageText = CurrentUser.State.ToString();
         return Task.CompletedTask;
     }
 

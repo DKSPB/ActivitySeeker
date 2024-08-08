@@ -17,7 +17,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
         {
-            CurrentUser.State = StatesEnum.PeriodFromDate;
+            CurrentUser.State.StateNumber = StatesEnum.PeriodFromDate;
             
             ResponseMessageText = $"Введите дату, с которой хотите искать активностив форматах:" +
                                   $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +

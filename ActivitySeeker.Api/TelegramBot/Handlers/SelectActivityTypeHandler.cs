@@ -17,7 +17,7 @@ public class SelectActivityTypeHandler: AbstractHandler
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         ResponseMessageText = "Выбери тип активности:";
-        CurrentUser.State = StatesEnum.ListOfActivities;
+        CurrentUser.State.StateNumber = StatesEnum.ListOfActivities;
         return Task.CompletedTask;
     }
 

@@ -45,7 +45,7 @@ public class TelegramBotController: ControllerBase
                         return Ok();
                     }
 
-                    var handlerType = FindHandlerByState(handlerTypes, currentUser.State);
+                    var handlerType = FindHandlerByState(handlerTypes, currentUser.State.StateNumber);
 
                     if (handlerType is not null)
                     {
@@ -81,7 +81,7 @@ public class TelegramBotController: ControllerBase
                 
                 if (handlerType is null)
                 {
-                    handlerType = FindHandlerByState(handlerTypes, currentUser.State);
+                    handlerType = FindHandlerByState(handlerTypes, currentUser.State.StateNumber);
                 }
 
                 await HandleCommand(handlerType, currentUser, update, cancellationToken);
@@ -155,11 +155,11 @@ public class TelegramBotController: ControllerBase
             Id = telegramUser.Id,
             UserName = telegramUser.Username ?? "",
             ChatId = message.Chat.Id,
-            MessageId = message.MessageId,
-            ActivityRequest =
+            State =
             {
                 SearchFrom = DateTime.Now,
-                SearchTo = DateTime.Now.AddDays(1).Date
+                SearchTo = DateTime.Now.AddDays(1).Date,
+                MessageId = message.MessageId
             }
         };
         _userService.CreateUser(user);

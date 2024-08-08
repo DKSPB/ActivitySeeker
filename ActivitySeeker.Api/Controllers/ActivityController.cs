@@ -16,9 +16,9 @@ public class ActivityController : ControllerBase
     }
     
     [HttpGet("get/all")]
-    public IActionResult GetAll([FromQuery] ActivityRequest activityRequest)
+    public IActionResult GetAll([FromQuery] State state)
     {
-        return Ok(_activityService.GetActivities(activityRequest));
+        return Ok(_activityService.GetActivities(state));
     }
 
     /// <summary>

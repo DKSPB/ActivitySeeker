@@ -24,15 +24,15 @@ public class StartHandler: IHandler
     {
         var chat = update.Message.Chat;
         
-        currentUser.State = StatesEnum.MainMenu;
+        currentUser.State.StateNumber = StatesEnum.MainMenu;
 
         var message = await _botClient.SendTextMessageAsync(
             chat.Id,
-            text: currentUser.ActivityRequest.ToString(),
+            text: currentUser.State.ToString(),
             replyMarkup: Keyboards.GetMainMenuKeyboard(),
             cancellationToken: cancellationToken);
 
-        currentUser.MessageId = message.MessageId;
+        currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);
     }
 }

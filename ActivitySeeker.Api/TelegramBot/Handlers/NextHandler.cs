@@ -53,7 +53,7 @@ public class NextHandler: AbstractHandler
     {
         await BotClient.DeleteMessageAsync(
             callbackQuery.Message.Chat.Id,
-            CurrentUser.MessageId,
+            CurrentUser.State.MessageId,
             cancellationToken);
     }
 }

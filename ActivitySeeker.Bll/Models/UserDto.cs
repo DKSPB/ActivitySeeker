@@ -11,14 +11,10 @@ public class UserDto
     public long ChatId { get; set; }
 
     public string UserName { get; set; } = default!;
-    
-    public int MessageId { get; set; }
-    
-    public StatesEnum State { get; set; }
 
     public LinkedList<ActivityDto> ActivityResult { get; set; } = default!;
 
-    public ActivityRequest ActivityRequest { get; set; } = new();
+    public State State { get; set; } = new();
 
     public UserDto()
     {
@@ -29,17 +25,17 @@ public class UserDto
         Id = user.Id;
         ChatId = user.ChatId;
         UserName = user.UserName;
-        MessageId = user.MessageId;
-        State = user.State;
         ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(user.ActivityResult) ??
-                 new LinkedList<ActivityDto>();
+                         new LinkedList<ActivityDto>();
         
-        ActivityRequest = new ActivityRequest
+        State = new State
         {
             ActivityTypeId = user.ActivityTypeId,
             ActivityType = user.ActivityType?.TypeName?? "Все виды активности",
             SearchFrom = user.SearchFrom,
-            SearchTo = user.SearchTo
+            SearchTo = user.SearchTo,
+            MessageId = user.MessageId,
+            StateNumber = user.State
         };
     }
     
@@ -50,11 +46,11 @@ public class UserDto
             Id = user.Id,
             ChatId = user.ChatId,
             UserName = user.UserName,
-            MessageId = user.MessageId,
-            State = user.State,
-            ActivityTypeId = user.ActivityRequest.ActivityTypeId,
-            SearchFrom = user.ActivityRequest.SearchFrom.GetValueOrDefault(),
-            SearchTo = user.ActivityRequest.SearchTo.GetValueOrDefault(),
+            MessageId = user.State.MessageId,
+            State = user.State.StateNumber,
+            ActivityTypeId = user.State.ActivityTypeId,
+            SearchFrom = user.State.SearchFrom.GetValueOrDefault(),
+            SearchTo = user.State.SearchTo.GetValueOrDefault(),
             ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
         };
     }

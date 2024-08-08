@@ -18,7 +18,7 @@ public class SelectActivityPeriodHandler: AbstractHandler
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        CurrentUser.State = StatesEnum.ActivityPeriodChapter;
+        CurrentUser.State.StateNumber = StatesEnum.ActivityPeriodChapter;
         return Task.CompletedTask;
     }
 

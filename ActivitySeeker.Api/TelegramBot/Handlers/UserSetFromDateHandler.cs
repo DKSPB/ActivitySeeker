@@ -31,7 +31,7 @@ public class UserSetFromDateHandler: IHandler
         
         if (result)
         {
-            currentUser.ActivityRequest.SearchFrom = fromDate;
+            currentUser.State.SearchFrom = fromDate;
             
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
@@ -40,8 +40,8 @@ public class UserSetFromDateHandler: IHandler
                       $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}",
                 cancellationToken: cancellationToken);
             
-            currentUser.MessageId = feedbackMessage.MessageId;
-            currentUser.State = StatesEnum.PeriodToDate;
+            currentUser.State.MessageId = feedbackMessage.MessageId;
+            currentUser.State.StateNumber = StatesEnum.PeriodToDate;
             _userService.UpdateUser(currentUser);
         }
         else
@@ -53,7 +53,7 @@ public class UserSetFromDateHandler: IHandler
                       $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}",
                 cancellationToken: cancellationToken);
             
-            currentUser.MessageId = feedbackMessage.MessageId;
+            currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
     }

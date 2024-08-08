@@ -42,7 +42,7 @@ public abstract class AbstractHandler: IHandler
 
             var message = await SendMessageAsync(callbackQuery.Message.Chat.Id, cancellationToken);
 
-            CurrentUser.MessageId = message.MessageId;
+            CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
         }   
 
@@ -56,7 +56,7 @@ public abstract class AbstractHandler: IHandler
     {
         await BotClient.EditMessageReplyMarkupAsync(
             chatId: callbackQuery.Message.Chat.Id,
-            messageId: CurrentUser.MessageId,
+            messageId: CurrentUser.State.MessageId,
             replyMarkup: InlineKeyboardMarkup.Empty(),
             cancellationToken
         );
