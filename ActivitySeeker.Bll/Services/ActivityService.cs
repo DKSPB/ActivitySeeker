@@ -46,7 +46,7 @@ namespace ActivitySeeker.Bll.Services
         public List<ActivityDto> GetActivities(State requestParams)
         {
             var result = _context.Activities
-                .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
+                .Where(x => x.ActivityTypeId == requestParams.ActivityType.Id || requestParams.ActivityType.Id == null)
                 .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
                 .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
                 .Select(x => new ActivityDto(x))
@@ -77,18 +77,16 @@ namespace ActivitySeeker.Bll.Services
         {
             var activityEntity = ActivityDto.ToActivity(newActivity);
 
-            await using (_context)
-            {
+
                 await _context.Activities.AddAsync(activityEntity);
                 await _context.SaveChangesAsync();
-            }
+
         }
         
         /// <inheritdoc />
         public async Task DeleteActivity(List<ActivityDto> activitiesForRemove)
         {
-            await using (_context)
-            {
+
                 foreach (var activity in activitiesForRemove)
                 {
                     var activityEntity =
@@ -101,14 +99,13 @@ namespace ActivitySeeker.Bll.Services
                 }
 
                 await _context.SaveChangesAsync();
-            }
+
         }
         
         /// <inheritdoc />
         public async Task UpdateActivity(ActivityDto activity)
         {
-            await using (_context)
-            {
+
                 var activityEntity = _context.Activities.FirstOrDefault(x => x.Id.Equals(activity.Id));
 
                 if (activityEntity is not null)
@@ -121,7 +118,7 @@ namespace ActivitySeeker.Bll.Services
                 }
 
                 await _context.SaveChangesAsync();
-            }
+
         }
     }
 }

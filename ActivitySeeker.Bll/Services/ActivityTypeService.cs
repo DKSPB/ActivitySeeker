@@ -33,17 +33,15 @@ public class ActivityTypeService: IActivityTypeService
 
     public async Task Create(ActivityTypeDto activityType)
     {
-        await using (_context)
-        {
+
             await _context.ActivityTypes.AddAsync(activityType.ToActivityType());
             await _context.SaveChangesAsync();
-        }
+
     }
 
     public async Task Update(ActivityTypeDto activityType)
     {
-        await using (_context)
-        {
+
             var activityTypeEntity = _context.ActivityTypes.FirstOrDefault(x => x.Id == activityType.Id);
 
             if (activityTypeEntity is null)
@@ -54,13 +52,12 @@ public class ActivityTypeService: IActivityTypeService
             activityTypeEntity.TypeName = activityType.TypeName;
             _context.ActivityTypes.Update(activityTypeEntity);
             await _context.SaveChangesAsync();
-        }
+
     }
     
     public async Task Delete(List<ActivityTypeDto> activityTypes)
     {
-        await using (_context)
-        {
+
             foreach (var type in activityTypes)
             {
                 var typeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == type.Id);
@@ -72,6 +69,6 @@ public class ActivityTypeService: IActivityTypeService
             }
 
             await _context.SaveChangesAsync();
-        }
+
     }
 }

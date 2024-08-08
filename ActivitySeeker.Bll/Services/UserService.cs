@@ -18,8 +18,7 @@ public class UserService: IUserService
     /// <inheritdoc />
     public void UpdateUser(UserDto user)
     {
-        using (_context)
-        {
+
             var userExists = _context.Users.First(x => x.Id == user.Id);
             
             userExists.MessageId = user.State.MessageId;
@@ -27,24 +26,23 @@ public class UserService: IUserService
             userExists.ChatId = user.ChatId;
             userExists.UserName = user.UserName;
             userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
-            userExists.ActivityTypeId = user.State.ActivityTypeId;
+            userExists.ActivityTypeId = user.State.ActivityType.Id;
             userExists.SearchFrom = user.State.SearchFrom.GetValueOrDefault();
             userExists.SearchTo = user.State.SearchTo.GetValueOrDefault();
 
             _context.Users.Update(userExists);
             _context.SaveChanges();
-        }
+
     }
     
     /// <inheritdoc />
     public void CreateUser(UserDto user)
     {
-        using (_context)
-        {
+
             var userEntity = UserDto.ToUser(user);
             _context.Users.Add(userEntity);
             _context.SaveChanges();
-        }
+
     }
     
     /// <inheritdoc />

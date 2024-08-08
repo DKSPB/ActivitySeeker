@@ -1,17 +1,14 @@
 ﻿using ActivitySeeker.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ActivitySeeker.Bll.Models
 {
     public class State
     {
-        public Guid? ActivityTypeId { get; set; }
+        public ActivityTypeDto ActivityType { get; set; } = new("Все виды активности");
+        //public Guid? ActivityTypeId { get; set; }
 
-        public string ActivityType { get; set; } = "Все виды активности";
+        //public string ActivityType { get; set; } = "Все виды активности";
 
         public DateTime? SearchFrom { get; set; }
 
@@ -28,7 +25,7 @@ namespace ActivitySeeker.Bll.Models
             stringBuilder.AppendLine($"\t\t\tВыбери тип и период проведения активностей:");
             
             stringBuilder.AppendLine("- Тип активности:");
-            stringBuilder.AppendLine(string.Concat("\t\t\t",ActivityType));
+            stringBuilder.AppendLine(string.Concat("\t\t\t", ActivityType.TypeName));
             
             stringBuilder.AppendLine("- Дата и время проведения:");
             stringBuilder.AppendLine($"\t\t\tСобытия, проходящие\n\t\t\tс " +

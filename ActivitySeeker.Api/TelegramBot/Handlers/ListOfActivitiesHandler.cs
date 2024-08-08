@@ -20,14 +20,15 @@ public class ListOfActivitiesHandler: AbstractHandler
 
         if (Guid.Parse(callbackQuery.Data) == Guid.Empty)
         {
-            CurrentUser.State.ActivityTypeId = null;
-            CurrentUser.State.ActivityType = "Все виды активности";
+            //CurrentUser.State.ActivityTypeId = null;
+            //CurrentUser.State.ActivityType = "Все виды активности";
+            CurrentUser.State.ActivityType = new();
         }
         else
         {
             var selectedActivityType = ActivityService.GetActivityType(Guid.Parse(selectedActivityTypeId));
-            CurrentUser.State.ActivityTypeId = selectedActivityType.Id;
-            CurrentUser.State.ActivityType = selectedActivityType.TypeName;
+            CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
+            CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
         }
 
         ResponseMessageText = CurrentUser.State.ToString();

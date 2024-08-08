@@ -4,8 +4,15 @@ namespace ActivitySeeker.Bll.Models;
 
 public class ActivityTypeDto
 {
+
     public ActivityTypeDto()
-    { }
+    {
+        
+    }
+    public ActivityTypeDto(string typeName)
+    {
+        TypeName = typeName;
+    }
 
     public ActivityTypeDto(ActivityType activityType)
     {
@@ -17,11 +24,11 @@ public class ActivityTypeDto
     {
         return new ActivityType
         {
-            Id = Id,
+            //Id = Id,
             TypeName = TypeName
         };
     }
 
-    public Guid Id { get; set; }
-    public string TypeName { get; set; } = default!;
+    public Guid? Id { get; set; }
+    public string TypeName { get; set; } = "Все виды активности";
 }
