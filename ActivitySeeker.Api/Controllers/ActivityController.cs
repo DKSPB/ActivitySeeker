@@ -15,10 +15,10 @@ public class ActivityController : ControllerBase
         _activityService = activityService;
     }
     
-    [HttpGet("get/all")]
-    public IActionResult GetAll([FromQuery] State state)
+    [HttpGet("get")]
+    public IActionResult GetAll([FromQuery] ActivityRequest request)
     {
-        return Ok(_activityService.GetActivities(state));
+        return Ok(_activityService.GetActivities(request));
     }
 
     /// <summary>

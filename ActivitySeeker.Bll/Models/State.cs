@@ -6,9 +6,6 @@ namespace ActivitySeeker.Bll.Models
     public class State
     {
         public ActivityTypeDto ActivityType { get; set; } = new("Все виды активности");
-        //public Guid? ActivityTypeId { get; set; }
-
-        //public string ActivityType { get; set; } = "Все виды активности";
 
         public DateTime? SearchFrom { get; set; }
 

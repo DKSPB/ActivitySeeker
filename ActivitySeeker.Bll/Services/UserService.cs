@@ -18,20 +18,19 @@ public class UserService: IUserService
     /// <inheritdoc />
     public void UpdateUser(UserDto user)
     {
+        var userExists = _context.Users.First(x => x.Id == user.Id);
+        
+        userExists.MessageId = user.State.MessageId;
+        userExists.State = user.State.StateNumber;
+        userExists.ChatId = user.ChatId;
+        userExists.UserName = user.UserName;
+        userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
+        userExists.ActivityTypeId = user.State.ActivityType.Id;
+        userExists.SearchFrom = user.State.SearchFrom.GetValueOrDefault();
+        userExists.SearchTo = user.State.SearchTo.GetValueOrDefault();
 
-            var userExists = _context.Users.First(x => x.Id == user.Id);
-            
-            userExists.MessageId = user.State.MessageId;
-            userExists.State = user.State.StateNumber;
-            userExists.ChatId = user.ChatId;
-            userExists.UserName = user.UserName;
-            userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
-            userExists.ActivityTypeId = user.State.ActivityType.Id;
-            userExists.SearchFrom = user.State.SearchFrom.GetValueOrDefault();
-            userExists.SearchTo = user.State.SearchTo.GetValueOrDefault();
-
-            _context.Users.Update(userExists);
-            _context.SaveChanges();
+        _context.Users.Update(userExists);
+        _context.SaveChanges();
 
     }
     

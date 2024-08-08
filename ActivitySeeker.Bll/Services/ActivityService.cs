@@ -28,11 +28,18 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public LinkedList<ActivityDto> GetActivitiesLinkedList(State requestParams)
+        public LinkedList<ActivityDto> GetActivitiesLinkedList(State currentUserState)
         {
             var activities = new LinkedList<ActivityDto>();
+            
+            var activityRequest = new ActivityRequest
+            {
+                ActivityTypeId = currentUserState.ActivityType.Id,
+                SearchFrom = currentUserState.SearchFrom,
+                SearchTo = currentUserState.SearchTo
+            };
 
-            var result = GetActivities(requestParams);
+            var result = GetActivities(activityRequest);
 
             foreach (var activity in result)
             {
@@ -43,10 +50,10 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public List<ActivityDto> GetActivities(State requestParams)
+        public List<ActivityDto> GetActivities(ActivityRequest requestParams)
         {
             var result = _context.Activities
-                .Where(x => x.ActivityTypeId == requestParams.ActivityType.Id || requestParams.ActivityType.Id == null)
+                .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
                 .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
                 .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
                 .Select(x => new ActivityDto(x))

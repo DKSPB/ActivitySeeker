@@ -15,7 +15,7 @@ public class ActivityTypeController : ControllerBase
         _activityTypeService = activityTypeService;
     }
     
-    [HttpGet("get/all")]
+    [HttpGet("get")]
     public async Task<IActionResult> GetAll()
     {
         return Ok(await _activityTypeService.GetTypes());
