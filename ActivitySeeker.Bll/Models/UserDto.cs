@@ -30,21 +30,18 @@ public class UserDto
         
         State = new State
         {
-            //ActivityTypeId = user.ActivityTypeId,
-            //ActivityType = user.ActivityType?.TypeName?? "Все виды активности",
             SearchFrom = user.SearchFrom,
             SearchTo = user.SearchTo,
             MessageId = user.MessageId,
-            StateNumber = user.State
+            StateNumber = user.State,
+            ActivityType = user.ActivityTypeId == null
+                ? new ActivityTypeDto()
+                : new ActivityTypeDto
+                {
+                    Id = user.ActivityTypeId,
+                    TypeName = user.ActivityType.TypeName
+                }
         };
-
-        State.ActivityType = user.ActivityTypeId == null
-            ? new ActivityTypeDto()
-            : new ActivityTypeDto
-            {
-                Id = user.ActivityTypeId,
-                TypeName = user.ActivityType.TypeName
-            };
     }
     
     public static User ToUser(UserDto user)

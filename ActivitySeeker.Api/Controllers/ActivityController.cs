@@ -1,3 +1,4 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,11 @@ public class ActivityController : ControllerBase
         _activityService = activityService;
     }
     
+    /// <summary>
+    /// Получение списка активностей
+    /// </summary>
+    /// <param name="request">Набор необязательных параметров</param>
+    /// <returns>Список объектов-активностей</returns>
     [HttpGet("get")]
     public IActionResult GetAll([FromQuery] ActivityRequest request)
     {
@@ -49,9 +55,9 @@ public class ActivityController : ControllerBase
     /// <param name="activity">Объект-активность</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateActivity([FromForm] ActivityDto activity)
+    public async Task<IActionResult> CreateActivity([FromForm] NewActivity activity)
     {
-        await _activityService.CreateActivity(activity);
+        await _activityService.CreateActivity(null);
         return Ok();
     }
 
