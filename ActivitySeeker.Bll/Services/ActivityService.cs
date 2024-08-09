@@ -80,12 +80,12 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public async Task CreateActivity(NewActivityDto newActivity)
+        public async Task CreateActivity(ActivityDto newActivity)
         {
-            //var activityEntity = ActivityDto.ToActivity(newActivity);
+            var activityEntity = ActivityDto.ToActivity(newActivity);
             
-            //await _context.Activities.AddAsync(activityEntity);
-            //await _context.SaveChangesAsync();
+            await _context.Activities.AddAsync(activityEntity);
+            await _context.SaveChangesAsync();
 
         }
         

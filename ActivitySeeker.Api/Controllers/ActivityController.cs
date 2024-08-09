@@ -1,6 +1,7 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActivitySeeker.Api.Controllers;
@@ -10,10 +11,12 @@ namespace ActivitySeeker.Api.Controllers;
 public class ActivityController : ControllerBase
 {
     private readonly IActivityService _activityService;
-    
-    public ActivityController(IActivityService activityService)
+    private readonly NewActivityValidator _newActivityValidator;
+
+    public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator)
     {
         _activityService = activityService;
+        _newActivityValidator = newActivityValidator;
     }
     
     /// <summary>
@@ -57,7 +60,14 @@ public class ActivityController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateActivity([FromForm] NewActivity activity)
     {
-        await _activityService.CreateActivity(null);
+        var validationResult = await _newActivityValidator.ValidateAsync(activity);
+
+        if (!validationResult.IsValid)
+        {
+            return StatusCode(StatusCodes.Status400BadRequest, validationResult.Errors);
+        }
+
+        await _activityService.CreateActivity(activity.ToActivityDto());
         return Ok();
     }
 

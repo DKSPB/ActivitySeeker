@@ -49,7 +49,7 @@ public interface IActivityService
     /// Добавление новой активности
     /// </summary>
     /// <param name="newActivity"></param>
-    Task CreateActivity(NewActivityDto newActivity);
+    Task CreateActivity(ActivityDto newActivity);
 
     /// <summary>
     /// Обновление существующей активности

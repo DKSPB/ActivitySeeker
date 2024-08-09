@@ -19,6 +19,10 @@ public class ActivityDto
     public Guid ActivityTypeId { get; set; }
     
     public string? Link { get; set; }
+     
+    public byte[]? Image { get; set; }
+    
+    public bool Selected { get; set; }
     
     public ActivityDto()
     { }
@@ -30,22 +34,21 @@ public class ActivityDto
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
         Link = activity.Link;
+        Image = activity.Image;
     }
 
     public static Activity ToActivity(ActivityDto activityDto)
     {
         return new Activity
         {
-            Id = activityDto.Id,
             Name = activityDto.Name,
             Description = activityDto.Description,
             StartDate = activityDto.StartDate,
             ActivityTypeId = activityDto.ActivityTypeId,
+            Image = activityDto.Image,
             Link = activityDto.Link
         };
     }
-
-    public bool Selected { get; set; }
 
     public override string ToString()
     {

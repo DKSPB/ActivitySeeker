@@ -1,10 +1,11 @@
-using ActivitySeeker.Api.TelegramBot;
 using ActivitySeeker.Api.TelegramBot.Handlers;
+using ActivitySeeker.Api.TelegramBot;
+using Microsoft.EntityFrameworkCore;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Services;
 using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+
 using Telegram.Bot;
 
 namespace ActivitySeeker.Api
@@ -22,7 +23,7 @@ namespace ActivitySeeker.Api
             
             var connection = builder.Configuration.GetConnectionString("ActivitySeekerConnection");
             builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
-
+            builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
             builder.Services.AddScoped<ActivitySeekerContext>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
