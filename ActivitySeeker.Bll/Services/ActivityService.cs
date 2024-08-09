@@ -28,9 +28,9 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public LinkedList<ActivityDto> GetActivitiesLinkedList(State currentUserState)
+        public LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(State currentUserState)
         {
-            var activities = new LinkedList<ActivityDto>();
+            var activities = new LinkedList<ActivityTelegramDto>();
             
             var activityRequest = new ActivityRequest
             {
@@ -41,24 +41,27 @@ namespace ActivitySeeker.Bll.Services
 
             var result = GetActivities(activityRequest);
 
+            if (result is null)
+            {
+                return activities;
+            }
+            
             foreach (var activity in result)
             {
-                activities.AddLast(activity);
+                activities.AddLast(new ActivityTelegramDto(activity));
             }
 
             return activities;
         }
 
         /// <inheritdoc />
-        public List<ActivityDto> GetActivities(ActivityRequest requestParams)
+        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
         {
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
                 .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
-                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
-                .Select(x => new ActivityDto(x))
-                .ToList();
-
+                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0);
+            
             return result;
         }
 
@@ -82,7 +85,7 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task CreateActivity(ActivityDto newActivity)
         {
-            var activityEntity = ActivityDto.ToActivity(newActivity);
+            var activityEntity = newActivity.ToActivity();
             
             await _context.Activities.AddAsync(activityEntity);
             await _context.SaveChangesAsync();
@@ -125,6 +128,12 @@ namespace ActivitySeeker.Bll.Services
 
                 await _context.SaveChangesAsync();
 
+        }
+
+        /// <inheritdoc />
+        public async Task<byte[]?> GetImage(Guid activityId)
+        {
+            return (await _context.Activities.FindAsync(activityId))?.Image;
         }
     }
 }

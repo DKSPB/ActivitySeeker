@@ -37,25 +37,16 @@ public class ActivityDto
         Image = activity.Image;
     }
 
-    public static Activity ToActivity(ActivityDto activityDto)
+    public Activity ToActivity()
     {
         return new Activity
         {
-            Name = activityDto.Name,
-            Description = activityDto.Description,
-            StartDate = activityDto.StartDate,
-            ActivityTypeId = activityDto.ActivityTypeId,
-            Image = activityDto.Image,
-            Link = activityDto.Link
+            Name = Name,
+            Description = Description,
+            StartDate = StartDate,
+            ActivityTypeId = ActivityTypeId,
+            Image = Image,
+            Link = Link
         };
-    }
-
-    public override string ToString()
-    {
-        StringBuilder stringBuilder = new();
-        stringBuilder.Append(Name);
-        stringBuilder.Append('\n');
-        stringBuilder.Append(Description);
-        return stringBuilder.ToString();
     }
 }

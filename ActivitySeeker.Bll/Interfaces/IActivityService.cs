@@ -10,14 +10,14 @@ public interface IActivityService
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
     /// <returns>Двусвязный список активностей</returns>
-    LinkedList<ActivityDto> GetActivitiesLinkedList(State requestParams);
+    LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(State requestParams);
 
     /// <summary>
     /// Получение списка активностей
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
     /// <returns>Список активностей</returns>
-    List<ActivityDto> GetActivities(ActivityRequest requestParams);
+    /*List<ActivityBaseDto>*/ IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
 
     /// <summary>
     /// Получение списка всех типов активностей
@@ -45,6 +45,14 @@ public interface IActivityService
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns></returns>
     Task<ActivityDto> GetActivity(Guid activityId);
+
+    /// <summary>
+    /// Получение изображения от активности
+    /// </summary>
+    /// <param name="activityId">Идентификатор активности</param>
+    /// <returns>Массив байтов изображения</returns>
+    Task<byte[]?> GetImage(Guid activityId);
+    
     /// <summary>
     /// Добавление новой активности
     /// </summary>

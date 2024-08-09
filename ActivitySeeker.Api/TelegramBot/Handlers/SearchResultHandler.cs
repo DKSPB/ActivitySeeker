@@ -10,17 +10,13 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.Result)]
 public class SearchResultHandler: AbstractHandler
 {
-    //private const string MessageText = "Найденные активности:";
-
-    private ActivityDto? CurrentActivity { get; set; }
+    private ActivityTelegramDto? CurrentActivity { get; set; }
 
     public SearchResultHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService)
         : base(botClient, userService, activityService)
-    {
-        //ResponseMessageText = MessageText;
-    }
+    { }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         var activities = ActivityService.GetActivitiesLinkedList(CurrentUser.State);
 
@@ -28,6 +24,7 @@ public class SearchResultHandler: AbstractHandler
         {
             ResponseMessageText = $"Найдено активностей: {activities.Count}";
             CurrentActivity = activities.First();
+            CurrentActivity.Image = await ActivityService.GetImage(CurrentActivity.Id);
             CurrentActivity.Selected = true;
             CurrentUser.ActivityResult = activities;
         }
@@ -35,9 +32,6 @@ public class SearchResultHandler: AbstractHandler
         {
             ResponseMessageText = "По вашему запросу активностей не найдено";
         }
-        
-
-        return Task.CompletedTask;
     }
 
     protected override async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
@@ -52,18 +46,27 @@ public class SearchResultHandler: AbstractHandler
         }
 
         var caption = CurrentActivity.ToString();
+        
+        if (CurrentActivity.Image is null)
+        {
+            return await BotClient.SendTextMessageAsync(
+                chatId,
+                text: caption,
+                replyMarkup: GetKeyboard(),
+                cancellationToken: cancellationToken);
+        }
 
         if (caption.Length <= 1024)
         {
             return await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileUrl("https://s00.yaplakal.com/pics/pics_original/5/0/6/17827605.jpg"),
+                photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
                 caption: CurrentActivity.ToString(),
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
         }
 
         await BotClient.SendPhotoAsync(chatId: chatId,
-            photo: new InputFileUrl("https://s00.yaplakal.com/pics/pics_original/5/0/6/17827605.jpg"),
+            photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
             cancellationToken: cancellationToken);
         
         return await BotClient.SendTextMessageAsync(chatId: chatId,

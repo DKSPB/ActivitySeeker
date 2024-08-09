@@ -12,7 +12,7 @@ public class UserDto
 
     public string UserName { get; set; } = default!;
 
-    public LinkedList<ActivityDto> ActivityResult { get; set; } = default!;
+    public LinkedList<ActivityTelegramDto> ActivityResult { get; set; } = default!;
 
     public State State { get; set; } = new();
 
@@ -25,8 +25,8 @@ public class UserDto
         Id = user.Id;
         ChatId = user.ChatId;
         UserName = user.UserName;
-        ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityDto>>(user.ActivityResult) ??
-                         new LinkedList<ActivityDto>();
+        ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityTelegramDto>>(user.ActivityResult) ??
+                         new LinkedList<ActivityTelegramDto>();
         
         State = new State
         {
