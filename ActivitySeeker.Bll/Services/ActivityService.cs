@@ -83,9 +83,9 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public async Task CreateActivity(ActivityDto newActivity)
+        public async Task CreateActivity(ActivityDto activity)
         {
-            var activityEntity = newActivity.ToActivity();
+            var activityEntity = activity.ToActivity();
             
             await _context.Activities.AddAsync(activityEntity);
             await _context.SaveChangesAsync();
@@ -115,18 +115,19 @@ namespace ActivitySeeker.Bll.Services
         public async Task UpdateActivity(ActivityDto activity)
         {
 
-                var activityEntity = _context.Activities.FirstOrDefault(x => x.Id.Equals(activity.Id));
+            var activityEntity = _context.Activities.FirstOrDefault(x => x.Id.Equals(activity.Id));
 
-                if (activityEntity is not null)
-                {
-                    activityEntity.Name = activity.Name;
-                    activityEntity.Description = activity.Description;
-                    activityEntity.StartDate = activity.StartDate;
-                    activityEntity.ActivityTypeId = activity.ActivityTypeId;
-                    activityEntity.Link = activity.Link;
-                }
+            if (activityEntity is not null)
+            {
+                activityEntity.Name = activity.Name;
+                activityEntity.Description = activity.Description;
+                activityEntity.StartDate = activity.StartDate;
+                activityEntity.ActivityTypeId = activity.ActivityTypeId;
+                activityEntity.Link = activity.Link;
+                activityEntity.Image = activity.Image;
+            }
 
-                await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
         }
 

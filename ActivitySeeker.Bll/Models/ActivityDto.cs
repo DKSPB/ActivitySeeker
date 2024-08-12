@@ -1,32 +1,16 @@
-using System.Text;
-using ActivitySeeker.Domain.Entities;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Bll.Models;
 
 [JsonObject]
-public class ActivityDto
-{
-    public Guid Id { get; set; }
-
-    public string Name { get; set; } = default!;
-
-    public string Description { get; set; } = default!;
-    
-    public DateTime StartDate { get; set; }
-    
-    public Guid ActivityTypeId { get; set; }
-    
-    public string? Link { get; set; }
-     
-    public byte[]? Image { get; set; }
-    
-    public bool Selected { get; set; }
-    
-    public ActivityDto()
+public class ActivityDto: ActivityBaseDto
+{    
+ 
+    public ActivityDto():base()
     { }
-    public ActivityDto(Activity activity)
+
+    public ActivityDto(Activity activity) : base(activity)
     {
         Id = activity.Id;
         Name = activity.Name;
@@ -49,4 +33,6 @@ public class ActivityDto
             Link = Link
         };
     }
+
+    public byte[]? Image { get; set; }
 }

@@ -46,7 +46,7 @@ public class ActivityController : ControllerBase
     /// </summary>
     /// <param name="activityTypeId">Идентификатор типа активности</param>
     /// <returns>Список активностей</returns>
-    [HttpGet("{activityTypeId:guid}/get")]
+    [HttpGet("type/{activityTypeId:guid}/get")]
     public async Task<IActionResult> GetByActivitiesTypeId([FromRoute]Guid activityTypeId)
     {
         return Ok(await _activityService.GetActivitiesByType(activityTypeId));
@@ -58,7 +58,7 @@ public class ActivityController : ControllerBase
     /// <param name="activity">Объект-активность</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateActivity([FromForm] NewActivity activity)
+    public async Task<IActionResult> CreateActivity([FromBody] NewActivity activity/*, [FromForm]IFormFile? image*/)
     {
         var validationResult = await _newActivityValidator.ValidateAsync(activity);
 
@@ -77,9 +77,9 @@ public class ActivityController : ControllerBase
     /// <param name="activity">Объект-активность</param>
     /// <returns></returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateActivity([FromForm] ActivityDto activity)
+    public async Task<IActionResult> UpdateActivity([FromForm] NewActivity activity)
     {
-        await _activityService.UpdateActivity(activity);
+        await _activityService.UpdateActivity(activity.ToActivityDto());
         return Ok();
     }
     
