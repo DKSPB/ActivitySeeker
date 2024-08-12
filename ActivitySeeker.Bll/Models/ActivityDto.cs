@@ -13,7 +13,6 @@ public class ActivityDto: ActivityBaseDto
     public ActivityDto(Activity activity) : base(activity)
     {
         Id = activity.Id;
-        Name = activity.Name;
         Description = activity.Description;
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
@@ -25,7 +24,6 @@ public class ActivityDto: ActivityBaseDto
     {
         return new Activity
         {
-            Name = Name,
             Description = Description,
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,

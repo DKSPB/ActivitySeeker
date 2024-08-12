@@ -33,13 +33,11 @@ public class PreviousHandler: AbstractHandler
                 currentActivity.Selected = false;
                 PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
                 PreviousNode.Selected = true;
-                ResponseMessageText = PreviousNode.Name;
             }
             else
             {
                 PreviousNode = currentActivity;
                 PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
-                ResponseMessageText = currentActivity.Name;
             }
         }
         else
@@ -69,15 +67,15 @@ public class PreviousHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (PreviousNode.Image is not null && PreviousNode.Link is null)
+        if (PreviousNode.Image is not null && PreviousNode.Description is not null && PreviousNode.Link is null)
         {
-            var caption = PreviousNode.ToString();
+            var caption = PreviousNode.Description;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
                     photo: new InputFileStream(new MemoryStream(PreviousNode.Image)),
-                    caption: PreviousNode.ToString(),
+                    caption: PreviousNode.Description,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
@@ -87,14 +85,14 @@ public class PreviousHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         
             return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: PreviousNode.ToString(),
+                text: PreviousNode.Description,
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
         }
         
         return await BotClient.SendTextMessageAsync(
             chatId,
-            text: PreviousNode.ToString(),
+            text: PreviousNode.Description,
             replyMarkup: GetKeyboard(),
             cancellationToken: cancellationToken);
         

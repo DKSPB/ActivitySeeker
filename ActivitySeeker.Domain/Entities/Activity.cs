@@ -9,11 +9,8 @@ public class Activity
     [Key]
     public Guid Id { get; set; }
 
-    [Column("name")]
-    public string Name { get; set; } = default!;
-
     [Column("description")]
-    public string Description { get; set; } = default!;
+    public string? Description { get; set; }
     
     [Column("image")]
     public byte[]? Image { get; set; }

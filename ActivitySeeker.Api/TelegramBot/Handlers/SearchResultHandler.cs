@@ -54,15 +54,15 @@ public class SearchResultHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (CurrentActivity.Image is not null && CurrentActivity.Link is null)
+        if (CurrentActivity.Image is not null && CurrentActivity.Description is not null && CurrentActivity.Link is null)
         {
-            var caption = CurrentActivity.ToString();
+            var caption = CurrentActivity.Description;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
                     photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-                    caption: CurrentActivity.ToString(),
+                    caption: CurrentActivity.Description,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
@@ -72,14 +72,14 @@ public class SearchResultHandler: AbstractHandler
                 cancellationToken: cancellationToken);
     
             return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: CurrentActivity.ToString(),
+                text: CurrentActivity.Description,
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
 
         }
         
         return await BotClient.SendTextMessageAsync(chatId: chatId,
-            text: CurrentActivity.ToString(),
+            text: CurrentActivity.Description,
             replyMarkup: GetKeyboard(), 
             cancellationToken: cancellationToken);
     }

@@ -14,13 +14,4 @@ public class ActivityTelegramDto: ActivityBaseDto
     public byte[]? Image { get; set; }
 
     public bool Selected { get; set; } = false;
-    
-    public override string ToString()
-    {
-        StringBuilder stringBuilder = new();
-        stringBuilder.Append(Name);
-        stringBuilder.Append('\n');
-        stringBuilder.Append(Description);
-        return stringBuilder.ToString();
-    }
 }

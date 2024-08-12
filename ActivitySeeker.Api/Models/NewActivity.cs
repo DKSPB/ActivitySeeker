@@ -11,10 +11,8 @@ public class NewActivity
     public Guid Id { get; set; }
 
     public Guid ActivityTypeId { get; set; }
-    
-    public string Name { get; set; }
-    
-    public string Description { get; set; }
+
+    public string? Description { get; set; }
     
     public DateTime StartDate { get; set; }
     
@@ -29,7 +27,6 @@ public class NewActivity
             Id = Id,
             ActivityTypeId = ActivityTypeId,
             StartDate = StartDate,
-            Name = Name,
             Description = Description,
             Link = Link,
             Image = ImageToByteArray()
@@ -57,11 +54,6 @@ public class NewActivityValidator : AbstractValidator<NewActivity>
     {
         RuleFor(newActivity => newActivity.ActivityTypeId)
             .NotEmpty().WithMessage("Поле \"Тип активности\" не должно быть пустым");
-        
-        RuleFor(newActivity => newActivity.Name)
-            .NotEmpty().WithMessage("Поле \"Название активности\" не должно быть пустым")
-            .NotNull().WithMessage("Поле \"Название активности\" не должно принимать значение null")
-            .MaximumLength(100).WithMessage("Максимальная длина названия не должна превышать 100 символов");
 
         RuleFor(newActivity => newActivity.Description)
             .NotEmpty().WithMessage("Поле \"Описание активности\" не должно быть пустым")

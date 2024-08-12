@@ -10,9 +10,7 @@ public class ActivityBaseDto
     }
     public Guid Id { get; set; }
 
-    public string Name { get; set; } = default!;
-
-    public string Description { get; set; } = default!;
+    public string? Description { get; set; }
     
     public DateTime StartDate { get; set; }
     
@@ -24,10 +22,8 @@ public class ActivityBaseDto
     {
         Id = activity.Id;
         ActivityTypeId = activity.ActivityTypeId;
-        Name = activity.Name;
         Description = activity.Description;
         StartDate = activity.StartDate;
         Link = activity.Link;
     }
-    
 }

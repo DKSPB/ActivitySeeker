@@ -33,13 +33,11 @@ public class NextHandler: AbstractHandler
                 currentActivity.Selected = false;
                 NextNode.Image = await ActivityService.GetImage(NextNode.Id);
                 NextNode.Selected = true;
-                ResponseMessageText = NextNode.Name;
             }
             else
             {
                 NextNode = currentActivity;
                 NextNode.Image = await ActivityService.GetImage(NextNode.Id);
-                ResponseMessageText = currentActivity.Name;
             }
         }
         else
@@ -69,15 +67,15 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (NextNode.Image is not null && NextNode.Link is null)
+        if (NextNode.Image is not null && NextNode.Description is not null && NextNode.Link is null)
         {
-            var caption = NextNode.ToString();
+            var caption = NextNode.Description;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
                     photo: new InputFileStream(new MemoryStream(NextNode.Image)),
-                    caption: NextNode.ToString(),
+                    caption: NextNode.Description,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
@@ -87,13 +85,13 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
             
             return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: NextNode.ToString(),
+                text: NextNode.Description,
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
         }
         
         return await BotClient.SendTextMessageAsync(chatId: chatId,
-            text: NextNode.ToString(),
+            text: NextNode.Description,
             replyMarkup: GetKeyboard(), 
             cancellationToken: cancellationToken);
     }

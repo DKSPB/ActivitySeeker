@@ -119,7 +119,6 @@ namespace ActivitySeeker.Bll.Services
 
             if (activityEntity is not null)
             {
-                activityEntity.Name = activity.Name;
                 activityEntity.Description = activity.Description;
                 activityEntity.StartDate = activity.StartDate;
                 activityEntity.ActivityTypeId = activity.ActivityTypeId;
