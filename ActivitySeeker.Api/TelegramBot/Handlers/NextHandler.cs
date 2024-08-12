@@ -12,7 +12,7 @@ public class NextHandler: AbstractHandler
 {
     private const string MessageText = "Найденные активности:";
     
-    private ActivityTelegramDto? CurrentActivity { get; set; }
+    private ActivityTelegramDto? NextNode { get; set; }
     
     public NextHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : 
         base(botClient, userService, activityService)
@@ -24,19 +24,22 @@ public class NextHandler: AbstractHandler
     {
         if (CurrentUser.ActivityResult.Count > 0)
         {
-            CurrentActivity = CurrentUser.ActivityResult.First(x => x.Selected);
+            var currentActivity = CurrentUser.ActivityResult.First(x => x.Selected);
 
-            var nextNode = CurrentUser.ActivityResult.Find(CurrentActivity)?.Next;
-            if (nextNode is not null)
+            var nextListNode = CurrentUser.ActivityResult.Find(currentActivity)?.Next;
+            if (nextListNode is not null)
             {
-                CurrentActivity.Selected = false;
-                CurrentActivity.Image = await ActivityService.GetImage(CurrentActivity.Id);
-                nextNode.Value.Selected = true;
-                ResponseMessageText = nextNode.Value.Name;
+                NextNode = nextListNode.Value;
+                currentActivity.Selected = false;
+                NextNode.Image = await ActivityService.GetImage(NextNode.Id);
+                NextNode.Selected = true;
+                ResponseMessageText = NextNode.Name;
             }
             else
             {
-                ResponseMessageText = CurrentActivity.Name;
+                NextNode = currentActivity;
+                NextNode.Image = await ActivityService.GetImage(NextNode.Id);
+                ResponseMessageText = currentActivity.Name;
             }
         }
         else
@@ -48,7 +51,7 @@ public class NextHandler: AbstractHandler
 
     protected override async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
     {
-        if (CurrentActivity is null)
+        if (NextNode is null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -57,35 +60,42 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        var caption = CurrentActivity.ToString();
-        
-        if (CurrentActivity.Image is null)
+        if (NextNode.Image is null && NextNode.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
-                text: caption,
+                text: NextNode.Link,
                 replyMarkup: GetKeyboard(),
                 cancellationToken: cancellationToken);
         }
 
-        if (caption.Length <= 1024)
+        if (NextNode.Image is not null && NextNode.Link is null)
         {
-            return await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-                caption: CurrentActivity.ToString(),
+            var caption = NextNode.ToString();
+            
+            if (caption.Length <= 1024)
+            {
+                return await BotClient.SendPhotoAsync(chatId: chatId,
+                    photo: new InputFileStream(new MemoryStream(NextNode.Image)),
+                    caption: NextNode.ToString(),
+                    replyMarkup: GetKeyboard(), 
+                    cancellationToken: cancellationToken);
+            }
+            
+            await BotClient.SendPhotoAsync(chatId: chatId,
+                photo: new InputFileStream(new MemoryStream(NextNode.Image)),
+                cancellationToken: cancellationToken);
+            
+            return await BotClient.SendTextMessageAsync(chatId: chatId,
+                text: NextNode.ToString(),
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
         }
-
-        await BotClient.SendPhotoAsync(chatId: chatId,
-            photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-            cancellationToken: cancellationToken);
         
         return await BotClient.SendTextMessageAsync(chatId: chatId,
-            text: CurrentActivity.ToString(),
+            text: NextNode.ToString(),
             replyMarkup: GetKeyboard(), 
             cancellationToken: cancellationToken);
-
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

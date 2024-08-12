@@ -6,8 +6,8 @@ namespace ActivitySeeker.Bll.Models;
 [JsonObject]
 public class ActivityDto: ActivityBaseDto
 {    
- 
-    public ActivityDto():base()
+    public byte[]? Image { get; set; }
+    public ActivityDto()
     { }
 
     public ActivityDto(Activity activity) : base(activity)
@@ -33,6 +33,4 @@ public class ActivityDto: ActivityBaseDto
             Link = Link
         };
     }
-
-    public byte[]? Image { get; set; }
 }

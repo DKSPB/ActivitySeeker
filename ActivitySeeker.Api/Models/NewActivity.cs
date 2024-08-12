@@ -8,24 +8,18 @@ namespace ActivitySeeker.Api.Models;
 public class NewActivity
 {
     [SwaggerSchema(ReadOnly = true)]
-    [FromBody]
     public Guid Id { get; set; }
 
     public Guid ActivityTypeId { get; set; }
-
-    [FromBody]
+    
     public string Name { get; set; }
-
-    [FromBody]
+    
     public string Description { get; set; }
-
-    [FromBody]
+    
     public DateTime StartDate { get; set; }
-
-    [FromBody]
+    
     public string? Link { get; set; }
-
-    [FromForm]
+    
     public IFormFile? Image { get; set; }
 
     public ActivityDto ToActivityDto()

@@ -44,36 +44,44 @@ public class SearchResultHandler: AbstractHandler
                 replyMarkup: GetKeyboard(),
                 cancellationToken: cancellationToken);
         }
-
-        var caption = CurrentActivity.ToString();
         
-        if (CurrentActivity.Image is null)
+        if (CurrentActivity.Image is null && CurrentActivity.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
-                text: caption,
+                text: CurrentActivity.Link,
                 replyMarkup: GetKeyboard(),
                 cancellationToken: cancellationToken);
         }
 
-        if (caption.Length <= 1024)
+        if (CurrentActivity.Image is not null && CurrentActivity.Link is null)
         {
-            return await BotClient.SendPhotoAsync(chatId: chatId,
+            var caption = CurrentActivity.ToString();
+            
+            if (caption.Length <= 1024)
+            {
+                return await BotClient.SendPhotoAsync(chatId: chatId,
+                    photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
+                    caption: CurrentActivity.ToString(),
+                    replyMarkup: GetKeyboard(), 
+                    cancellationToken: cancellationToken);
+            }
+
+            await BotClient.SendPhotoAsync(chatId: chatId,
                 photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-                caption: CurrentActivity.ToString(),
+                cancellationToken: cancellationToken);
+    
+            return await BotClient.SendTextMessageAsync(chatId: chatId,
+                text: CurrentActivity.ToString(),
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
-        }
 
-        await BotClient.SendPhotoAsync(chatId: chatId,
-            photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-            cancellationToken: cancellationToken);
+        }
         
         return await BotClient.SendTextMessageAsync(chatId: chatId,
             text: CurrentActivity.ToString(),
             replyMarkup: GetKeyboard(), 
             cancellationToken: cancellationToken);
-
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

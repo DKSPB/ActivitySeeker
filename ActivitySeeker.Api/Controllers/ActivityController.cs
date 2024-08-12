@@ -58,7 +58,7 @@ public class ActivityController : ControllerBase
     /// <param name="activity">Объект-активность</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateActivity([FromBody] NewActivity activity/*, [FromForm]IFormFile? image*/)
+    public async Task<IActionResult> CreateActivity([FromForm] NewActivity activity)
     {
         var validationResult = await _newActivityValidator.ValidateAsync(activity);
 
