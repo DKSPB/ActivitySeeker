@@ -15,13 +15,13 @@ public class ActivityTypeController : ControllerBase
         _activityTypeService = activityTypeService;
     }
     
-    [HttpGet("get")]
+    [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         return Ok(await _activityTypeService.GetTypes());
     }
 
-    [HttpGet("{id:guid}/get")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         return Ok(await _activityTypeService.GetById(id));

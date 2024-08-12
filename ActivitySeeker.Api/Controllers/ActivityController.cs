@@ -24,7 +24,7 @@ public class ActivityController : ControllerBase
     /// </summary>
     /// <param name="request">Набор необязательных параметров</param>
     /// <returns>Список объектов-активностей</returns>
-    [HttpGet("get")]
+    [HttpGet]
     public IActionResult GetAll([FromQuery] ActivityRequest request)
     {
         return Ok(_activityService.GetActivities(request)?.Select(x => new ActivityBaseDto(x)));
@@ -35,7 +35,7 @@ public class ActivityController : ControllerBase
     /// </summary>
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns>Возвращает объект - активность</returns>
-    [HttpGet("{activityId:guid}/get")]
+    [HttpGet("{activityId:guid}")]
     public async Task<IActionResult> GetByActivityId([FromRoute]Guid activityId)
     {
         return Ok(await _activityService.GetActivity(activityId));
@@ -46,7 +46,7 @@ public class ActivityController : ControllerBase
     /// </summary>
     /// <param name="activityTypeId">Идентификатор типа активности</param>
     /// <returns>Список активностей</returns>
-    [HttpGet("type/{activityTypeId:guid}/get")]
+    [HttpGet("type/{activityTypeId:guid}")]
     public async Task<IActionResult> GetByActivitiesTypeId([FromRoute]Guid activityTypeId)
     {
         return Ok(await _activityService.GetActivitiesByType(activityTypeId));
