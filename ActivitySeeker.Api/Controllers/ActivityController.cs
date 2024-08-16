@@ -38,7 +38,7 @@ public class ActivityController : ControllerBase
     [HttpGet("{activityId:guid}")]
     public async Task<IActionResult> GetByActivityId([FromRoute]Guid activityId)
     {
-        return Ok(await _activityService.GetActivity(activityId));
+        return Ok(new ActivityInfoViewModel(await _activityService.GetActivity(activityId)));
     }
 
     /// <summary>
@@ -55,31 +55,31 @@ public class ActivityController : ControllerBase
     /// <summary>
     /// Создание активности
     /// </summary>
-    /// <param name="activity">Объект-активность</param>
+    /// <param name="activityViewModel">Объект-активность</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateActivity([FromForm] NewActivity activity)
+    public async Task<IActionResult> CreateActivity([FromForm] CreateUpdateActivityViewModel activityViewModel)
     {
-        var validationResult = await _newActivityValidator.ValidateAsync(activity);
+        var validationResult = await _newActivityValidator.ValidateAsync(activityViewModel);
 
         if (!validationResult.IsValid)
         {
             return StatusCode(StatusCodes.Status400BadRequest, validationResult.Errors);
         }
 
-        await _activityService.CreateActivity(activity.ToActivityDto());
+        await _activityService.CreateActivity(activityViewModel.ToActivityDto());
         return Ok();
     }
 
     /// <summary>
     /// Обновление активности
     /// </summary>
-    /// <param name="activity">Объект-активность</param>
+    /// <param name="activityViewModel">Объект-активность</param>
     /// <returns></returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateActivity([FromForm] NewActivity activity)
+    public async Task<IActionResult> UpdateActivity([FromForm] CreateUpdateActivityViewModel activityViewModel)
     {
-        await _activityService.UpdateActivity(activity.ToActivityDto());
+        await _activityService.UpdateActivity(activityViewModel.ToActivityDto());
         return Ok();
     }
     

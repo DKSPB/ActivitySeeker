@@ -1,13 +1,10 @@
 using ActivitySeeker.Bll.Models;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace ActivitySeeker.Api.Models;
 
-public class NewActivity
+public class CreateUpdateActivityViewModel
 {
-    [SwaggerSchema(ReadOnly = true)]
     public Guid Id { get; set; }
 
     public Guid ActivityTypeId { get; set; }
@@ -18,7 +15,7 @@ public class NewActivity
     
     public string? Link { get; set; }
     
-    public IFormFile? Image { get; set; }
+    public FormFileCollection? Images { get; set; }
 
     public ActivityDto ToActivityDto()
     {
@@ -29,26 +26,35 @@ public class NewActivity
             StartDate = StartDate,
             Description = Description,
             Link = Link,
-            Image = ImageToByteArray()
+            Images = ToImageDto()
         };
     }
 
-    private byte[]? ImageToByteArray()
+    private IEnumerable<ImageDto>? ToImageDto()
     {
-        if (Image is null)
+        if (Images is null || Images.Count == 0)
         {
             return null;
         }
 
-        byte[]? imageData = null;
-        using BinaryReader binaryReader = new(Image.OpenReadStream());
-        imageData = binaryReader.ReadBytes((int)Image.Length);
-
-        return imageData;
+        List<ImageDto> images = new();
+        
+        foreach (var image in Images)
+        {
+            byte[]? imageData = null;
+            using BinaryReader binaryReader = new(image.OpenReadStream());
+            imageData = binaryReader.ReadBytes((int)image.Length);
+            images.Add(new ImageDto
+            {
+                Content = imageData,
+            });
+        }
+        
+        return images;
     }
 }
 
-public class NewActivityValidator : AbstractValidator<NewActivity>
+public class NewActivityValidator : AbstractValidator<CreateUpdateActivityViewModel>
 {
     public NewActivityValidator()
     {
@@ -64,13 +70,13 @@ public class NewActivityValidator : AbstractValidator<NewActivity>
             .NotEmpty().WithMessage($"Поле \"Дата начала\" не должно быть пустым")
             .GreaterThanOrEqualTo(DateTime.Now).WithMessage("Дата начала не должно быть раньше текущей даты");
 
-        RuleFor(newActivity => newActivity.Link)
-            .NotEmpty().When(newActivity => newActivity.Image is null)
-            .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
+        //RuleFor(newActivity => newActivity.Link)
+        //    .NotEmpty().When(newActivity => newActivity.Image is null)
+        //    .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
 
-        RuleFor(newActivity => newActivity.Image)
-            .NotEmpty().When(newActivity => newActivity.Link is null)
-            .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
+        //RuleFor(newActivity => newActivity.Image)
+        //    .NotEmpty().When(newActivity => newActivity.Link is null)
+        //    .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
         //.Must(newActivity => newActivity?.ContentType is "image/jpeg" or "image/png")
         //.WithMessage("Загружаемый файл должен иметь расширение .jpg или .png");
     }

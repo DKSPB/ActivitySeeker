@@ -31,13 +31,13 @@ public class PreviousHandler: AbstractHandler
             {
                 PreviousNode = previousListNode.Value;
                 currentActivity.Selected = false;
-                PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
+                PreviousNode.Images = await ActivityService.GetImages(PreviousNode.Id);
                 PreviousNode.Selected = true;
             }
             else
             {
                 PreviousNode = currentActivity;
-                PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
+                PreviousNode.Images = await ActivityService.GetImages(PreviousNode.Id);
             }
         }
         else
@@ -58,7 +58,7 @@ public class PreviousHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (PreviousNode.Image is null && PreviousNode.Link is not null)
+        if (PreviousNode.Images is null && PreviousNode.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -67,21 +67,21 @@ public class PreviousHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (PreviousNode.Image is not null && PreviousNode.Description is not null && PreviousNode.Link is null)
+        if (PreviousNode.Images is not null && PreviousNode.Description is not null && PreviousNode.Link is null)
         {
             var caption = PreviousNode.Description;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(PreviousNode.Image)),
+                    photo: new InputFileStream(new MemoryStream(PreviousNode.Images.First().Content)),
                     caption: PreviousNode.Description,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
             
             await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(PreviousNode.Image)),
+                photo: new InputFileStream(new MemoryStream(PreviousNode.Images.First().Content)),
                 cancellationToken: cancellationToken);
         
             return await BotClient.SendTextMessageAsync(chatId: chatId,

@@ -6,7 +6,7 @@ namespace ActivitySeeker.Bll.Models;
 [JsonObject]
 public class ActivityDto: ActivityBaseDto
 {    
-    public byte[]? Image { get; set; }
+    public IEnumerable<ImageDto>? Images { get; set; }
     public ActivityDto()
     { }
 
@@ -17,7 +17,7 @@ public class ActivityDto: ActivityBaseDto
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
         Link = activity.Link;
-        Image = activity.Image;
+        Images = activity.Images?.Select(x => new ImageDto(x));
     }
 
     public Activity ToActivity()
@@ -27,7 +27,7 @@ public class ActivityDto: ActivityBaseDto
             Description = Description,
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
-            Image = Image,
+            Images = Images?.Select(x => x.ToEntity()).ToList(),
             Link = Link
         };
     }

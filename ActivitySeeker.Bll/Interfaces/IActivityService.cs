@@ -51,7 +51,7 @@ public interface IActivityService
     /// </summary>
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns>Массив байтов изображения</returns>
-    Task<byte[]?> GetImage(Guid activityId);
+    Task<IEnumerable<ImageDto>?> GetImages(Guid activityId);
     
     /// <summary>
     /// Добавление новой активности

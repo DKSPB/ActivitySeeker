@@ -68,11 +68,25 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task<ActivityDto> GetActivity(Guid activityId)
         {
-            var activityEntity = await _context.Activities.FirstOrDefaultAsync(x => x.Id.Equals(activityId));
+            var activityEntity = await _context.Activities
+                .FirstOrDefaultAsync(x => x.Id.Equals(activityId));
 
-            return activityEntity is null
-                ? throw new NullReferenceException($"Активность с идентификатором {activityId} не найдена")
-                : new ActivityDto(activityEntity);
+            var imageId = _context.Images
+                .Where(x => x.ActivityId.Equals(activityId))
+                .Select(x => new ImageDto{Id = x.Id})
+                .ToList();
+
+            if (activityEntity is null)
+            {
+                throw new NullReferenceException($"Активность с идентификатором {activityId} не найдена");
+            }
+            
+            ActivityDto activityDto = new (activityEntity)
+            {
+                Images = imageId
+            };
+
+            return activityDto;
         }
         
         /// <inheritdoc />
@@ -123,17 +137,18 @@ namespace ActivitySeeker.Bll.Services
                 activityEntity.StartDate = activity.StartDate;
                 activityEntity.ActivityTypeId = activity.ActivityTypeId;
                 activityEntity.Link = activity.Link;
-                activityEntity.Image = activity.Image;
+                activityEntity.Images = activity.Images?.Select(x => x.ToEntity()).ToList();
             }
 
             await _context.SaveChangesAsync();
-
         }
 
         /// <inheritdoc />
-        public async Task<byte[]?> GetImage(Guid activityId)
+        public async Task<IEnumerable<ImageDto>?> GetImages(Guid activityId)
         {
-            return (await _context.Activities.FindAsync(activityId))?.Image;
+            var activity = await _context.Activities.FindAsync(activityId);
+            var images = activity?.Images?.Select(x => new ImageDto(x));
+            return images;
         }
     }
 }

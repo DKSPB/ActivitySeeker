@@ -31,13 +31,13 @@ public class NextHandler: AbstractHandler
             {
                 NextNode = nextListNode.Value;
                 currentActivity.Selected = false;
-                NextNode.Image = await ActivityService.GetImage(NextNode.Id);
+                NextNode.Images = await ActivityService.GetImages(NextNode.Id);
                 NextNode.Selected = true;
             }
             else
             {
                 NextNode = currentActivity;
-                NextNode.Image = await ActivityService.GetImage(NextNode.Id);
+                NextNode.Images = await ActivityService.GetImages(NextNode.Id);
             }
         }
         else
@@ -58,7 +58,7 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (NextNode.Image is null && NextNode.Link is not null)
+        if (NextNode.Images is null && NextNode.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -67,21 +67,21 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (NextNode.Image is not null && NextNode.Description is not null && NextNode.Link is null)
+        if (NextNode.Images is not null && NextNode.Description is not null && NextNode.Link is null)
         {
             var caption = NextNode.Description;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(NextNode.Image)),
+                    photo: new InputFileStream(new MemoryStream(NextNode.Images.First().Content)),
                     caption: NextNode.Description,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
             
             await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(NextNode.Image)),
+                photo: new InputFileStream(new MemoryStream(NextNode.Images.First().Content)),
                 cancellationToken: cancellationToken);
             
             return await BotClient.SendTextMessageAsync(chatId: chatId,

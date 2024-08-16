@@ -15,7 +15,7 @@ public class ActivityBaseDto
     public DateTime StartDate { get; set; }
     
     public Guid ActivityTypeId { get; set; }
-    
+
     public string? Link { get; set; }
 
     public ActivityBaseDto(Activity activity)

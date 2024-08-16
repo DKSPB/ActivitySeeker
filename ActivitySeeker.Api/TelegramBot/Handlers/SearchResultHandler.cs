@@ -24,7 +24,7 @@ public class SearchResultHandler: AbstractHandler
         {
             ResponseMessageText = $"Найдено активностей: {activities.Count}";
             CurrentActivity = activities.First();
-            CurrentActivity.Image = await ActivityService.GetImage(CurrentActivity.Id);
+            CurrentActivity.Images = await ActivityService.GetImages(CurrentActivity.Id);
             CurrentActivity.Selected = true;
             CurrentUser.ActivityResult = activities;
         }
@@ -45,7 +45,7 @@ public class SearchResultHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
         
-        if (CurrentActivity.Image is null && CurrentActivity.Link is not null)
+        if (CurrentActivity.Images is null && CurrentActivity.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -54,21 +54,21 @@ public class SearchResultHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (CurrentActivity.Image is not null && CurrentActivity.Description is not null && CurrentActivity.Link is null)
+        if (CurrentActivity.Images is not null && CurrentActivity.Description is not null && CurrentActivity.Link is null)
         {
             var caption = CurrentActivity.Description;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
+                    photo: new InputFileStream(new MemoryStream(CurrentActivity.Images.First().Content)),
                     caption: CurrentActivity.Description,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
 
             await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
+                photo: new InputFileStream(new MemoryStream(CurrentActivity.Images.First().Content)),
                 cancellationToken: cancellationToken);
     
             return await BotClient.SendTextMessageAsync(chatId: chatId,

@@ -8,7 +8,9 @@ public class ActivitySeekerContext: DbContext
 {
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Activity> Activities { get; set; } = null!;
-    
+
+    public DbSet<Image> Images { get; set; } = null!;
+
     public DbSet<ActivityType> ActivityTypes { get; set; } = null!;
     
     public ActivitySeekerContext(DbContextOptions<ActivitySeekerContext> options) : base(options)

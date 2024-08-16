@@ -11,7 +11,7 @@ public class ActivityTelegramDto: ActivityBaseDto
     public ActivityTelegramDto(Activity activity) : base(activity)
     { }
 
-    public byte[]? Image { get; set; }
+    public IEnumerable<ImageDto>? Images { get; set; }
 
     public bool Selected { get; set; } = false;
 }
