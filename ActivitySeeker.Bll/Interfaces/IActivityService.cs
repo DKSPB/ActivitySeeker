@@ -12,12 +12,7 @@ public interface IActivityService
     /// <returns>Двусвязный список активностей</returns>
     LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(State requestParams);
 
-    /// <summary>
-    /// Получение списка активностей
-    /// </summary>
-    /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
-    /// <returns>Список активностей</returns>
-    /*List<ActivityBaseDto>*/ IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
+    List<ActivityDto>? GetActivities(ActivityRequest request);
 
     /// <summary>
     /// Получение списка всех типов активностей

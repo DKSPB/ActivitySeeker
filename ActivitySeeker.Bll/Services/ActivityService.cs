@@ -39,7 +39,7 @@ namespace ActivitySeeker.Bll.Services
                 SearchTo = currentUserState.SearchTo
             };
 
-            var result = GetActivities(activityRequest);
+            var result = GetActivitiesByFilters(activityRequest);
 
             if (result is null)
             {
@@ -55,14 +55,11 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
+        public List<ActivityDto>? GetActivities(ActivityRequest request)
         {
-            var result = _context.Activities
-                .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
-                .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
-                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0);
-            
-            return result;
+            var entityRequest = GetActivitiesByFilters(request);
+
+            return entityRequest?.Select(x => new ActivityDto(x)).ToList();
         }
 
         /// <inheritdoc />
@@ -150,5 +147,24 @@ namespace ActivitySeeker.Bll.Services
             var images = activity?.Images?.Select(x => new ImageDto(x));
             return images;
         }
+
+        #region Private methods
+
+        /// <summary>
+        /// Получение списка активностей
+        /// </summary>
+        /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
+        /// <returns>Список активностей</returns>
+        private IQueryable<Activity>? GetActivitiesByFilters(ActivityRequest requestParams)
+        {
+            var result = _context.Activities.Include(x => x.Images)
+                .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
+                .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
+                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0);
+
+            return result;
+        }
+
+        #endregion
     }
 }

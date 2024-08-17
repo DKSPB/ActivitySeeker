@@ -27,7 +27,7 @@ public class ActivityController : ControllerBase
     [HttpGet]
     public IActionResult GetAll([FromQuery] ActivityRequest request)
     {
-        return Ok(_activityService.GetActivities(request)?.Select(x => new ActivityBaseDto(x)));
+        return Ok(_activityService.GetActivities(request)?.Select(x => new ActivityInfoViewModel(x)));
     }
 
     /// <summary>

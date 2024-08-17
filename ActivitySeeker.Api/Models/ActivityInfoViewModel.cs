@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Domain.Entities;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ActivitySeeker.Api.Models;
