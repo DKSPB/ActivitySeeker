@@ -45,7 +45,7 @@ public class SearchResultHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
         
-        if (CurrentActivity.Images is null && CurrentActivity.Link is not null)
+        if ((CurrentActivity.Images is null || !CurrentActivity.Images.Any()) && CurrentActivity.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -54,7 +54,7 @@ public class SearchResultHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (CurrentActivity.Images is not null && CurrentActivity.Description is not null && CurrentActivity.Link is null)
+        if ((CurrentActivity.Images is not null && CurrentActivity.Images.Any()) && CurrentActivity.Description is not null && CurrentActivity.Link is null)
         {
             var caption = CurrentActivity.Description;
             

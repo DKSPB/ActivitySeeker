@@ -58,7 +58,7 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (NextNode.Images is null && NextNode.Link is not null)
+        if ((NextNode.Images is null || !NextNode.Images.Any()) && NextNode.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -67,7 +67,7 @@ public class NextHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (NextNode.Images is not null && NextNode.Description is not null && NextNode.Link is null)
+        if ((NextNode.Images is not null && NextNode.Images.Any()) && NextNode.Description is not null && NextNode.Link is null)
         {
             var caption = NextNode.Description;
             
