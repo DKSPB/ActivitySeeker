@@ -49,22 +49,26 @@ public class NextHandler: AbstractHandler
 
     protected override async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
     {
+        SendMessageStrategy strategy = new SendMessageStrategy(BotClient, chatId, GetKeyboard(), cancellationToken);
+        
         if (NextNode is null)
         {
-            return await BotClient.SendTextMessageAsync(
+            return await strategy.SendMessage(ResponseMessageText);
+            /*return await BotClient.SendTextMessageAsync(
                 chatId,
                 text: ResponseMessageText,
                 replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken);*/
         }
 
         if ((NextNode.Images is null || !NextNode.Images.Any()) && NextNode.Link is not null)
         {
-            return await BotClient.SendTextMessageAsync(
+            return await strategy.SendMessage(NextNode.Link);
+            /*return await BotClient.SendTextMessageAsync(
                 chatId,
                 text: NextNode.Link,
                 replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken);*/
         }
 
         if ((NextNode.Images is not null && NextNode.Images.Any()) && NextNode.Description is not null && NextNode.Link is null)
@@ -73,27 +77,32 @@ public class NextHandler: AbstractHandler
             
             if (caption.Length <= 1024)
             {
-                return await BotClient.SendPhotoAsync(chatId: chatId,
+                return (await strategy.SendMessageWithGroupPhoto(NextNode.Images.ToList(), NextNode.Description))[0];
+                /*return await BotClient.SendPhotoAsync(chatId: chatId,
                     photo: new InputFileStream(new MemoryStream(NextNode.Images.First().Content)),
                     caption: NextNode.Description,
                     replyMarkup: GetKeyboard(), 
-                    cancellationToken: cancellationToken);
+                    cancellationToken: cancellationToken);*/
             }
-            
-            await BotClient.SendPhotoAsync(chatId: chatId,
+
+            await strategy.SendMessageWithSinglePhoto(NextNode.Images.First().Content);
+            /*await BotClient.SendPhotoAsync(chatId: chatId,
                 photo: new InputFileStream(new MemoryStream(NextNode.Images.First().Content)),
-                cancellationToken: cancellationToken);
-            
-            return await BotClient.SendTextMessageAsync(chatId: chatId,
+                cancellationToken: cancellationToken);*/
+
+            return await strategy.SendMessage(NextNode.Description);
+            /*return await BotClient.SendTextMessageAsync(chatId: chatId,
                 text: NextNode.Description,
                 replyMarkup: GetKeyboard(), 
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken);*/
         }
-        
-        return await BotClient.SendTextMessageAsync(chatId: chatId,
+
+        return await strategy.SendMessage(NextNode.Description);
+
+        /*return await BotClient.SendTextMessageAsync(chatId: chatId,
             text: NextNode.Description,
             replyMarkup: GetKeyboard(), 
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken);*/
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

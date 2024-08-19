@@ -143,7 +143,10 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task<IEnumerable<ImageDto>?> GetImages(Guid activityId)
         {
-            var activity = await _context.Activities.FindAsync(activityId);
+            var activity = await _context.Activities
+                .Include(x => x.Images)
+                .FirstOrDefaultAsync(x => x.Id.Equals(activityId));
+            
             var images = activity?.Images?.Select(x => new ImageDto(x));
             return images;
         }
