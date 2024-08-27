@@ -7,6 +7,7 @@ using ActivitySeeker.Domain;
 using FluentValidation;
 
 using Telegram.Bot;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace ActivitySeeker.Api
 {
@@ -64,6 +65,11 @@ namespace ActivitySeeker.Api
 
             var app = builder.Build();
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
             app.UseExceptionHandler("/ErrorHandling/ProcessError");
             
             if (app.Environment.IsDevelopment())
@@ -92,6 +98,8 @@ namespace ActivitySeeker.Api
         public string BotToken { get; set; } = default!;
 
         public string WebhookUrl { get; set; } = default!;
+
+        public string? PathToCertificate { get; set; }
     }
 }
 

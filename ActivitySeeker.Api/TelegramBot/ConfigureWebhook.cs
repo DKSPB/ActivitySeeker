@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace ActivitySeeker.Api.TelegramBot;
@@ -20,9 +21,22 @@ public class ConfigureWebhook : IHostedService
         using var scope = _serviceProvider.CreateScope();
         var botClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
+        var pathToCertificate = _botConfig.PathToCertificate;
+
+        InputFileStream? fileStream = null;
+
+        if (!string.IsNullOrEmpty(pathToCertificate)) 
+        {
+            if (System.IO.File.Exists(pathToCertificate))
+            {
+                fileStream = new(System.IO.File.OpenRead(pathToCertificate));
+            }
+        }
+
         var webhookAddress = $"{_botConfig.WebhookUrl}/api/message";
         await botClient.SetWebhookAsync(
             url: webhookAddress,
+            certificate: fileStream,
             allowedUpdates: Array.Empty<UpdateType>(),
             cancellationToken: cancellationToken);
     }
