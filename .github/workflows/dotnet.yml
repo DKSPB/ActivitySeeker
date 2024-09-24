@@ -28,11 +28,17 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
 
+    # - name: install dotnet ef tool
+    #   run: dotnet tool install dotnet-ef --version 6.*
+
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
     - name: dotnet publish
       run: dotnet publish -c Release -o myapp
+
+    - name: build dotnet ef migration bundle
+      run: dotnet ef migrations bundle --target-runtime linux-x64 --configuration Bundle -o myapp/efbundle --verbose
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
@@ -51,12 +57,26 @@ jobs:
         TARGET: "/opt/activity_seeker"
         # EXCLUDE: "/dist/, /node_modules/"
         SCRIPT_BEFORE: |
-          whoami
-          ls -al
           systemctl stop bot
         SCRIPT_AFTER: |
-          whoami
-          ls -al
-          echo $RSYNC_STDOUT
+          cat << EOF
+          {
+            "Logging": {
+              "LogLevel": {
+                "Default": "Information",
+                "Microsoft.AspNetCore": "Warning"
+              }
+            },
+            "AllowedHosts": "*",
+            "BotConfiguration": {
+              "BotToken": "__ITS_A_SECRET_",
+              "WebhookUrl": "__ITS_A_SECRET_",
+              "PathToCertificate": "/opt/activity_seeker/fullchain.crt"
+            },
+            "ConnectionStrings": {
+              "ActivitySeekerConnection": "Host=${{ secrets.REMOTE_HOST }};Port=5432;Database=activity_seeker;Username=postgres;Password=__ITS_A_SECRET_;Include Error Detail=true;"
+            }
+          }
+          EOF
           chown -R root:root /opt/activity_seeker/
           systemctl restart bot
