@@ -76,7 +76,7 @@ jobs:
               "PathToCertificate": "/etc/letsencrypt/live/v2575056.hosted-by-vdsina.ru/telegram_ssl_public.pem"
             },
             "ConnectionStrings": {
-              "ActivitySeekerConnection": "Host=127.0.0.1;Port=5432;Database=activity_seeker;Username=${{ secrets.DB_USER }};Password=${{ secrets.DB_PASSWORD }};Include Error Detail=true;"
+              "ActivitySeekerConnection": "${{ secrets.CONNECTION_STRING }}"
             }
           }
           EOT
