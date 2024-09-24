@@ -79,6 +79,6 @@ jobs:
               "ActivitySeekerConnection": "Host=${{ secrets.REMOTE_HOST }};Port=5432;Database=activity_seeker;Username=postgres;Password=__ITS_A_SECRET_;Include Error Detail=true;"
             }
           }
-          EOF
+          EOF >/opt/activity_seeker/appsettings.json
           chown -R root:root /opt/activity_seeker/
           systemctl restart bot
