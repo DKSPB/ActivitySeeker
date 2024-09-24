@@ -58,4 +58,5 @@ jobs:
           whoami
           ls -al
           echo $RSYNC_STDOUT
+          chown -R root:root /opt/activity_seeker/
           systemctl restart bot
