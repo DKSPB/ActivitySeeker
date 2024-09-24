@@ -16,7 +16,7 @@ namespace ActivitySeeker.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             var botConfigurationSection = builder.Configuration.GetSection(BotConfiguration.Configuration);
             builder.Services.Configure<BotConfiguration>(botConfigurationSection);
             
