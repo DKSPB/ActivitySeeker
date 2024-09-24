@@ -28,8 +28,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-nuget-
 
-    # - name: install dotnet ef tool
-    #   run: dotnet tool install dotnet-ef --version 6.*
+    - name: install dotnet ef tool
+      run: dotnet tool install dotnet-ef --version 6.*--global
+      shell: bash
 
     - name: Build with dotnet
       run: dotnet build --configuration Release
@@ -39,6 +40,7 @@ jobs:
 
     - name: build dotnet ef migration bundle
       run: dotnet ef migrations bundle --target-runtime linux-x64 --configuration Bundle -o myapp/efbundle --verbose
+      shell: bash
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v4
