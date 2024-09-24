@@ -61,7 +61,7 @@ jobs:
         SCRIPT_BEFORE: |
           systemctl stop bot
         SCRIPT_AFTER: |
-          cat << EOF
+          cat >/opt/activity_seeker/appsettings.json <<EOT
           {
             "Logging": {
               "LogLevel": {
@@ -79,6 +79,6 @@ jobs:
               "ActivitySeekerConnection": "Host=${{ secrets.REMOTE_HOST }};Port=5432;Database=activity_seeker;Username=postgres;Password=__ITS_A_SECRET_;Include Error Detail=true;"
             }
           }
-          EOF >/opt/activity_seeker/appsettings.json
+          EOT
           chown -R root:root /opt/activity_seeker/
           systemctl restart bot
