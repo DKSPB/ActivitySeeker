@@ -48,7 +48,7 @@ jobs:
         SOURCE: ${{env.DOTNET_ROOT}}/myapp
         REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
         REMOTE_USER: ${{ secrets.REMOTE_USER }}
-        TARGET: ${{ secrets.REMOTE_TARGET }}
+        TARGET: "/opt/activity_seeker"
         # EXCLUDE: "/dist/, /node_modules/"
         SCRIPT_BEFORE: |
           whoami
