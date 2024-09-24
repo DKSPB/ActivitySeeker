@@ -39,7 +39,7 @@ jobs:
       run: dotnet publish -c Release -o myapp
 
     - name: build dotnet ef migration bundle
-      run: dotnet ef migrations bundle --target-runtime linux-x64 --configuration Bundle -o myapp/efbundle --verbose
+      run: dotnet ef migrations bundle --target-runtime linux-x64 --configuration Bundle -o myapp/efbundle --project ActivitySeeker.Api/ActivitySeeker.Api.csproj --verbose
       shell: bash
 
     - name: Upload artifact for deployment job
