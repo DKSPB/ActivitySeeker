@@ -1,12 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivitySeeker.Domain", "ActivitySeeker.Domain\ActivitySeeker.Domain.csproj", "{F1E1247B-3422-4118-8E1E-DF7ED7778BB1}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35312.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Domain", "ActivitySeeker.Domain\ActivitySeeker.Domain.csproj", "{F1E1247B-3422-4118-8E1E-DF7ED7778BB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivitySeeker.Tests", "ActivitySeeker.Tests\ActivitySeeker.Tests.csproj", "{4180737F-B941-4E32-9AFA-7865014894CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Tests", "ActivitySeeker.Tests\ActivitySeeker.Tests.csproj", "{4180737F-B941-4E32-9AFA-7865014894CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivitySeeker.Api", "ActivitySeeker.Api\ActivitySeeker.Api.csproj", "{EA68C017-25CA-48D4-80C9-BE814CA7E62B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Api", "ActivitySeeker.Api\ActivitySeeker.Api.csproj", "{EA68C017-25CA-48D4-80C9-BE814CA7E62B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivitySeeker.Bll", "ActivitySeeker.Bll\ActivitySeeker.Bll.csproj", "{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Bll", "ActivitySeeker.Bll\ActivitySeeker.Bll.csproj", "{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "activityseeker.ui", "ActivitySeeker.Ui\activityseeker.ui.esproj", "{EB5530D0-97FC-4F6E-BEA8-815926D565BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +35,14 @@ Global
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
