@@ -16,6 +16,10 @@ public class UserDto
 
     public State State { get; set; } = new();
 
+    public ActivityDto? Offer { get; set; }
+    
+    public Guid? OfferId { get; set; }
+
     public UserDto()
     {
         
@@ -25,8 +29,10 @@ public class UserDto
         Id = user.Id;
         ChatId = user.ChatId;
         UserName = user.UserName;
+        Offer = user.Offer is null ? null : new ActivityDto(user.Offer);
         ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityTelegramDto>>(user.ActivityResult) ??
                          new LinkedList<ActivityTelegramDto>();
+        OfferId = user.OfferId;
         
         State = new State
         {

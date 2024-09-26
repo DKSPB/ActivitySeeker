@@ -34,10 +34,15 @@ public class User
 
     [Column("activity_result")]
     public string ActivityResult { get; set; } = default!;
+    
+    [Column("offer_id")]
+    public Guid? OfferId { get; set; }
 
     #region Навигационные свойства
 
     public ActivityType? ActivityType { get; set; }
+
+    public Activity? Offer { get; set; }
 
     #endregion
 }

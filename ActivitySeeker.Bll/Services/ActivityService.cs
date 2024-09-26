@@ -66,7 +66,7 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public async Task<ActivityDto> GetActivity(Guid activityId)
+        public async Task<ActivityDto> GetActivityAsync(Guid activityId)
         {
             var activityEntity = await _context.Activities.FirstOrDefaultAsync(x => x.Id.Equals(activityId));
 

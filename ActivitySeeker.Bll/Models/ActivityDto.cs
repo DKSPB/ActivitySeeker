@@ -18,6 +18,7 @@ public class ActivityDto: ActivityBaseDto
         ActivityTypeId = activity.ActivityTypeId;
         Link = activity.Link;
         Image = activity.Image;
+        OfferState = activity.OfferState;
     }
 
     public Activity ToActivity()
@@ -28,7 +29,8 @@ public class ActivityDto: ActivityBaseDto
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
             Image = Image,
-            Link = Link
+            Link = Link,
+            OfferState = OfferState
         };
     }
 }

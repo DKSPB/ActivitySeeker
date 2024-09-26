@@ -25,14 +25,40 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
+        public static InlineKeyboardMarkup GetOfferKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Добавить ссылку", StatesEnum.OfferActivityLink.GetDisplayName()), 
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Добавить описание", StatesEnum.OfferActivityLink.GetDisplayName()), 
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup ConfirmOffer()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Подтвердить мероприятие", StatesEnum.ConfirmOffer.GetDisplayName()), 
+                }
+            });
+        }
+
         public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityType> activityTypes) 
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
             
-            activityTypeButtons.Add(new List<InlineKeyboardButton>
+            /*activityTypeButtons.Add(new List<InlineKeyboardButton>
             {
                 InlineKeyboardButton.WithCallbackData("Все виды активностей", Guid.Empty.ToString())
-            });
+            });*/
 
             foreach (var activityType in activityTypes)
             {

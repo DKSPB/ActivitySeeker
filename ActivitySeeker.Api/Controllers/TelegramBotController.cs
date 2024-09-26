@@ -45,6 +45,13 @@ public class TelegramBotController: ControllerBase
                         return Ok();
                     }
 
+                    if (update.Message.Text is not null && update.Message.Text.Equals("/offer"))
+                    {
+                        var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
+                        await offerHandler.HandleAsync(currentUser, update, cancellationToken);
+                        return Ok();
+                    }
+
                     var handlerType = FindHandlerByState(handlerTypes, currentUser.State.StateNumber);
 
                     if (handlerType is not null)

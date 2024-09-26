@@ -17,5 +17,14 @@ public enum StatesEnum
     MonthPeriod,
     PeriodFromDate,
     PeriodToDate,
-    Result
+    Result,
+    Offer,
+    SelectListOfferType,
+    OfferActivityLink,
+    SaveActivityLink,
+    AddOfferDate,
+    ConfirmOffer,
+    OfferActivityDescription,
+    OfferActivityPicture,
+    WaitNewUserActivityDescription
 }

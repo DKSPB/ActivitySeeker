@@ -18,6 +18,8 @@ public class ActivityBaseDto
     
     public string? Link { get; set; }
 
+    public OffersEnum OfferState { get; set; }
+
     public ActivityBaseDto(Activity activity)
     {
         Id = activity.Id;
@@ -25,5 +27,6 @@ public class ActivityBaseDto
         Description = activity.Description;
         StartDate = activity.StartDate;
         Link = activity.Link;
+        OfferState = activity.OfferState;
     }
 }

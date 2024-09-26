@@ -38,7 +38,7 @@ public class ActivityController : ControllerBase
     [HttpGet("{activityId:guid}")]
     public async Task<IActionResult> GetByActivityId([FromRoute]Guid activityId)
     {
-        return Ok(await _activityService.GetActivity(activityId));
+        return Ok(await _activityService.GetActivityAsync(activityId));
     }
 
     /// <summary>

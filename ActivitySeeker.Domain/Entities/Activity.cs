@@ -20,9 +20,12 @@ public class Activity
     
     [Column("start_date")]
     public DateTime StartDate { get; set; }
-    
+
     [Column("activity_type_id")]
     public Guid ActivityTypeId { get; set; }
+    
+    [Column("offer_state")]
+    public OffersEnum OfferState { get; set; } = OffersEnum.NotPublish;
 
     #region Навигационные свойства
 

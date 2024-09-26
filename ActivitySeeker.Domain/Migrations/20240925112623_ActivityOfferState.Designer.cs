@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20240925112623_ActivityOfferState")]
+    partial class ActivityOfferState
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +67,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Тренеровки на открытом воздухе. Приглашаем всех присоединиться к тренировкам на открытом воздухе",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 10, 3, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8026)
+                            StartDate = new DateTime(2024, 10, 3, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7104)
                         },
                         new
                         {
@@ -73,7 +75,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Игра в настолку Бункер. Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 9, 28, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8045)
+                            StartDate = new DateTime(2024, 9, 28, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7127)
                         },
                         new
                         {
@@ -81,7 +83,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Мастер-класс по изготовлению свечи. Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 9, 26, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8047)
+                            StartDate = new DateTime(2024, 9, 26, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7130)
                         },
                         new
                         {
@@ -89,7 +91,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Мастер-класс по изготовлению глиняной посуды. Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 10, 25, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8050)
+                            StartDate = new DateTime(2024, 10, 25, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7133)
                         },
                         new
                         {
@@ -97,7 +99,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Вархаммер 40000. Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 9, 25, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8052)
+                            StartDate = new DateTime(2024, 9, 25, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7135)
                         },
                         new
                         {
@@ -105,7 +107,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Футбол в Мурино. Все желающие, присоединяйтесь к нашей команде для игры в футбол",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 9, 27, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8056)
+                            StartDate = new DateTime(2024, 9, 27, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7139)
                         },
                         new
                         {
@@ -113,7 +115,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Соревнования по настольному теннису. Fitness House Мурино проводит соревнования по настольному теннису!",
                             OfferState = 3,
-                            StartDate = new DateTime(2024, 9, 30, 15, 22, 31, 960, DateTimeKind.Local).AddTicks(8057)
+                            StartDate = new DateTime(2024, 9, 30, 14, 26, 23, 140, DateTimeKind.Local).AddTicks(7140)
                         });
                 });
 
@@ -181,10 +183,6 @@ namespace ActivitySeeker.Domain.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("message_id");
 
-                    b.Property<Guid?>("OfferId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("offer_id");
-
                     b.Property<DateTime>("SearchFrom")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("search_from");
@@ -206,8 +204,6 @@ namespace ActivitySeeker.Domain.Migrations
 
                     b.HasIndex("ActivityTypeId");
 
-                    b.HasIndex("OfferId");
-
                     b.ToTable("user", "activity_seeker");
                 });
 
@@ -228,13 +224,7 @@ namespace ActivitySeeker.Domain.Migrations
                         .WithMany()
                         .HasForeignKey("ActivityTypeId");
 
-                    b.HasOne("ActivitySeeker.Domain.Entities.Activity", "Offer")
-                        .WithMany()
-                        .HasForeignKey("OfferId");
-
                     b.Navigation("ActivityType");
-
-                    b.Navigation("Offer");
                 });
 
             modelBuilder.Entity("ActivitySeeker.Domain.Entities.ActivityType", b =>
