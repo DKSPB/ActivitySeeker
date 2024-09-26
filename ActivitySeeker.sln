@@ -13,6 +13,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Bll", "Activ
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "activityseeker.ui", "ActivitySeeker.Ui\activityseeker.ui.esproj", "{EB5530D0-97FC-4F6E-BEA8-815926D565BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivitySeeker.UI2.Server", "ActivitySeeker.UI2\ActivitySeeker.UI2.Server\ActivitySeeker.UI2.Server.csproj", "{13ADCB8F-9CDB-4239-AA5E-6275A01F99A4}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "activityseeker.ui2.client", "ActivitySeeker.UI2\activityseeker.ui2.client\activityseeker.ui2.client.esproj", "{7C73D39A-F1E1-4161-99CA-8484BF930028}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,16 @@ Global
 		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB5530D0-97FC-4F6E-BEA8-815926D565BA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{13ADCB8F-9CDB-4239-AA5E-6275A01F99A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13ADCB8F-9CDB-4239-AA5E-6275A01F99A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13ADCB8F-9CDB-4239-AA5E-6275A01F99A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13ADCB8F-9CDB-4239-AA5E-6275A01F99A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C73D39A-F1E1-4161-99CA-8484BF930028}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C73D39A-F1E1-4161-99CA-8484BF930028}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C73D39A-F1E1-4161-99CA-8484BF930028}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7C73D39A-F1E1-4161-99CA-8484BF930028}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C73D39A-F1E1-4161-99CA-8484BF930028}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C73D39A-F1E1-4161-99CA-8484BF930028}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
