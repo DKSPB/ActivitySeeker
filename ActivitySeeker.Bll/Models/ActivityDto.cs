@@ -25,6 +25,7 @@ public class ActivityDto: ActivityBaseDto
     {
         return new Activity
         {
+            Id = Id,
             Description = Description,
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,

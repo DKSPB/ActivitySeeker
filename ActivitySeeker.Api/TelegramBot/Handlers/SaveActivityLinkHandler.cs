@@ -27,7 +27,6 @@ public class SaveActivityLinkHandler : IHandler
         
         var offerLink = update.Message.Text;
         
-        //var activityId = currentUser.OfferId;
         if (currentUser.Offer is null)
         {
             throw new ArgumentNullException($"Ошибка создания активности,  offer is null");
@@ -37,17 +36,12 @@ public class SaveActivityLinkHandler : IHandler
         {
             currentUser.State.StateNumber = StatesEnum.AddOfferDate;
             currentUser.Offer.Link = offerLink;
-            //var offer = await _activityService.GetActivityAsync((Guid)activityId);
 
-            //offer.Link = offerLink;
-           
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 text: $"Введите дату мероприятия в формате (дд.мм.гггг чч.мм):" +
                       $"\nпример:{DateTime.Now:dd.MM.yyyy HH:mm}",
                 cancellationToken: cancellationToken);
-
-            //await _activityService.UpdateActivity(offer);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
