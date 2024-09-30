@@ -24,7 +24,6 @@ public class ActivityTypeDto
     {
         return new ActivityType
         {
-            //Id = Id,
             TypeName = TypeName
         };
     }

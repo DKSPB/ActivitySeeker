@@ -23,13 +23,30 @@ public class UserService: IUserService
         userExists.MessageId = user.State.MessageId;
         userExists.State = user.State.StateNumber;
         userExists.ChatId = user.ChatId;
-        userExists.Offer = user.Offer?.ToActivity();
         userExists.UserName = user.UserName;
         userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
         userExists.ActivityTypeId = user.State.ActivityType.Id;
         userExists.SearchFrom = user.State.SearchFrom.GetValueOrDefault();
         userExists.SearchTo = user.State.SearchTo.GetValueOrDefault();
-        userExists.OfferId = user.OfferId;
+
+        if (user.Offer is null)
+        {
+            userExists.Offer = null;
+        }
+        else if (userExists.Offer is null)
+        {
+            userExists.Offer = user.Offer.ToActivity();
+        }
+        else
+        {
+            userExists.Offer.Id = user.Offer.Id;
+            userExists.Offer.Description = user.Offer.Description;
+            userExists.Offer.ActivityTypeId = user.Offer.ActivityTypeId;
+            userExists.Offer.OfferState = user.Offer.OfferState;
+            userExists.Offer.StartDate = user.Offer.StartDate;
+            userExists.Offer.Link = user.Offer.Link;
+            userExists.Offer.Image = user.Offer.Image;
+        }
 
         _context.Users.Update(userExists);
         _context.SaveChanges();
@@ -39,11 +56,9 @@ public class UserService: IUserService
     /// <inheritdoc />
     public void CreateUser(UserDto user)
     {
-
-            var userEntity = UserDto.ToUser(user);
-            _context.Users.Add(userEntity);
-            _context.SaveChanges();
-
+        var userEntity = UserDto.ToUser(user);
+        _context.Users.Add(userEntity);
+        _context.SaveChanges();
     }
     
     /// <inheritdoc />
