@@ -8,10 +8,12 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/activityType")]
 public class ActivityTypeController : ControllerBase
 {
+    private readonly ILogger<ActivityController> _logger;
     private readonly IActivityTypeService _activityTypeService;
     
-    public ActivityTypeController(IActivityTypeService activityTypeService)
+    public ActivityTypeController(ILogger<ActivityController> logger, IActivityTypeService activityTypeService)
     {
+        _logger = logger;
         _activityTypeService = activityTypeService;
     }
     
