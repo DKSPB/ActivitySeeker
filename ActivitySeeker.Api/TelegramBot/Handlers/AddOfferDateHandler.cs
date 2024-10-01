@@ -1,73 +1,30 @@
-using System.Globalization;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.AddOfferDate)]
-public class AddOfferDateHandler : IHandler
+public class AddOfferDateHandler : AbstractHandler
 {
-    private readonly ITelegramBotClient _botClient;
-    private readonly IUserService _userService;
-    private readonly IActivityService _activityService;
-
-    public AddOfferDateHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService)
+    public AddOfferDateHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : base(botClient, userService, activityService)
     {
-        _botClient = botClient;
-        _userService = userService;
-        _activityService = activityService;
     }
 
-    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
-        var message = update.Message;
+        CurrentUser.State.StateNumber = StatesEnum.SaveOfferDate;
 
-        var byDateText = update.Message.Text;
-        var format = "dd.MM.yyyy HH:mm";
-
-        var result = ParseDate(byDateText, format, out var byDate);
-
-        var activityId = currentUser.OfferId ?? Guid.Empty;
-
-        if (result)
-        {
-            currentUser.State.StateNumber = StatesEnum.ConfirmOffer;
-            
-            var offer = await _activityService.GetActivityAsync(activityId);
-            offer.StartDate = byDate;
-
-            var feedbackMessage = await _botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                text: $"Подтвердите предлагаемое мероприятие:" +
-                      $"\nмероприятие",
-                replyMarkup: Keyboards.ConfirmOffer(),
-                cancellationToken: cancellationToken);
-            
-            await _activityService.UpdateActivity(offer);
-            
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
-        }
-        else
-        {
-            var feedbackMessage = await _botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                text: $"Введёная дата не соответствует формату:" +
-                      $"\n(дд.мм.гггг чч.мм)" +
-                      $"\nпример: {DateTime.Now:dd.MM.yyyy HH:mm}",
-                cancellationToken: cancellationToken);
-            
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
-        }
+        ResponseMessageText = $"Введите дату мероприятия в формате (дд.мм.гггг чч.мм):" +
+                              $"\nпример:{DateTime.Now:dd.MM.yyyy HH:mm}";
+        
+        return Task.CompletedTask;
     }
-    
-    bool ParseDate(string fromDateText, string format, out DateTime fromDate)
+
+    protected override IReplyMarkup GetKeyboard()
     {
-        return DateTime.TryParseExact(fromDateText, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDate);
+        return InlineKeyboardMarkup.Empty();
     }
 }

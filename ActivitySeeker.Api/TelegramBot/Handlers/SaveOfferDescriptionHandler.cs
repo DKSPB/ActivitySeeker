@@ -3,41 +3,38 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SaveActivityLink)]
-public class SaveActivityLinkHandler : IHandler
+public class SaveOfferDescriptionHandler : IHandler
 {
     private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
 
-    public SaveActivityLinkHandler(ITelegramBotClient botClient, IUserService userService)
+    public SaveOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService)
     {
         _botClient = botClient;
         _userService = userService;
     }
-
     public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var message = update.Message;
         
-        var offerLink = update.Message.Text;
+        var offerDescription = update.Message.Text;
         
         if (currentUser.Offer is null)
         {
             throw new ArgumentNullException($"Ошибка создания активности,  offer is null");
         }
         
-        if (!string.IsNullOrWhiteSpace(offerLink))
+        if (!string.IsNullOrWhiteSpace(offerDescription))
         {
-            currentUser.State.StateNumber = StatesEnum.AddOfferDate;
-            currentUser.Offer.Link = offerLink;
+            currentUser.Offer.Description = offerDescription;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Ссылка добавлена",
+                text: $"Необходимо ввести дату мероприятия",
+                replyMarkup: Keyboards.GetPinOfferPictureKeyboard(),
                 cancellationToken: cancellationToken);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
@@ -45,11 +42,11 @@ public class SaveActivityLinkHandler : IHandler
         }
         else
         {
-            currentUser.State.StateNumber = StatesEnum.OfferActivityLink;
+            currentUser.State.StateNumber = StatesEnum.AddOfferDescription;
             
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: "Поле ссылки не может быть пустым или содержать только пробелы!",
+                text: "Поле описания не может быть пустым!",
                 cancellationToken: cancellationToken);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;

@@ -22,9 +22,11 @@ public enum StatesEnum
     SelectListOfferType,
     OfferActivityLink,
     SaveActivityLink,
+    AddOfferDescription,
+    SaveOfferDescription,
+    AddOfferPicture,
+    SaveOfferPicture,
     AddOfferDate,
-    ConfirmOffer,
-    OfferActivityDescription,
-    OfferActivityPicture,
-    WaitNewUserActivityDescription
+    SaveOfferDate,
+    ConfirmOffer
 }

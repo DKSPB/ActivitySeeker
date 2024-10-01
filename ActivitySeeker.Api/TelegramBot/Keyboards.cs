@@ -36,6 +36,25 @@ namespace ActivitySeeker.Api.TelegramBot
                 new []
                 {
                     InlineKeyboardButton.WithCallbackData("Добавить описание", StatesEnum.OfferActivityLink.GetDisplayName()), 
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
+                }
+            });
+        }
+        
+        public static InlineKeyboardMarkup GetPinOfferPictureKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Да", StatesEnum.OfferActivityLink.GetDisplayName()), 
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Нет", StatesEnum.AddOfferDate.GetDisplayName()), 
                 }
             });
         }

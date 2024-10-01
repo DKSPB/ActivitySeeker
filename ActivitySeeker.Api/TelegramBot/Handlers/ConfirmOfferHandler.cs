@@ -3,41 +3,38 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.ConfirmOffer)]
-public class ConfirmOfferHandler : IHandler
+public class ConfirmOfferHandler : AbstractHandler
 {
-    private readonly ITelegramBotClient _botClient;
-    private readonly IUserService _userService;
-    private readonly IActivityService _activityService;
-    
-    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService)
+    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : base(botClient, userService, activityService)
     {
-        _botClient = botClient;
-        _userService = userService;
-        _activityService = activityService;
     }
-    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
-    {
-        var message = update.Message;
-        
-        var activityId = currentUser.OfferId ?? Guid.Empty;
-        
-        currentUser.State.StateNumber = StatesEnum.Start;
-        
-        var offer = await _activityService.GetActivityAsync(activityId);
-        offer.OfferState = (OffersEnum)1;
-        
-        var feedbackMessage = await _botClient.SendTextMessageAsync(
-            message.Chat.Id,
-            text: $"Предложка успешно отправлена на модерацию!",
-            cancellationToken: cancellationToken);
 
-        await _activityService.UpdateActivity(offer);
-            
-        currentUser.State.MessageId = feedbackMessage.MessageId;
-        _userService.UpdateUser(currentUser);
+    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    {
+        CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+
+        if (CurrentUser.Offer is null)
+        {
+            throw new NullReferenceException("Предложенная активность не может быть null");
+        }
+
+        CurrentUser.Offer.OfferState = OffersEnum.Offered;
+        
+        ResponseMessageText = $"Предложенная активность отправлена на модерацию " +
+                              $"\n{CurrentUser.State.ToString()}";
+
+        CurrentUser.Offer = null;
+
+        return Task.CompletedTask;
+    }
+
+    protected override IReplyMarkup GetKeyboard()
+    {
+        return Keyboards.GetMainMenuKeyboard();
     }
 }
