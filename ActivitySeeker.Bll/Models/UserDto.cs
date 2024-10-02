@@ -40,13 +40,6 @@ public class UserDto
             SearchTo = user.SearchTo,
             MessageId = user.MessageId,
             StateNumber = user.State,
-            ActivityType = user.ActivityTypeId == null
-                ? new ActivityTypeDto()
-                : new ActivityTypeDto
-                {
-                    Id = user.ActivityTypeId,
-                    TypeName = user.ActivityType.TypeName
-                }
         };
     }
     
@@ -59,7 +52,6 @@ public class UserDto
             UserName = user.UserName,
             MessageId = user.State.MessageId,
             State = user.State.StateNumber,
-            ActivityTypeId = user.State.ActivityType.Id,
             SearchFrom = user.State.SearchFrom.GetValueOrDefault(),
             SearchTo = user.State.SearchTo.GetValueOrDefault(),
             ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
