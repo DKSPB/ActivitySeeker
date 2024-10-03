@@ -25,6 +25,8 @@ public class SaveOfferDateHandler : IHandler
     public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var message = update.Message;
+        
+        string info = "";
 
         var byDateText = update.Message.Text;
         var format = "dd.MM.yyyy HH:mm";
@@ -42,9 +44,20 @@ public class SaveOfferDateHandler : IHandler
 
             currentUser.Offer.StartDate = byDate;
 
+            if (currentUser.Offer.Link is not null)
+            {
+                info = $"Ссылка: {currentUser.Offer.Link}";
+            }
+            else if (currentUser.Offer.Description is not null)
+            {
+                info = $"Описание: {currentUser.Offer.Description}";
+            }
+
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Подтвердите предлагаемое мероприятие:",
+                text: $"Подтвердите предлагаемое мероприятие: " +
+                        $"{info}" + 
+                        $"Дата проведения: {currentUser.Offer.StartDate}",
                 replyMarkup: Keyboards.ConfirmOffer(),
                 cancellationToken: cancellationToken);
             
