@@ -62,7 +62,6 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SelectListOfferType>();
                 builder.Services.AddScoped<AddOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
-                builder.Services.AddScoped<AddOfferDateHandler>(); 
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
                 {

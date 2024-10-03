@@ -35,7 +35,7 @@ namespace ActivitySeeker.Api.TelegramBot
                 },
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Добавить описание", StatesEnum.OfferActivityLink.GetDisplayName()), 
+                    InlineKeyboardButton.WithCallbackData("Добавить описание", StatesEnum.AddOfferDescription.GetDisplayName()), 
                 },
                 new []
                 {
@@ -44,7 +44,7 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
         
-        public static InlineKeyboardMarkup GetPinOfferPictureKeyboard()
+        /*public static InlineKeyboardMarkup GetPinOfferPictureKeyboard()
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
             {
@@ -57,7 +57,7 @@ namespace ActivitySeeker.Api.TelegramBot
                     InlineKeyboardButton.WithCallbackData("Нет", StatesEnum.AddOfferDate.GetDisplayName()), 
                 }
             });
-        }
+        }*/
 
         public static InlineKeyboardMarkup ConfirmOffer()
         {

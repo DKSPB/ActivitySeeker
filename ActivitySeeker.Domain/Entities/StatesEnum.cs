@@ -24,9 +24,6 @@ public enum StatesEnum
     SaveActivityLink,
     AddOfferDescription,
     SaveOfferDescription,
-    AddOfferPicture,
-    SaveOfferPicture,
-    AddOfferDate,
     SaveOfferDate,
     ConfirmOffer
 }

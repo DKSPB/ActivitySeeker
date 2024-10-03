@@ -6,6 +6,7 @@ using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.SaveOfferDescription)]
 public class SaveOfferDescriptionHandler : IHandler
 {
     private readonly ITelegramBotClient _botClient;
@@ -29,13 +30,14 @@ public class SaveOfferDescriptionHandler : IHandler
         
         if (!string.IsNullOrWhiteSpace(offerDescription))
         {
+            currentUser.State.StateNumber = StatesEnum.SaveOfferDate;
             currentUser.Offer.Description = offerDescription;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Необходимо ввести дату мероприятия",
-                replyMarkup: Keyboards.GetPinOfferPictureKeyboard(),
-                cancellationToken: cancellationToken);
+                text: $"Введите дату мероприятия в формате (дд.мм.гггг чч.мм):" +
+                      $"\nпример:{DateTime.Now:dd.MM.yyyy HH:mm}",
+            cancellationToken: cancellationToken);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);

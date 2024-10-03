@@ -63,7 +63,9 @@ public class UserService: IUserService
     /// <inheritdoc />
     public UserDto? GetUserById(long id)
     {
-        var user = _context.Users.FirstOrDefault(x=>x.Id == id);
+        var user = _context.Users.
+            Include(x => x.Offer).
+            FirstOrDefault(x=>x.Id == id);
 
         return user is null ? null : new UserDto(user);
     }

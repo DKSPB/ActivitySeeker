@@ -22,38 +22,54 @@ public class SaveActivityLinkHandler : IHandler
     public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var message = update.Message;
-        
+
         var offerLink = update.Message.Text;
-        
+
         if (currentUser.Offer is null)
         {
             throw new ArgumentNullException($"Ошибка создания активности,  offer is null");
         }
+
+        var result = offerLink != null && isLink(offerLink);
         
-        if (!string.IsNullOrWhiteSpace(offerLink))
+        if (result)
         {
-            currentUser.State.StateNumber = StatesEnum.AddOfferDate;
+            currentUser.State.StateNumber = StatesEnum.SaveOfferDate;
             currentUser.Offer.Link = offerLink;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Ссылка добавлена",
+                text: $"Введите дату мероприятия в формате (дд.мм.гггг чч.мм):" +
+                      $"\nпример:{DateTime.Now:dd.MM.yyyy HH:mm}",
                 cancellationToken: cancellationToken);
-            
+
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
         {
             currentUser.State.StateNumber = StatesEnum.OfferActivityLink;
-            
+
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: "Поле ссылки не может быть пустым или содержать только пробелы!",
+                text: "Поле ссылки содержит неправильные символы, либо же оно пустое или содержит пробелы!",
                 cancellationToken: cancellationToken);
-            
+
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
+    }
+
+    private bool isLink(string offerLink)
+    {
+        if (!string.IsNullOrWhiteSpace(offerLink))
+        {
+            if (offerLink.Contains("t.me") || offerLink.Contains("vk.com"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

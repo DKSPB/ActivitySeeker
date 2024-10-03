@@ -31,23 +31,22 @@ public class SaveOfferDateHandler : IHandler
 
         var result = ParseDate(byDateText, format, out var byDate);
 
-        var activityId = currentUser.OfferId ?? Guid.Empty;
+        if (currentUser.Offer is null)
+        {
+            throw new ArgumentNullException($"Ошибка создания активности,  offer is null");
+        }
 
         if (result)
         {
             currentUser.State.StateNumber = StatesEnum.ConfirmOffer;
-            
-            var offer = await _activityService.GetActivityAsync(activityId);
-            offer.StartDate = byDate;
+
+            currentUser.Offer.StartDate = byDate;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Подтвердите предлагаемое мероприятие:" +
-                      $"\nмероприятие",
+                text: $"Подтвердите предлагаемое мероприятие:",
                 replyMarkup: Keyboards.ConfirmOffer(),
                 cancellationToken: cancellationToken);
-            
-            await _activityService.UpdateActivity(offer);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
