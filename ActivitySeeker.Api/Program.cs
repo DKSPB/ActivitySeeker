@@ -1,14 +1,20 @@
+using System.Text;
 using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Api.TelegramBot;
 using Microsoft.EntityFrameworkCore;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Services;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using NLog;
 using NLog.Web;
 using Telegram.Bot;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace ActivitySeeker.Api
 {
@@ -30,14 +36,35 @@ namespace ActivitySeeker.Api
                 builder.Services.Configure<BotConfiguration>(botConfigurationSection);
 
                 var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
-
                 var connection = builder.Configuration.GetConnectionString("ActivitySeekerConnection");
+
+                var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));
+                builder.Services.Configure<JwtOptions>(jwtConfigurationSection);
+                var jwtOptions = jwtConfigurationSection.Get<JwtOptions>();
+                
+                builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                    {
+                        options.TokenValidationParameters = new()
+                        {
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+                        };
+                    });
+                builder.Services.AddAuthorization();
+                
                 builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
                 builder.Services.AddScoped<ActivitySeekerContext>();
                 builder.Services.AddScoped<IUserService, UserService>();
                 builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
                 builder.Services.AddScoped<IActivityService, ActivityService>();
+                builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+                builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+                builder.Services.AddScoped<IAdminService, AdminService>();
                 builder.Services.AddScoped<StartHandler>();
                 builder.Services.AddScoped<MainMenuHandler>();
                 builder.Services.AddScoped<ListOfActivitiesHandler>();
@@ -70,7 +97,34 @@ namespace ActivitySeeker.Api
 
                 #endregion
 
-                builder.Services.AddSwaggerGen();
+                builder.Services.AddSwaggerGen(opt =>
+                {
+                    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+                    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                    {
+                        In = ParameterLocation.Header,
+                        Description = "Please enter token",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.Http,
+                        BearerFormat = "JWT",
+                        Scheme = "bearer"
+                    });
+                    
+                    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type=ReferenceType.SecurityScheme,
+                                    Id="Bearer"
+                                }
+                            },
+                            new string[]{}
+                        }
+                    });
+                });
                 
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
@@ -91,6 +145,7 @@ namespace ActivitySeeker.Api
                 }
 
                 app.UseRouting();
+                app.UseAuthentication();
                 app.UseAuthorization();
                 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 

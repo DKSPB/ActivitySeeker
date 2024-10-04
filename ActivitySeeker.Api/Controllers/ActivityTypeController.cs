@@ -1,11 +1,13 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
 [Route("api/activityType")]
+[Authorize]
 public class ActivityTypeController : ControllerBase
 {
     private readonly ILogger<ActivityController> _logger;
