@@ -14,9 +14,6 @@ public class User
     [Column("username")]
     public string UserName { get; set; } = default!;
 
-    [Column("is_admin")]
-    public bool IsAdmin { get; set; } = false;
-
     [Column("message_id")]
     public int MessageId { get; set; }
     
@@ -37,6 +34,8 @@ public class User
     
     #region Навигационные свойства
     public Activity? Offer { get; set; }
+    
+    public Admin? AdminProfile { get; set; }
 
     #endregion
 }
