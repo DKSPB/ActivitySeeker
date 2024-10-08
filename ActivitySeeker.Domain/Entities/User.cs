@@ -19,6 +19,9 @@ public class User
     
     [Column("state")]
     public StatesEnum State { get; set; }
+    
+    [Column("activity_type_id")]
+    public Guid? ActivityTypeId { get; set; }
 
     [Column("search_from")]
     public DateTime SearchFrom { get; set; }
@@ -35,7 +38,9 @@ public class User
     #region Навигационные свойства
     public Activity? Offer { get; set; }
     
+    public ActivityType? ActivityType { get; set; }
+    
     public Admin? AdminProfile { get; set; }
-
+    
     #endregion
 }

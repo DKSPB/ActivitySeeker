@@ -20,8 +20,6 @@ public class ListOfActivitiesHandler: AbstractHandler
 
         if (Guid.Parse(callbackQuery.Data) == Guid.Empty)
         {
-            //CurrentUser.State.ActivityTypeId = null;
-            //CurrentUser.State.ActivityType = "Все виды активности";
             CurrentUser.State.ActivityType = new();
         }
         else
