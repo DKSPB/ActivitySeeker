@@ -20,7 +20,7 @@ public class AdminController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegisterAdmin newAdmin)
     {
-        await _adminService.RegisterAsync(newAdmin.Username, newAdmin.Password);
+        await _adminService.RegisterAsync(newAdmin.Username, newAdmin.Login, newAdmin.Password);
         return Ok();
     }
     

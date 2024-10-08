@@ -17,29 +17,32 @@ public class AdminService: IAdminService
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
     }
-    public async Task RegisterAsync(string userName, string password)
+    public async Task RegisterAsync(string userName, string login, string password)
     {
-        var userExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Username == userName);
+        var adminExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Login == login);
 
-        if (userExists is not null)
+        if (adminExists is not null)
         {
             throw new ArgumentException("Пользователь с таким именем уже существует");
         }
 
         var hashedPassword = _passwordHasher.Generate(password);
 
-        await _activitySeekerContext.Admins.AddAsync(new Admin
+        var user = await _activitySeekerContext.Users.Include(x => x.AdminProfile)
+            .FirstAsync(x => x.UserName ==userName);
+
+        user.AdminProfile = new Admin
         {
-            Username = userName,
+            Login = login,
             HashedPassword = hashedPassword
-        });
+        };
 
         await _activitySeekerContext.SaveChangesAsync();
     }
 
     public async Task<string> LoginAsync(string userName, string password)
     {
-        var userExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Username == userName);
+        var userExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Login == userName);
 
         if (userExists is null)
         {

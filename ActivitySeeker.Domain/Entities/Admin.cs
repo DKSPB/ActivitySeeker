@@ -7,12 +7,22 @@ namespace ActivitySeeker.Domain.Entities;
 public class Admin
 {
     [Key]
+    [Column("id")]
     public Guid Id { get; set; }
+    
+    [Column("user_id")]
+    public long UserId { get; set; }
 
-    [Column("username")] 
-    public string Username { get; set; } = default!;
+    [Column("login")] 
+    public string Login { get; set; } = default!;
 
     [Column("hashed_password")]
     public string HashedPassword { get; set; } = default!;
+
+    #region NavigationProperties
+
+    public User User { get; set; } = null!;
+
+    #endregion
 
 }
