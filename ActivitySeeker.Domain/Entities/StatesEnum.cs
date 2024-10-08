@@ -25,5 +25,7 @@ public enum StatesEnum
     AddOfferDescription,
     SaveOfferDescription,
     SaveOfferDate,
-    ConfirmOffer
+    ConfirmOffer,
+    PublishOffer,
+    RejectOffer
 }

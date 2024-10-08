@@ -43,21 +43,6 @@ namespace ActivitySeeker.Api.TelegramBot
                 }
             });
         }
-        
-        /*public static InlineKeyboardMarkup GetPinOfferPictureKeyboard()
-        {
-            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
-            {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Да", StatesEnum.OfferActivityLink.GetDisplayName()), 
-                },
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Нет", StatesEnum.AddOfferDate.GetDisplayName()), 
-                }
-            });
-        }*/
 
         public static InlineKeyboardMarkup ConfirmOffer()
         {
@@ -73,12 +58,6 @@ namespace ActivitySeeker.Api.TelegramBot
         public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityType> activityTypes) 
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
-            
-            /*activityTypeButtons.Add(new List<InlineKeyboardButton>
-            {
-                InlineKeyboardButton.WithCallbackData("Все виды активностей", Guid.Empty.ToString())
-            });*/
-
             foreach (var activityType in activityTypes)
             {
                 activityTypeButtons.Add(new List<InlineKeyboardButton>
@@ -156,6 +135,18 @@ namespace ActivitySeeker.Api.TelegramBot
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Меню", StatesEnum.MainMenu.GetDisplayName())
+                }
+            });
+        }
+
+        public static InlineKeyboardMarkup GetOfferConfirmationMenu()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Опубликовать", StatesEnum.PublishOffer.GetDisplayName()),
+                    InlineKeyboardButton.WithCallbackData("Отклонить", StatesEnum.RejectOffer.GetDisplayName())
                 }
             });
         }

@@ -23,13 +23,18 @@ public class AdminService: IAdminService
 
         if (adminExists is not null)
         {
-            throw new ArgumentException("Пользователь с таким именем уже существует");
+            throw new ArgumentException("Администратор с таким логином уже существует");
         }
 
         var hashedPassword = _passwordHasher.Generate(password);
 
         var user = await _activitySeekerContext.Users.Include(x => x.AdminProfile)
-            .FirstAsync(x => x.UserName ==userName);
+            .FirstOrDefaultAsync(x => x.UserName == userName);
+
+        if (user is null)
+        {
+            throw new Exception("Нет информации о пользователе");
+        }
 
         user.AdminProfile = new Admin
         {
@@ -59,5 +64,10 @@ public class AdminService: IAdminService
         var token = _jwtProvider.GenerateToken(userExists);
 
         return token;
+    }
+
+    public async Task<IEnumerable<Admin>> GetAll()
+    {
+        return await _activitySeekerContext.Admins.Include(x => x.User).ToListAsync();
     }
 }
