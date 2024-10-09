@@ -25,32 +25,17 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
-        public static InlineKeyboardMarkup GetOfferKeyboard()
-        {
-            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
-            {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Добавить ссылку", StatesEnum.OfferActivityLink.GetDisplayName()), 
-                },
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Добавить описание", StatesEnum.AddOfferDescription.GetDisplayName()), 
-                },
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
-                }
-            });
-        }
-
         public static InlineKeyboardMarkup ConfirmOffer()
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Подтвердить мероприятие", StatesEnum.ConfirmOffer.GetDisplayName()), 
+                    InlineKeyboardButton.WithCallbackData("К началу", StatesEnum.Offer.GetDisplayName()),
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Предложить активность", StatesEnum.ConfirmOffer.GetDisplayName()), 
                 }
             });
         }
@@ -135,18 +120,6 @@ namespace ActivitySeeker.Api.TelegramBot
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Меню", StatesEnum.MainMenu.GetDisplayName())
-                }
-            });
-        }
-
-        public static InlineKeyboardMarkup GetOfferConfirmationMenu()
-        {
-            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
-            {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Опубликовать", StatesEnum.PublishOffer.GetDisplayName()),
-                    InlineKeyboardButton.WithCallbackData("Отклонить", StatesEnum.RejectOffer.GetDisplayName())
                 }
             });
         }

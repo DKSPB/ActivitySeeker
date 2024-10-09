@@ -28,15 +28,15 @@ public class SaveOfferDescriptionHandler : IHandler
             throw new ArgumentNullException($"Ошибка создания активности,  offer is null");
         }
         
-        if (!string.IsNullOrWhiteSpace(offerDescription))
+        if (!string.IsNullOrWhiteSpace(offerDescription) && offerDescription.Length <= 2000)
         {
             currentUser.State.StateNumber = StatesEnum.SaveOfferDate;
             currentUser.Offer.Description = offerDescription;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Введите дату мероприятия в формате (дд.мм.гггг чч.мм):" +
-                      $"\nпример:{DateTime.Now:dd.MM.yyyy HH:mm}",
+                text: $"Заполни дату и время проведения события в формате: (дд.мм.гггг чч.мм):" +
+                      $"\nПример:{DateTime.Now:dd.MM.yyyy HH:mm}",
             cancellationToken: cancellationToken);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
@@ -48,7 +48,7 @@ public class SaveOfferDescriptionHandler : IHandler
             
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: "Поле описания не может быть пустым!",
+                text: "Описание события не может быть пустым, состоять только из пробелов и содержать больше 2000 символов",
                 cancellationToken: cancellationToken);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;

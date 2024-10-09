@@ -14,7 +14,7 @@ public class ConfirmOfferHandler : AbstractHandler
     {
     }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
         CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
@@ -25,12 +25,14 @@ public class ConfirmOfferHandler : AbstractHandler
 
         CurrentUser.Offer.OfferState = OffersEnum.Offered;
         
-        ResponseMessageText = $"Предложенная активность отправлена на модерацию " +
-                              $"\n{CurrentUser.State.ToString()}";
+        await BotClient.SendTextMessageAsync(
+            callbackQuery.Message.Chat.Id,
+            text:"Поздравляю! Твоя активность создана. Она будет опубликована после проверки",
+            cancellationToken: cancellationToken);
+            
+        ResponseMessageText = $"{CurrentUser.State}";
 
         CurrentUser.Offer = null;
-
-        return Task.CompletedTask;
     }
 
     protected override IReplyMarkup GetKeyboard()

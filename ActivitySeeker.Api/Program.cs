@@ -82,11 +82,9 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<PreviousHandler>();
                 builder.Services.AddScoped<NextHandler>();
                 builder.Services.AddScoped<OfferHandler>();
-                builder.Services.AddScoped<OfferActivityLinkHandler>();
                 builder.Services.AddScoped<SaveActivityLinkHandler>();
                 builder.Services.AddScoped<SaveOfferDateHandler>();
                 builder.Services.AddScoped<ConfirmOfferHandler>();
-                builder.Services.AddScoped<SelectListOfferType>();
                 builder.Services.AddScoped<AddOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<PublishOfferHandler>();

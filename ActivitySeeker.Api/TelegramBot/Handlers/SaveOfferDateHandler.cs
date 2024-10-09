@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
@@ -14,9 +15,11 @@ public class SaveOfferDateHandler : IHandler
     private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
     private readonly IActivityService _activityService;
+    private readonly ILogger<SaveOfferDateHandler> _logger;
 
-    public SaveOfferDateHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService)
+    public SaveOfferDateHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ILogger<SaveOfferDateHandler> logger)
     {
+        _logger = logger;
         _botClient = botClient;
         _userService = userService;
         _activityService = activityService;
@@ -25,39 +28,38 @@ public class SaveOfferDateHandler : IHandler
     public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
     {
         var message = update.Message;
-        
-        string info = "";
 
-        var byDateText = update.Message.Text;
-        var format = "dd.MM.yyyy HH:mm";
-
-        var result = ParseDate(byDateText, format, out var byDate);
-
-        if (currentUser.Offer is null)
+        if (message is null)
         {
-            throw new ArgumentNullException($"Ошибка создания активности,  offer is null");
+            var errorMessage = "Объект update.Message is null";
+            _logger.LogError(errorMessage);
+            throw new ArgumentNullException(errorMessage);
         }
 
-        if (result)
+        if (message.Text is null)
         {
-            currentUser.State.StateNumber = StatesEnum.ConfirmOffer;
+            var errorMessage = "Объект update.Message.Text is null";
+            _logger.LogError(errorMessage);
+            throw new ArgumentNullException(errorMessage);
+        }
+        
+        if (currentUser.Offer is null)
+        {
+            throw new ArgumentNullException($"Ошибка создания активности, объект offer is null");
+        }
+        
+        var dateTimeFormat = "dd.MM.yyyy HH:mm";
+        var startActivityDateText = message.Text;
 
-            currentUser.Offer.StartDate = byDate;
+        var parsingDateResult = ParseDate(startActivityDateText, dateTimeFormat, out var startActivityDate);
 
-            if (currentUser.Offer.Link is not null)
-            {
-                info = $"Ссылка: {currentUser.Offer.Link}";
-            }
-            else if (currentUser.Offer.Description is not null)
-            {
-                info = $"Описание: {currentUser.Offer.Description}";
-            }
+        if (parsingDateResult)
+        {
+            currentUser.Offer.StartDate = startActivityDate;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Подтвердите предлагаемое мероприятие: " +
-                        $"{info}" + 
-                        $"Дата проведения: {currentUser.Offer.StartDate}",
+                text: GetFullOfferContent(currentUser.Offer),
                 replyMarkup: Keyboards.ConfirmOffer(),
                 cancellationToken: cancellationToken);
             
@@ -69,8 +71,8 @@ public class SaveOfferDateHandler : IHandler
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 text: $"Введёная дата не соответствует формату:" +
-                      $"\n(дд.мм.гггг чч.мм)" +
-                      $"\nпример: {DateTime.Now:dd.MM.yyyy HH:mm}",
+                      $"\n(дд.мм.гггг чч:мм)" +
+                      $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}",
                 cancellationToken: cancellationToken);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
@@ -78,8 +80,24 @@ public class SaveOfferDateHandler : IHandler
         }
     }
     
-    bool ParseDate(string fromDateText, string format, out DateTime fromDate)
+    private bool ParseDate(string fromDateText, string format, out DateTime fromDate)
     {
         return DateTime.TryParseExact(fromDateText, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDate);
+    }
+
+    private string GetFullOfferContent(ActivityDto offer)
+    {
+        StringBuilder builder = new();
+
+        builder.AppendLine("Эта активность будет предложена для публикации.");
+        builder.AppendLine("Убедись, что данные заполнены корректно ");
+        builder.AppendLine("Тип активности:");
+        builder.AppendLine(_activityService.GetActivityType(offer.ActivityTypeId).TypeName);
+        builder.AppendLine("Дата и время начала:");
+        builder.AppendLine(offer.StartDate.ToString("dd.MM.yyyy HH:mm"));
+        builder.AppendLine("Описание активности:");
+        builder.AppendLine(offer.Description);
+
+        return builder.ToString();
     }
 }

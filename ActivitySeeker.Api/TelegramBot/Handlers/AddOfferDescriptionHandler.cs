@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -9,6 +10,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.AddOfferDescription)]
 public class AddOfferDescriptionHandler : AbstractHandler
 {
+    
     public AddOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService,
         IActivityService activityService)
         : base(botClient, userService, activityService)
@@ -19,7 +21,29 @@ public class AddOfferDescriptionHandler : AbstractHandler
     {
         CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
         
-        ResponseMessageText = $"Введите описание предложенного мероприятия: ";
+        ResponseMessageText = $"Заполни описание события";
+
+        var selectedActivityTypeId = callbackQuery.Data;
+
+        if (string.IsNullOrEmpty(selectedActivityTypeId))
+        {
+            throw new ArgumentNullException("");
+        }
+
+        var selectedActivityType = ActivityService.GetActivityType(Guid.Parse(selectedActivityTypeId));
+
+        if (CurrentUser.Offer is null)
+        {
+            CurrentUser.Offer = new ActivityDto()
+            {
+                ActivityTypeId = selectedActivityType.Id,
+                OfferState = OffersEnum.NotOffered
+            };
+        }
+        else
+        {
+            CurrentUser.Offer.ActivityTypeId = selectedActivityType.Id;
+        }
         
         return Task.CompletedTask;
     }
