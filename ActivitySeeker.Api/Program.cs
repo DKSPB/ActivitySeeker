@@ -15,6 +15,8 @@ using Telegram.Bot;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.SignalR;
+using ActivitySeeker.Bll.Notification;
 
 namespace ActivitySeeker.Api
 {
@@ -55,7 +57,7 @@ namespace ActivitySeeker.Api
                         };
                     });
                 builder.Services.AddAuthorization();
-                
+                builder.Services.AddSignalR();
                 builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
                 builder.Services.AddScoped<ActivitySeekerContext>();
@@ -89,6 +91,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<PublishOfferHandler>();
                 builder.Services.AddScoped<RejectOfferHandler>();
+                builder.Services.AddSingleton<NotificationAdminHub>();
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
                 {
@@ -152,10 +155,12 @@ namespace ActivitySeeker.Api
                     app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"); });
                 }
 
+                app.UseStaticFiles();
                 app.UseRouting();
                 app.UseAuthentication();
                 app.UseAuthorization();
                 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+                app.MapHub<NotificationAdminHub>("/notify");
 
                 app.Run();
             }

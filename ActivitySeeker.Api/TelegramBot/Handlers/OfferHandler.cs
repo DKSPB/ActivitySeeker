@@ -51,7 +51,7 @@ public class OfferHandler : IHandler
                 cancellationToken
             );
         }
-        catch (Exception e)
+        catch (Exception)
         {
             var errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
             _loggerHandler.LogError(errorMessage);

@@ -1,6 +1,8 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Notification;
 using ActivitySeeker.Domain.Entities;
+using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -10,8 +12,11 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.ConfirmOffer)]
 public class ConfirmOfferHandler : AbstractHandler
 {
-    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : base(botClient, userService, activityService)
+    private readonly NotificationAdminHub _adminHub;
+    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, NotificationAdminHub adminHub)
+        : base(botClient, userService, activityService)
     {
+        _adminHub = adminHub;
     }
 
     protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
@@ -24,6 +29,8 @@ public class ConfirmOfferHandler : AbstractHandler
         }
 
         CurrentUser.Offer.OfferState = OffersEnum.Offered;
+
+        await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
         
         await BotClient.SendTextMessageAsync(
             callbackQuery.Message.Chat.Id,
