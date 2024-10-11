@@ -8,7 +8,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 public abstract class AbstractHandler: IHandler
 {
-    private IUserService UserService { get; set; }
+    protected IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
     protected string ResponseMessageText { get; set; } = default!;
     protected ITelegramBotClient BotClient { get; set; }

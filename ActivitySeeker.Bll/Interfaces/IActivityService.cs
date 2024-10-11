@@ -44,7 +44,7 @@ public interface IActivityService
     /// </summary>
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns></returns>
-    Task<ActivityDto> GetActivity(Guid activityId);
+    Task<ActivityDto> GetActivityAsync(Guid activityId);
 
     /// <summary>
     /// Получение изображения от активности

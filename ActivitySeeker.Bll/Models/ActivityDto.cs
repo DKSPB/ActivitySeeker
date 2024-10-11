@@ -18,17 +18,20 @@ public class ActivityDto: ActivityBaseDto
         ActivityTypeId = activity.ActivityTypeId;
         Link = activity.Link;
         Image = activity.Image;
+        OfferState = activity.OfferState;
     }
 
     public Activity ToActivity()
     {
         return new Activity
         {
+            Id = Id,
             Description = Description,
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
             Image = Image,
-            Link = Link
+            Link = Link,
+            OfferState = OfferState
         };
     }
 }

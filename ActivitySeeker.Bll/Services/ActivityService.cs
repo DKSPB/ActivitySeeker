@@ -66,7 +66,7 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public async Task<ActivityDto> GetActivity(Guid activityId)
+        public async Task<ActivityDto> GetActivityAsync(Guid activityId)
         {
             var activityEntity = await _context.Activities.FirstOrDefaultAsync(x => x.Id.Equals(activityId));
 
@@ -95,20 +95,18 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task DeleteActivity(List<ActivityDto> activitiesForRemove)
         {
+            foreach (var activity in activitiesForRemove)
+            {
+                var activityEntity =
+                    _context.Activities.FirstOrDefault(x => x.ActivityTypeId.Equals(activity.ActivityTypeId));
 
-                foreach (var activity in activitiesForRemove)
+                if (activityEntity is not null)
                 {
-                    var activityEntity =
-                        _context.Activities.FirstOrDefault(x => x.ActivityTypeId.Equals(activity.ActivityTypeId));
-
-                    if (activityEntity is not null)
-                    {
-                        _context.Activities.Remove(activityEntity);
-                    }
+                    _context.Activities.Remove(activityEntity);
                 }
+            }
 
-                await _context.SaveChangesAsync();
-
+            await _context.SaveChangesAsync();
         }
         
         /// <inheritdoc />

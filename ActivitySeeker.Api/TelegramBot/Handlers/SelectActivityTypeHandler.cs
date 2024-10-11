@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -24,6 +25,8 @@ public class SelectActivityTypeHandler: AbstractHandler
     protected override InlineKeyboardMarkup GetKeyboard()
     {
         var activityTypes = ActivityService.GetActivityTypes();
+        activityTypes.Insert(0, new ActivityType{Id = Guid.Empty, TypeName = "Все виды активностей"});
+        
         return Keyboards.GetActivityTypesKeyboard(activityTypes);
     }
 }

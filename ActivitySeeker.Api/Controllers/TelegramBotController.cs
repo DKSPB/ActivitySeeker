@@ -6,6 +6,7 @@ using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.Enums;
 using User = Telegram.Bot.Types.User;
@@ -25,6 +26,7 @@ public class TelegramBotController: ControllerBase
         _userService = userService;
     }
 
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken cancellationToken)
     {
@@ -42,6 +44,13 @@ public class TelegramBotController: ControllerBase
                     {
                         var handler = _serviceProvider.GetRequiredService<StartHandler>();
                         await handler.HandleAsync(currentUser, update, cancellationToken);
+                        return Ok();
+                    }
+
+                    if (update.Message.Text is not null && update.Message.Text.Equals("/offer"))
+                    {
+                        var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
+                        await offerHandler.HandleAsync(currentUser, update, cancellationToken);
                         return Ok();
                     }
 

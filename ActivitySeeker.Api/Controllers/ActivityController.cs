@@ -1,6 +1,7 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
 [Route("api/activity")]
+[Authorize]
 public class ActivityController : ControllerBase
 {
     private readonly IActivityService _activityService;
@@ -38,7 +40,7 @@ public class ActivityController : ControllerBase
     [HttpGet("{activityId:guid}")]
     public async Task<IActionResult> GetByActivityId([FromRoute]Guid activityId)
     {
-        return Ok(await _activityService.GetActivity(activityId));
+        return Ok(await _activityService.GetActivityAsync(activityId));
     }
 
     /// <summary>
