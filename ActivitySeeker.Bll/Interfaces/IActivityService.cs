@@ -17,7 +17,7 @@ public interface IActivityService
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
     /// <returns>Список активностей</returns>
-    /*List<ActivityBaseDto>*/ IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
+    IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
 
     /// <summary>
     /// Получение списка всех типов активностей

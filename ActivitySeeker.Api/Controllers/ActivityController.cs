@@ -4,12 +4,13 @@ using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Telegram.Bot.Requests.Abstractions;
 
 namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
 [Route("api/activity")]
-[Authorize]
 public class ActivityController : ControllerBase
 {
     private readonly IActivityService _activityService;
@@ -27,9 +28,28 @@ public class ActivityController : ControllerBase
     /// <param name="request">Набор необязательных параметров</param>
     /// <returns>Список объектов-активностей</returns>
     [HttpGet]
-    public IActionResult GetAll([FromQuery] ActivityRequest request)
+    public async Task<IActionResult> GetAll([FromQuery] ActivityFilters filters)
     {
-        return Ok(_activityService.GetActivities(request)?.Select(x => new ActivityBaseDto(x)));
+        var activities = _activityService.GetActivities(filters.ActivityRequest);
+
+        if (activities == null) 
+        {
+            return Ok(new PageDto<ActivityBaseDto>());
+        }
+
+        var total = activities.Count();
+
+        var data = await activities
+            .Skip(filters.Offset)
+            .Take(filters.Limmit)
+            .Select(x => new ActivityBaseDto(x))
+            .ToListAsync();
+
+        return Ok(new PageDto<ActivityBaseDto>
+        {
+            Total = total,
+            Data = data
+        });
     }
 
     /// <summary>
