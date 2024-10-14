@@ -116,5 +116,12 @@ public class ActivityController : ControllerBase
         await _activityService.DeleteActivity(activities);
         return Ok();
     }
+
+    [HttpPut("publish")]
+    public async Task<IActionResult> PublishActivities([FromBody] List<Guid>activityIds)
+    {
+        _activityService.PublishActivities(activityIds);
+        return Ok();
+    }
     
 }

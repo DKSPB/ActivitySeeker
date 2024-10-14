@@ -7,4 +7,6 @@ public class ActivityRequest
     public DateTime? SearchFrom { get; set; }
     
     public DateTime? SearchTo { get; set; }
+
+    public bool? IsPublished { get; set; }
 }

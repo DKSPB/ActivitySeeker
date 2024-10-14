@@ -69,4 +69,11 @@ public interface IActivityService
     /// </summary>
     /// <param name="activitiesForRemove">Список объектов для удаления</param>
     Task DeleteActivity(List<ActivityDto> activitiesForRemove);
+
+    /// <summary>
+    /// Публикация активностей из списка
+    /// </summary>
+    /// <param name="activityIds">Список идентификаторов активностей</param>
+    /// <returns></returns>
+    Task PublishActivities(List<Guid> activityIds);
 }

@@ -36,7 +36,8 @@ namespace ActivitySeeker.Bll.Services
             {
                 ActivityTypeId = currentUserState.ActivityType.Id,
                 SearchFrom = currentUserState.SearchFrom,
-                SearchTo = currentUserState.SearchTo
+                SearchTo = currentUserState.SearchTo,
+                IsPublished = true
             };
 
             var result = GetActivities(activityRequest);
@@ -60,7 +61,8 @@ namespace ActivitySeeker.Bll.Services
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
                 .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
-                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0);
+                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
+                .Where(x => !requestParams.IsPublished.HasValue || x.OfferState == requestParams.IsPublished);
             
             return result;
         }
@@ -132,6 +134,25 @@ namespace ActivitySeeker.Bll.Services
         public async Task<byte[]?> GetImage(Guid activityId)
         {
             return (await _context.Activities.FindAsync(activityId))?.Image;
+        }
+
+        /// <inheritdoc />
+        public async Task PublishActivities(List<Guid> activityIds)
+        {
+            activityIds.ForEach(async x => {
+
+                var activityEntity = await _context.Activities.FirstOrDefaultAsync(z => z.Id == x);
+
+                if (activityEntity is not null)
+                {
+                    activityEntity.OfferState = true;
+
+                    _context.Activities.Update(activityEntity);
+                }
+
+            });
+
+            await _context.SaveChangesAsync();
         }
     }
 }
