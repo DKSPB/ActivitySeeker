@@ -18,7 +18,7 @@ public class ActivityBaseDto
     
     public string? Link { get; set; }
 
-    public OffersEnum OfferState { get; set; }
+    public bool OfferState { get; set; }
 
     public ActivityBaseDto(Activity activity)
     {

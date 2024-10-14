@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20241014104144_remove_offer_state")]
+    partial class remove_offer_state
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,10 +46,6 @@ namespace ActivitySeeker.Domain.Migrations
                         .HasColumnType("text")
                         .HasColumnName("link");
 
-                    b.Property<bool>("OfferState")
-                        .HasColumnType("boolean")
-                        .HasColumnName("offer_state");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("start_date");
@@ -64,56 +62,49 @@ namespace ActivitySeeker.Domain.Migrations
                             Id = new Guid("66353503-2ad9-4e90-ae0c-4b46a69b6481"),
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Тренеровки на открытом воздухе. Приглашаем всех присоединиться к тренировкам на открытом воздухе",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 10, 22, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2282)
+                            StartDate = new DateTime(2024, 10, 22, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4168)
                         },
                         new
                         {
                             Id = new Guid("43955f98-0bdc-4ca6-ad25-604e186e3751"),
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Игра в настолку Бункер. Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 10, 17, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2297)
+                            StartDate = new DateTime(2024, 10, 17, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4183)
                         },
                         new
                         {
                             Id = new Guid("86c75c6b-43aa-42b6-8154-a6306f2c1cc7"),
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Мастер-класс по изготовлению свечи. Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 10, 15, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2300)
+                            StartDate = new DateTime(2024, 10, 15, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4186)
                         },
                         new
                         {
                             Id = new Guid("88ce103e-3f4a-4829-92a4-8d318447f3e6"),
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             Description = "Мастер-класс по изготовлению глиняной посуды. Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 11, 14, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2303)
+                            StartDate = new DateTime(2024, 11, 14, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4188)
                         },
                         new
                         {
                             Id = new Guid("4564a97f-fe6a-4493-9adc-7a5278b59937"),
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             Description = "Вархаммер 40000. Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 10, 14, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2307)
+                            StartDate = new DateTime(2024, 10, 14, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4192)
                         },
                         new
                         {
                             Id = new Guid("2b7c542f-8070-49b3-a20d-e2864b0b8383"),
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Футбол в Мурино. Все желающие, присоединяйтесь к нашей команде для игры в футбол",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 10, 16, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2311)
+                            StartDate = new DateTime(2024, 10, 16, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4196)
                         },
                         new
                         {
                             Id = new Guid("c4513d82-5a21-4583-bac8-71b869c8c57c"),
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             Description = "Соревнования по настольному теннису. Fitness House Мурино проводит соревнования по настольному теннису!",
-                            OfferState = true,
-                            StartDate = new DateTime(2024, 10, 19, 14, 55, 24, 803, DateTimeKind.Local).AddTicks(2314)
+                            StartDate = new DateTime(2024, 10, 19, 13, 41, 44, 175, DateTimeKind.Local).AddTicks(4198)
                         });
                 });
 

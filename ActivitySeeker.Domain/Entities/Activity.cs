@@ -23,9 +23,9 @@ public class Activity
 
     [Column("activity_type_id")]
     public Guid ActivityTypeId { get; set; }
-    
+
     [Column("offer_state")]
-    public OffersEnum OfferState { get; set; } = OffersEnum.NotPublish;
+    public bool OfferState { get; set; }
 
     #region Навигационные свойства
 

@@ -37,7 +37,7 @@ public class AddOfferDescriptionHandler : AbstractHandler
             CurrentUser.Offer = new ActivityDto()
             {
                 ActivityTypeId = selectedActivityType.Id,
-                OfferState = OffersEnum.NotOffered
+                OfferState = false
             };
         }
         else

@@ -28,8 +28,6 @@ public class ConfirmOfferHandler : AbstractHandler
             throw new NullReferenceException("Предложенная активность не может быть null");
         }
 
-        CurrentUser.Offer.OfferState = OffersEnum.Offered;
-
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
         
         await BotClient.SendTextMessageAsync(

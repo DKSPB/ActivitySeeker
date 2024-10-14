@@ -11,7 +11,10 @@ namespace ActivitySeeker.Bll.Notification
     {
         public async Task Send(string message)
         {
-            await Clients.All.SendAsync("Receive", message);
+            if(Clients is not null)
+            {
+                await Clients.All.SendAsync("Receive", message);
+            }
         }
     }
 }
