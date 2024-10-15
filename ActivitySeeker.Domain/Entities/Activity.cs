@@ -9,14 +9,14 @@ public class Activity
     [Key]
     public Guid Id { get; set; }
 
-    [Column("description")]
-    public string? Description { get; set; }
+    [Column("link_description")]
+    public string LinkOrDescription { get; set; } = null!;
     
     [Column("image")]
     public byte[]? Image { get; set; }
 
-    [Column("link")] 
-    public string? Link { get; set; }
+    //[Column("link")] 
+    //public string? Link { get; set; }
     
     [Column("start_date")]
     public DateTime StartDate { get; set; }
@@ -24,8 +24,8 @@ public class Activity
     [Column("activity_type_id")]
     public Guid ActivityTypeId { get; set; }
 
-    [Column("offer_state")]
-    public bool OfferState { get; set; }
+    [Column("is_published")]
+    public bool IsPublished { get; set; }
 
     #region Навигационные свойства
 

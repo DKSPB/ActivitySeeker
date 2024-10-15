@@ -5,18 +5,16 @@ namespace ActivitySeeker.Bll.Models;
 public class ActivityBaseDto
 {
     public ActivityBaseDto()
-    {
-        
-    }
+    {}
     public Guid Id { get; set; }
 
-    public string? Description { get; set; }
+    public string LinkOrDescription { get; set; } = null!;
     
     public DateTime StartDate { get; set; }
     
     public Guid ActivityTypeId { get; set; }
     
-    public string? Link { get; set; }
+    //public string? Link { get; set; }
 
     public bool OfferState { get; set; }
 
@@ -24,9 +22,9 @@ public class ActivityBaseDto
     {
         Id = activity.Id;
         ActivityTypeId = activity.ActivityTypeId;
-        Description = activity.Description;
+        LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
-        Link = activity.Link;
-        OfferState = activity.OfferState;
+        //Link = activity.Link;
+        OfferState = activity.IsPublished;
     }
 }

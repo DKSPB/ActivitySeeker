@@ -13,12 +13,12 @@ public class ActivityDto: ActivityBaseDto
     public ActivityDto(Activity activity) : base(activity)
     {
         Id = activity.Id;
-        Description = activity.Description;
+        LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
-        Link = activity.Link;
+        //Link = activity.Link;
         Image = activity.Image;
-        OfferState = activity.OfferState;
+        OfferState = activity.IsPublished;
     }
 
     public Activity ToActivity()
@@ -26,12 +26,12 @@ public class ActivityDto: ActivityBaseDto
         return new Activity
         {
             Id = Id,
-            Description = Description,
+            LinkOrDescription = LinkOrDescription,
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
             Image = Image,
-            Link = Link,
-            OfferState = OfferState
+            //Link = Link,
+            IsPublished = OfferState
         };
     }
 }

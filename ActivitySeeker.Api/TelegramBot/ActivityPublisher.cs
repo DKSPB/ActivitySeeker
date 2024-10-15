@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using System.Threading;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot
 {
@@ -14,23 +13,25 @@ namespace ActivitySeeker.Api.TelegramBot
             _botClient = botClient;
         }
 
-        public async Task PublishActivity(string postText, byte[]? postImage, CancellationToken cancellationToken)
+        public async Task<Message> PublishActivity(ChatId chatId, string postText, byte[]? postImage, IReplyMarkup replyMarkup, CancellationToken cancellationToken)
         {
             if (postImage is null)
             {
-                await _botClient.SendTextMessageAsync(
-                    chatId: "@activity_seeker_channel", 
+                return await _botClient.SendTextMessageAsync(
+                    chatId: chatId,//"@activity_seeker_channel", 
                     text: postText, 
-                    disableNotification: true, 
+                    disableNotification: true,
+                    replyMarkup: replyMarkup,
                     cancellationToken: cancellationToken);
             }
             else
             {
-                await _botClient.SendPhotoAsync(
-                    chatId: "@activity_seeker_channel",
+                return await _botClient.SendPhotoAsync(
+                    chatId: chatId,//"@activity_seeker_channel",
                     photo: new InputFileStream(new MemoryStream(postImage)),
                     caption: postText,
                     disableNotification: true,
+                    replyMarkup: replyMarkup,
                     cancellationToken: cancellationToken);
             }
         }

@@ -40,11 +40,11 @@ public class UserService: IUserService
         else
         {
             userExists.Offer.Id = user.Offer.Id;
-            userExists.Offer.Description = user.Offer.Description;
+            userExists.Offer.LinkOrDescription = user.Offer.LinkOrDescription;
             userExists.Offer.ActivityTypeId = user.Offer.ActivityTypeId;
-            userExists.Offer.OfferState = user.Offer.OfferState;
+            userExists.Offer.IsPublished = user.Offer.OfferState;
             userExists.Offer.StartDate = user.Offer.StartDate;
-            userExists.Offer.Link = user.Offer.Link;
+            //userExists.Offer.Link = user.Offer.Link;
             userExists.Offer.Image = user.Offer.Image;
         }
 

@@ -31,7 +31,7 @@ public class SaveOfferDescriptionHandler : IHandler
         if (!string.IsNullOrWhiteSpace(offerDescription) && offerDescription.Length <= 2000)
         {
             currentUser.State.StateNumber = StatesEnum.SaveOfferDate;
-            currentUser.Offer.Description = offerDescription;
+            currentUser.Offer.LinkOrDescription = offerDescription;
 
             var feedbackMessage = await _botClient.SendTextMessageAsync(
                 message.Chat.Id,

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Telegram.Bot.Requests.Abstractions;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -129,8 +130,8 @@ public class ActivityController : ControllerBase
         {
             publishedActivities.ToList().ForEach(async x => 
             {
-                var messageText = x.Description == null ? x.Link : x.Description;
-                await _activityPublisher.PublishActivity(messageText, x.Image, cancellationToken);
+                //var messageText = x.LinkOrDescription == null ? x.Link : x.LinkOrDescription;
+                await _activityPublisher.PublishActivity("@activity_seeker_channel", x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty(), cancellationToken);
             });
         }
 

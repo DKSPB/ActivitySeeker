@@ -7,7 +7,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SaveActivityLink)]
+/*[HandlerState(StatesEnum.SaveActivityLink)]
 public class SaveActivityLinkHandler : IHandler
 {
     private readonly ITelegramBotClient _botClient;
@@ -72,4 +72,4 @@ public class SaveActivityLinkHandler : IHandler
 
         return false;
     }
-}
+}*/

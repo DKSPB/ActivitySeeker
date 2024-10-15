@@ -96,7 +96,7 @@ public class SaveOfferDateHandler : IHandler
         builder.AppendLine("Дата и время начала:");
         builder.AppendLine(offer.StartDate.ToString("dd.MM.yyyy HH:mm"));
         builder.AppendLine("Описание активности:");
-        builder.AppendLine(offer.Description);
+        builder.AppendLine(offer.LinkOrDescription);
 
         return builder.ToString();
     }

@@ -3,7 +3,6 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace ActivitySeeker.Bll.Services
 {
@@ -63,7 +62,7 @@ namespace ActivitySeeker.Bll.Services
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
                 .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
                 .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
-                .Where(x => !requestParams.IsPublished.HasValue || x.OfferState == requestParams.IsPublished);
+                .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished);
             
             return result;
         }
@@ -120,10 +119,10 @@ namespace ActivitySeeker.Bll.Services
 
             if (activityEntity is not null)
             {
-                activityEntity.Description = activity.Description;
+                activityEntity.LinkOrDescription = activity.LinkOrDescription;
                 activityEntity.StartDate = activity.StartDate;
                 activityEntity.ActivityTypeId = activity.ActivityTypeId;
-                activityEntity.Link = activity.Link;
+                //activityEntity.Link = activity.Link;
                 activityEntity.Image = activity.Image;
             }
 
@@ -144,7 +143,7 @@ namespace ActivitySeeker.Bll.Services
 
             if(activityEntities is not null)
             {
-                activityEntities.ForEach(x => x.OfferState = true);
+                activityEntities.ForEach(x => x.IsPublished = true);
                 _context.Activities.UpdateRange(activityEntities);
                 await _context.SaveChangesAsync();
             }

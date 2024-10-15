@@ -13,10 +13,13 @@ public class PreviousHandler: AbstractHandler
     private const string MessageText = "Найденные активности:";
     
     private ActivityTelegramDto? PreviousNode { get; set; }
+
+    private readonly ActivityPublisher _activityPublisher;
     
-    public PreviousHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : 
+    public PreviousHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
         base(botClient, userService, activityService)
     {
+        _activityPublisher = activityPublisher;
         ResponseMessageText = MessageText;
     }
 
@@ -51,14 +54,17 @@ public class PreviousHandler: AbstractHandler
     {
         if (PreviousNode is null)
         {
-            return await BotClient.SendTextMessageAsync(
+            /*return await BotClient.SendTextMessageAsync(
                 chatId,
                 text: ResponseMessageText,
                 replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken);*/
+            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
         }
 
-        if (PreviousNode.Image is null && PreviousNode.Link is not null)
+        return await _activityPublisher.PublishActivity(chatId, PreviousNode.LinkOrDescription, PreviousNode.Image, GetKeyboard(), cancellationToken);
+
+        /*if (PreviousNode.Image is null && PreviousNode.Link is not null)
         {
             return await BotClient.SendTextMessageAsync(
                 chatId,
@@ -67,15 +73,15 @@ public class PreviousHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         }
 
-        if (PreviousNode.Image is not null && PreviousNode.Description is not null && PreviousNode.Link is null)
+        if (PreviousNode.Image is not null && PreviousNode.LinkOrDescription is not null && PreviousNode.Link is null)
         {
-            var caption = PreviousNode.Description;
+            var caption = PreviousNode.LinkOrDescription;
             
             if (caption.Length <= 1024)
             {
                 return await BotClient.SendPhotoAsync(chatId: chatId,
                     photo: new InputFileStream(new MemoryStream(PreviousNode.Image)),
-                    caption: PreviousNode.Description,
+                    caption: PreviousNode.LinkOrDescription,
                     replyMarkup: GetKeyboard(), 
                     cancellationToken: cancellationToken);
             }
@@ -85,17 +91,17 @@ public class PreviousHandler: AbstractHandler
                 cancellationToken: cancellationToken);
         
             return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: PreviousNode.Description,
+                text: PreviousNode.LinkOrDescription,
                 replyMarkup: GetKeyboard(), 
                 cancellationToken: cancellationToken);
         }
         
         return await BotClient.SendTextMessageAsync(
             chatId,
-            text: PreviousNode.Description,
+            text: PreviousNode.LinkOrDescription,
             replyMarkup: GetKeyboard(),
-            cancellationToken: cancellationToken);
-        
+            cancellationToken: cancellationToken);*/
+
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

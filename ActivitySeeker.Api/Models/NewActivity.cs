@@ -12,11 +12,11 @@ public class NewActivity
 
     public Guid ActivityTypeId { get; set; }
 
-    public string? Description { get; set; }
+    public string LinkOrDescription { get; set; } = null!;
     
     public DateTime StartDate { get; set; }
     
-    public string? Link { get; set; }
+    //public string? Link { get; set; }
     
     public IFormFile? Image { get; set; }
 
@@ -27,8 +27,8 @@ public class NewActivity
             Id = Id,
             ActivityTypeId = ActivityTypeId,
             StartDate = StartDate,
-            Description = Description,
-            Link = Link,
+            LinkOrDescription = LinkOrDescription,
+            //Link = Link,
             Image = ImageToByteArray()
         };
     }
@@ -55,7 +55,7 @@ public class NewActivityValidator : AbstractValidator<NewActivity>
         RuleFor(newActivity => newActivity.ActivityTypeId)
             .NotEmpty().WithMessage("Поле \"Тип активности\" не должно быть пустым");
 
-        RuleFor(newActivity => newActivity.Description)
+        RuleFor(newActivity => newActivity.LinkOrDescription)
             .NotEmpty().WithMessage("Поле \"Описание активности\" не должно быть пустым")
             .NotNull().WithMessage("Поле \"Описание активности\" не должно принимать значение null")
             .MaximumLength(100).WithMessage("Максимальная длина описания не должна превышать 1024 символа");
@@ -64,13 +64,13 @@ public class NewActivityValidator : AbstractValidator<NewActivity>
             .NotEmpty().WithMessage($"Поле \"Дата начала\" не должно быть пустым")
             .GreaterThanOrEqualTo(DateTime.Now).WithMessage("Дата начала не должно быть раньше текущей даты");
 
-        RuleFor(newActivity => newActivity.Link)
-            .NotEmpty().When(newActivity => newActivity.Image is null)
-            .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
+        //RuleFor(newActivity => newActivity.Link)
+        //    .NotEmpty().When(newActivity => newActivity.Image is null)
+        //    .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
 
-        RuleFor(newActivity => newActivity.Image)
-            .NotEmpty().When(newActivity => newActivity.Link is null)
-            .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
+        //RuleFor(newActivity => newActivity.Image)
+        //    .NotEmpty().When(newActivity => newActivity.Link is null)
+        //    .WithMessage("Одно из полей: ссылка на активность или изображение должно быть заполнено");
         //.Must(newActivity => newActivity?.ContentType is "image/jpeg" or "image/png")
         //.WithMessage("Загружаемый файл должен иметь расширение .jpg или .png");
     }
