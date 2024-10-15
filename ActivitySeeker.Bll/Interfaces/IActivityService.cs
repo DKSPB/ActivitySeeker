@@ -75,5 +75,5 @@ public interface IActivityService
     /// </summary>
     /// <param name="activityIds">Список идентификаторов активностей</param>
     /// <returns></returns>
-    Task PublishActivities(List<Guid> activityIds);
+    Task<IEnumerable<ActivityDto>?> PublishActivities(List<Guid> activityIds);
 }

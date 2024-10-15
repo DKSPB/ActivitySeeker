@@ -3,6 +3,7 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ActivitySeeker.Bll.Services
 {
@@ -137,9 +138,20 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public async Task PublishActivities(List<Guid> activityIds)
+        public async Task<IEnumerable<ActivityDto>?> PublishActivities(List<Guid> activityIds)
         {
-            activityIds.ForEach(async x => {
+            var activityEntities = await _context.Activities.Where(x => activityIds.Contains(x.Id)).ToListAsync();
+
+            if(activityEntities is not null)
+            {
+                activityEntities.ForEach(x => x.OfferState = true);
+                _context.Activities.UpdateRange(activityEntities);
+                await _context.SaveChangesAsync();
+            }
+
+            return activityEntities?.Select(x => new ActivityDto(x)).ToList();
+
+            /*activityIds.ForEach(async x => {
 
                 var activityEntity = await _context.Activities.FirstOrDefaultAsync(z => z.Id == x);
 
@@ -152,7 +164,7 @@ namespace ActivitySeeker.Bll.Services
 
             });
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*/
         }
     }
 }

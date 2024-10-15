@@ -1,4 +1,5 @@
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.Api.TelegramBot;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -15,11 +16,13 @@ public class ActivityController : ControllerBase
 {
     private readonly IActivityService _activityService;
     private readonly NewActivityValidator _newActivityValidator;
+    private readonly ActivityPublisher _activityPublisher;
 
-    public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator)
+    public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator, ActivityPublisher activityPublisher)
     {
         _activityService = activityService;
         _newActivityValidator = newActivityValidator;
+        _activityPublisher = activityPublisher;
     }
     
     /// <summary>
@@ -118,9 +121,19 @@ public class ActivityController : ControllerBase
     }
 
     [HttpPut("publish")]
-    public async Task<IActionResult> PublishActivities([FromBody] List<Guid>activityIds)
+    public async Task<IActionResult> PublishActivities([FromBody] List<Guid>activityIds, CancellationToken cancellationToken)
     {
-        _activityService.PublishActivities(activityIds);
+        var publishedActivities = await _activityService.PublishActivities(activityIds);
+
+        if (publishedActivities is not null)
+        {
+            publishedActivities.ToList().ForEach(async x => 
+            {
+                var messageText = x.Description == null ? x.Link : x.Description;
+                await _activityPublisher.PublishActivity(messageText, x.Image, cancellationToken);
+            });
+        }
+
         return Ok();
     }
     

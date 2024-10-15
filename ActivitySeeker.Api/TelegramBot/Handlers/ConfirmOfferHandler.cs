@@ -29,7 +29,7 @@ public class ConfirmOfferHandler : AbstractHandler
         }
 
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
-        
+
         await BotClient.SendTextMessageAsync(
             callbackQuery.Message.Chat.Id,
             text:"Поздравляю! Твоя активность создана. Она будет опубликована после проверки",

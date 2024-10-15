@@ -62,6 +62,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
                 builder.Services.AddScoped<ActivitySeekerContext>();
                 builder.Services.AddScoped<IUserService, UserService>();
+                builder.Services.AddScoped<ActivityPublisher>();
                 builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
                 builder.Services.AddScoped<IActivityService, ActivityService>();
                 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
