@@ -14,9 +14,6 @@ public class Activity
     
     [Column("image")]
     public byte[]? Image { get; set; }
-
-    //[Column("link")] 
-    //public string? Link { get; set; }
     
     [Column("start_date")]
     public DateTime StartDate { get; set; }

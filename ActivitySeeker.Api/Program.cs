@@ -85,13 +85,10 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<PreviousHandler>();
                 builder.Services.AddScoped<NextHandler>();
                 builder.Services.AddScoped<OfferHandler>();
-                //builder.Services.AddScoped<SaveActivityLinkHandler>();
                 builder.Services.AddScoped<SaveOfferDateHandler>();
                 builder.Services.AddScoped<ConfirmOfferHandler>();
                 builder.Services.AddScoped<AddOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
-                builder.Services.AddScoped<PublishOfferHandler>();
-                builder.Services.AddScoped<RejectOfferHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>

@@ -18,7 +18,7 @@ namespace ActivitySeeker.Api.TelegramBot
             if (postImage is null)
             {
                 return await _botClient.SendTextMessageAsync(
-                    chatId: chatId,//"@activity_seeker_channel", 
+                    chatId: chatId,
                     text: postText, 
                     disableNotification: true,
                     replyMarkup: replyMarkup,
@@ -27,7 +27,7 @@ namespace ActivitySeeker.Api.TelegramBot
             else
             {
                 return await _botClient.SendPhotoAsync(
-                    chatId: chatId,//"@activity_seeker_channel",
+                    chatId: chatId,
                     photo: new InputFileStream(new MemoryStream(postImage)),
                     caption: postText,
                     disableNotification: true,

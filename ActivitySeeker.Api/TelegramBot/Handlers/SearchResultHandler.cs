@@ -42,54 +42,10 @@ public class SearchResultHandler: AbstractHandler
     {
         if (CurrentActivity is null)
         {
-            /*return await BotClient.SendTextMessageAsync(
-                chatId,
-                text: ResponseMessageText,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);*/
             return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
         }
 
         return await _activityPublisher.PublishActivity(chatId, CurrentActivity.LinkOrDescription, CurrentActivity.Image, GetKeyboard(), cancellationToken);
-
-
-        /*if (CurrentActivity.Image is null && CurrentActivity.Link is not null)
-        {
-            return await BotClient.SendTextMessageAsync(
-                chatId,
-                text: CurrentActivity.Link,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
-        }
-
-        if (CurrentActivity.Image is not null && CurrentActivity.LinkOrDescription is not null && CurrentActivity.Link is null)
-        {
-            var caption = CurrentActivity.LinkOrDescription;
-            
-            if (caption.Length <= 1024)
-            {
-                return await BotClient.SendPhotoAsync(chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-                    caption: CurrentActivity.LinkOrDescription,
-                    replyMarkup: GetKeyboard(), 
-                    cancellationToken: cancellationToken);
-            }
-
-            await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(CurrentActivity.Image)),
-                cancellationToken: cancellationToken);
-    
-            return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: CurrentActivity.LinkOrDescription,
-                replyMarkup: GetKeyboard(), 
-                cancellationToken: cancellationToken);
-
-        }
-        
-        return await BotClient.SendTextMessageAsync(chatId: chatId,
-            text: CurrentActivity.LinkOrDescription,
-            replyMarkup: GetKeyboard(), 
-            cancellationToken: cancellationToken);*/
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

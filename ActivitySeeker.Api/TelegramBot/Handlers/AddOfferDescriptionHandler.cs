@@ -14,8 +14,7 @@ public class AddOfferDescriptionHandler : AbstractHandler
     public AddOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService,
         IActivityService activityService)
         : base(botClient, userService, activityService)
-    {
-    }
+    {}
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {
@@ -37,6 +36,7 @@ public class AddOfferDescriptionHandler : AbstractHandler
             CurrentUser.Offer = new ActivityDto()
             {
                 ActivityTypeId = selectedActivityType.Id,
+                LinkOrDescription = "offer_in_create_process",
                 OfferState = false
             };
         }

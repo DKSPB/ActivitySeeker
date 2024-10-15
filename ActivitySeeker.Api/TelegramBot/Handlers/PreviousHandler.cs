@@ -54,53 +54,10 @@ public class PreviousHandler: AbstractHandler
     {
         if (PreviousNode is null)
         {
-            /*return await BotClient.SendTextMessageAsync(
-                chatId,
-                text: ResponseMessageText,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);*/
             return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
         }
 
         return await _activityPublisher.PublishActivity(chatId, PreviousNode.LinkOrDescription, PreviousNode.Image, GetKeyboard(), cancellationToken);
-
-        /*if (PreviousNode.Image is null && PreviousNode.Link is not null)
-        {
-            return await BotClient.SendTextMessageAsync(
-                chatId,
-                text: PreviousNode.Link,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
-        }
-
-        if (PreviousNode.Image is not null && PreviousNode.LinkOrDescription is not null && PreviousNode.Link is null)
-        {
-            var caption = PreviousNode.LinkOrDescription;
-            
-            if (caption.Length <= 1024)
-            {
-                return await BotClient.SendPhotoAsync(chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(PreviousNode.Image)),
-                    caption: PreviousNode.LinkOrDescription,
-                    replyMarkup: GetKeyboard(), 
-                    cancellationToken: cancellationToken);
-            }
-            
-            await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(PreviousNode.Image)),
-                cancellationToken: cancellationToken);
-        
-            return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: PreviousNode.LinkOrDescription,
-                replyMarkup: GetKeyboard(), 
-                cancellationToken: cancellationToken);
-        }
-        
-        return await BotClient.SendTextMessageAsync(
-            chatId,
-            text: PreviousNode.LinkOrDescription,
-            replyMarkup: GetKeyboard(),
-            cancellationToken: cancellationToken);*/
 
     }
     

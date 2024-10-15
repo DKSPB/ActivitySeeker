@@ -13,7 +13,7 @@ public class SelectActivityTypeHandler: AbstractHandler
     public SelectActivityTypeHandler(ITelegramBotClient botClient, IUserService userService,
         IActivityService activityService):
         base(botClient, userService, activityService)
-    {    }
+    {}
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
     {

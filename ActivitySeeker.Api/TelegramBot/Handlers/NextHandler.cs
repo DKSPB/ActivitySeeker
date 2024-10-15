@@ -54,52 +54,11 @@ public class NextHandler: AbstractHandler
     {
         if (NextNode is null)
         {
-            /*return await BotClient.SendTextMessageAsync(
-                chatId,
-                text: ResponseMessageText,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);*/
             return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
         }
 
         return await _activityPublisher.PublishActivity(chatId, NextNode.LinkOrDescription, NextNode.Image, GetKeyboard(), cancellationToken);
 
-        /*if (NextNode.Image is null && NextNode.Link is not null)
-        {
-            return await BotClient.SendTextMessageAsync(
-                chatId,
-                text: NextNode.Link,
-                replyMarkup: GetKeyboard(),
-                cancellationToken: cancellationToken);
-        }
-
-        if (NextNode.Image is not null && NextNode.LinkOrDescription is not null && NextNode.Link is null)
-        {
-            var caption = NextNode.LinkOrDescription;
-            
-            if (caption.Length <= 1024)
-            {
-                return await BotClient.SendPhotoAsync(chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(NextNode.Image)),
-                    caption: NextNode.LinkOrDescription,
-                    replyMarkup: GetKeyboard(), 
-                    cancellationToken: cancellationToken);
-            }
-            
-            await BotClient.SendPhotoAsync(chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(NextNode.Image)),
-                cancellationToken: cancellationToken);
-            
-            return await BotClient.SendTextMessageAsync(chatId: chatId,
-                text: NextNode.LinkOrDescription,
-                replyMarkup: GetKeyboard(), 
-                cancellationToken: cancellationToken);
-        }
-        
-        return await BotClient.SendTextMessageAsync(chatId: chatId,
-            text: NextNode.LinkOrDescription,
-            replyMarkup: GetKeyboard(), 
-            cancellationToken: cancellationToken);*/
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

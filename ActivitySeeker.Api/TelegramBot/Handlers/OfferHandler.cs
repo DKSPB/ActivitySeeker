@@ -48,8 +48,7 @@ public class OfferHandler : IHandler
                 chatId: chat.Id,
                 messageId: currentUser.State.MessageId,
                 replyMarkup: InlineKeyboardMarkup.Empty(),
-                cancellationToken
-            );
+                cancellationToken);
         }
         catch (Exception)
         {
@@ -61,8 +60,7 @@ public class OfferHandler : IHandler
             chat.Id,
             text: "Выбери тип активности",
             replyMarkup: Keyboards.GetActivityTypesKeyboard(activityTypes),
-            cancellationToken: cancellationToken
-            );
+            cancellationToken: cancellationToken);
         
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);

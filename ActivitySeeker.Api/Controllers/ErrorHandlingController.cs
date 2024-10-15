@@ -38,13 +38,11 @@ public class ErrorHandlingController : Controller
             return Problem(
                 title: feature.Error.Message,
                 detail: feature.Error.StackTrace,
-                statusCode: StatusCodes.Status200OK
-            );
+                statusCode: StatusCodes.Status200OK);
         }
         return Problem(
             title: "Ошибка сервера",
             detail: "Для подробной информации свяжитесь с администратором",
-            statusCode: StatusCodes.Status200OK
-        );
+            statusCode: StatusCodes.Status200OK);
     }
 }

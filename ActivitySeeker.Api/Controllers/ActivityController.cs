@@ -130,7 +130,6 @@ public class ActivityController : ControllerBase
         {
             publishedActivities.ToList().ForEach(async x => 
             {
-                //var messageText = x.LinkOrDescription == null ? x.Link : x.LinkOrDescription;
                 await _activityPublisher.PublishActivity("@activity_seeker_channel", x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty(), cancellationToken);
             });
         }

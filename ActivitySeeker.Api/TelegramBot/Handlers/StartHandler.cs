@@ -1,10 +1,8 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using User = ActivitySeeker.Domain.Entities.User;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
