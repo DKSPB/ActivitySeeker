@@ -42,10 +42,10 @@ public class SearchResultHandler: AbstractHandler
     {
         if (CurrentActivity is null)
         {
-            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
+            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.PublishActivity(chatId, CurrentActivity.LinkOrDescription, CurrentActivity.Image, GetKeyboard(), cancellationToken);
+        return await _activityPublisher.PublishActivity(chatId, CurrentActivity.LinkOrDescription, CurrentActivity.Image, GetKeyboard());
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

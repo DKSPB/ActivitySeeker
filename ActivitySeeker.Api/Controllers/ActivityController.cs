@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Telegram.Bot.Requests.Abstractions;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -18,12 +19,14 @@ public class ActivityController : ControllerBase
     private readonly IActivityService _activityService;
     private readonly NewActivityValidator _newActivityValidator;
     private readonly ActivityPublisher _activityPublisher;
+    private readonly BotConfiguration _botConfig;
 
-    public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator, ActivityPublisher activityPublisher)
+    public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator, ActivityPublisher activityPublisher, IOptions<BotConfiguration> botOptions)
     {
         _activityService = activityService;
         _newActivityValidator = newActivityValidator;
         _activityPublisher = activityPublisher;
+        _botConfig = botOptions.Value;
     }
     
     /// <summary>
@@ -44,6 +47,7 @@ public class ActivityController : ControllerBase
         var total = activities.Count();
 
         var data = await activities
+            .OrderByDescending(x => x.StartDate)
             .Skip(filters.Offset)
             .Take(filters.Limmit)
             .Select(x => new ActivityBaseDto(x))
@@ -130,7 +134,7 @@ public class ActivityController : ControllerBase
         {
             publishedActivities.ToList().ForEach(async x => 
             {
-                await _activityPublisher.PublishActivity("@activity_seeker_channel", x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty(), cancellationToken);
+                await _activityPublisher.PublishActivity(_botConfig.TelegramChennel, x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty());
             });
         }
 

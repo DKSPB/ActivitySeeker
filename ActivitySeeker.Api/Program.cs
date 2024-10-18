@@ -182,6 +182,8 @@ namespace ActivitySeeker.Api
         public string WebhookUrl { get; set; } = default!;
 
         public string? PathToCertificate { get; set; }
+
+        public string TelegramChennel { get; set; } = default!;
     }
 }
 

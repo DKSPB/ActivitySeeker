@@ -40,7 +40,7 @@ namespace ActivitySeeker.Bll.Services
                 IsPublished = true
             };
 
-            var result = GetActivities(activityRequest);
+            var result = GetActivities(activityRequest)?.OrderBy(x => x.StartDate);
 
             if (result is null)
             {
