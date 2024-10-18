@@ -1,5 +1,4 @@
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -11,11 +10,11 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class SelectActivityTypeHandler: AbstractHandler
 {
     public SelectActivityTypeHandler(ITelegramBotClient botClient, IUserService userService,
-        IActivityService activityService):
-        base(botClient, userService, activityService)
+        IActivityService activityService, ActivityPublisher activityPublisher):
+        base(botClient, userService, activityService, activityPublisher)
     {}
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         ResponseMessageText = "Выбери тип активности:";
         CurrentUser.State.StateNumber = StatesEnum.ListOfActivities;

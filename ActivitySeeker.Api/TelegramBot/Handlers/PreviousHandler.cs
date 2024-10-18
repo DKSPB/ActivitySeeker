@@ -1,9 +1,10 @@
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 using Telegram.Bot.Types.ReplyMarkups;
+
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -17,13 +18,13 @@ public class PreviousHandler: AbstractHandler
     private readonly ActivityPublisher _activityPublisher;
     
     public PreviousHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
-        base(botClient, userService, activityService)
+        base(botClient, userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
         ResponseMessageText = MessageText;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
     {
         if (CurrentUser.ActivityResult.Count > 0)
         {
@@ -50,14 +51,14 @@ public class PreviousHandler: AbstractHandler
         }
     }
 
-    protected override async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
+    protected override async Task<Message> SendMessageAsync(long chatId)
     {
         if (PreviousNode is null)
         {
-            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
+            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.PublishActivity(chatId, PreviousNode.LinkOrDescription, PreviousNode.Image, GetKeyboard(), cancellationToken);
+        return await _activityPublisher.PublishActivity(chatId, PreviousNode.LinkOrDescription, PreviousNode.Image, GetKeyboard());
 
     }
     
@@ -66,11 +67,12 @@ public class PreviousHandler: AbstractHandler
         return Keyboards.GetActivityPaginationKeyboard();
     }
 
-    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery)
     {
-        await BotClient.DeleteMessageAsync(
+        await _activityPublisher.DeleteMessage(callbackQuery.Message.Chat.Id, CurrentUser.State.MessageId);
+        /*await BotClient.DeleteMessageAsync(
             callbackQuery.Message.Chat.Id,
             CurrentUser.State.MessageId,
-            cancellationToken);
+            cancellationToken);*/
     }
 }

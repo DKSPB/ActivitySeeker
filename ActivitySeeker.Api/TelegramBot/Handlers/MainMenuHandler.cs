@@ -12,12 +12,12 @@ public class MainMenuHandler: AbstractHandler
 {
     private const string MessageText = "Выбери тип активности и время проведения:";
 
-    public MainMenuHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService):
-        base(botClient, userService, activityService)
+    public MainMenuHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) :
+        base(botClient, userService, activityService, activityPublisher)
     {
         ResponseMessageText = MessageText;
     }
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         ResponseMessageText = CurrentUser.State.ToString();
         return Task.CompletedTask;

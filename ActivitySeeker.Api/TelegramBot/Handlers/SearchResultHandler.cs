@@ -15,12 +15,12 @@ public class SearchResultHandler: AbstractHandler
     private readonly ActivityPublisher _activityPublisher;
 
     public SearchResultHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
-        : base(botClient, userService, activityService)
+        : base(botClient, userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
     {
         var activities = ActivityService.GetActivitiesLinkedList(CurrentUser.State);
 
@@ -38,7 +38,7 @@ public class SearchResultHandler: AbstractHandler
         }
     }
 
-    protected override async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
+    protected override async Task<Message> SendMessageAsync(long chatId)
     {
         if (CurrentActivity is null)
         {

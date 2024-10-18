@@ -9,7 +9,6 @@ using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.Enums;
-using User = Telegram.Bot.Types.User;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -43,14 +42,14 @@ public class TelegramBotController: ControllerBase
                     if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
                     {
                         var handler = _serviceProvider.GetRequiredService<StartHandler>();
-                        await handler.HandleAsync(currentUser, update, cancellationToken);
+                        await handler.HandleAsync(currentUser, update);
                         return Ok();
                     }
 
                     if (update.Message.Text is not null && update.Message.Text.Equals("/offer"))
                     {
                         var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
-                        await offerHandler.HandleAsync(currentUser, update, cancellationToken);
+                        await offerHandler.HandleAsync(currentUser, update);
                         return Ok();
                     }
 
@@ -58,7 +57,7 @@ public class TelegramBotController: ControllerBase
 
                     if (handlerType is not null)
                     {
-                        await HandleCommand(handlerType, currentUser,update, cancellationToken);
+                        await HandleCommand(handlerType, currentUser,update);
                     }
                 }
                 else
@@ -93,7 +92,7 @@ public class TelegramBotController: ControllerBase
                     handlerType = FindHandlerByState(handlerTypes, currentUser.State.StateNumber);
                 }
 
-                await HandleCommand(handlerType, currentUser, update, cancellationToken);
+                await HandleCommand(handlerType, currentUser, update);
                 
                 return Ok();
             }
@@ -121,11 +120,10 @@ public class TelegramBotController: ControllerBase
     /// <param name="handlerType"></param>
     /// <param name="currentUser"></param>
     /// <param name="update"></param>
-    /// <param name="cancellationToken"></param>
-    private async Task HandleCommand(Type handlerType, UserDto currentUser, Update update, CancellationToken cancellationToken)
+    private async Task HandleCommand(Type handlerType, UserDto currentUser, Update update)
     {
         var handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
-        await handler.HandleAsync(currentUser,update, cancellationToken);
+        await handler.HandleAsync(currentUser,update);
     }
 
     /// <summary>

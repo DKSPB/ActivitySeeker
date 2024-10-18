@@ -9,15 +9,16 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.MonthPeriod)]
 public class SelectMonthPeriodHandler: AbstractHandler
 {
-    public SelectMonthPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 
-        : base(botClient, userService, activityService)
+    public SelectMonthPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
+        : base(botClient, userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddMonths(1).AddDays(1).Date;
         ResponseMessageText = CurrentUser.State.ToString();
+
         return Task.CompletedTask;
     }
 

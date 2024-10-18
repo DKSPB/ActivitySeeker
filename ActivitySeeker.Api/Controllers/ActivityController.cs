@@ -2,12 +2,9 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Api.TelegramBot;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Telegram.Bot.Requests.Abstractions;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.Controllers;
@@ -125,8 +122,13 @@ public class ActivityController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Публикация активностей
+    /// </summary>
+    /// <param name="activityIds">Идентификаторы активностей</param>
+    /// <returns></returns>
     [HttpPut("publish")]
-    public async Task<IActionResult> PublishActivities([FromBody] List<Guid>activityIds, CancellationToken cancellationToken)
+    public async Task<IActionResult> PublishActivities([FromBody] List<Guid>activityIds)
     {
         var publishedActivities = await _activityService.PublishActivities(activityIds);
 

@@ -9,11 +9,11 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.TomorrowPeriod)]
 public class SelectTomorrowPeriodHandler: AbstractHandler
 {
-    public SelectTomorrowPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) 
-        : base(botClient, userService, activityService)
+    public SelectTomorrowPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
+        : base(botClient, userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         CurrentUser.State.SearchFrom = DateTime.Now.AddDays(1).Date;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(2).Date;

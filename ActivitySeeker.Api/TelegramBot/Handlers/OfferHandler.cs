@@ -17,16 +17,18 @@ public class OfferHandler : IHandler
     private readonly IUserService _userService;
     private readonly IActivityService _activityService;
     private readonly ILogger<OfferHandler> _loggerHandler;
+    private readonly ActivityPublisher _activityPublisher;
 
-    public OfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ILogger<OfferHandler> loggerHandler)
+    public OfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, ILogger<OfferHandler> loggerHandler)
     {
         _botClient = botClient;
         _userService = userService;
         _activityService = activityService;
+        _activityPublisher = activityPublisher;
         _loggerHandler = loggerHandler;
     }
 
-    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update)
     {
         Chat? chat = null;
         if (update.Message is not null)
@@ -44,23 +46,25 @@ public class OfferHandler : IHandler
 
         try
         {
-            await _botClient.EditMessageReplyMarkupAsync(
+            await _activityPublisher.EditMessageAsync(chat.Id, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
+            /*await _botClient.EditMessageReplyMarkupAsync(
                 chatId: chat.Id,
                 messageId: currentUser.State.MessageId,
                 replyMarkup: InlineKeyboardMarkup.Empty(),
-                cancellationToken);
+                cancellationToken);*/
         }
         catch (Exception)
         {
             var errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
             _loggerHandler.LogError(errorMessage);
         }
-        
-        var message = await _botClient.SendTextMessageAsync(
+
+        var message = await _activityPublisher.PublishActivity(chat.Id, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
+            /*_botClient.SendTextMessageAsync(
             chat.Id,
             text: "Выбери тип активности",
             replyMarkup: Keyboards.GetActivityTypesKeyboard(activityTypes),
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken);*/
         
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);

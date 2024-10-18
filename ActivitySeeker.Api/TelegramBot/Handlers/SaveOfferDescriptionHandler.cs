@@ -3,6 +3,7 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -11,13 +12,15 @@ public class SaveOfferDescriptionHandler : IHandler
 {
     private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
+    private readonly ActivityPublisher _activityPublisher;
 
-    public SaveOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService)
+    public SaveOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService, ActivityPublisher activityPublisher)
     {
         _botClient = botClient;
         _userService = userService;
+        _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update)
     {
         var message = update.Message;
         
@@ -30,26 +33,35 @@ public class SaveOfferDescriptionHandler : IHandler
         
         if (!string.IsNullOrWhiteSpace(offerDescription) && offerDescription.Length <= 2000)
         {
+            var msgText = $"Заполни дату и время проведения события в формате: (дд.мм.гггг чч.мм):" +
+                      $"\nПример:{DateTime.Now:dd.MM.yyyy HH:mm}";
+
             currentUser.State.StateNumber = StatesEnum.SaveOfferDate;
             currentUser.Offer.LinkOrDescription = offerDescription;
 
-            var feedbackMessage = await _botClient.SendTextMessageAsync(
+            var feedbackMessage = await _activityPublisher.PublishActivity(message.Chat.Id, msgText, null, InlineKeyboardMarkup.Empty());
+                
+                /*_botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: $"Заполни дату и время проведения события в формате: (дд.мм.гггг чч.мм):" +
-                      $"\nПример:{DateTime.Now:dd.MM.yyyy HH:mm}",
-            cancellationToken: cancellationToken);
+                text: msgText,
+            cancellationToken: cancellationToken);*/
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
         {
+            var msgText = "Описание события не может быть пустым, состоять только из пробелов и содержать больше 2000 символов";
+
             currentUser.State.StateNumber = StatesEnum.AddOfferDescription;
-            
-            var feedbackMessage = await _botClient.SendTextMessageAsync(
+
+            var feedbackMessage = await _activityPublisher.PublishActivity(message.Chat.Id, msgText, null, InlineKeyboardMarkup.Empty());
+                
+                
+                /*_botClient.SendTextMessageAsync(
                 message.Chat.Id,
-                text: "Описание события не может быть пустым, состоять только из пробелов и содержать больше 2000 символов",
-                cancellationToken: cancellationToken);
+                text: msgText,
+                cancellationToken: cancellationToken);*/
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);

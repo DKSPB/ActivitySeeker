@@ -10,13 +10,15 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.AddOfferDescription)]
 public class AddOfferDescriptionHandler : AbstractHandler
 {
-    
+    //private readonly ActivityPublisher _activityPublisher;
     public AddOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService,
-        IActivityService activityService)
-        : base(botClient, userService, activityService)
-    {}
+        IActivityService activityService, ActivityPublisher activityPublisher)
+        : base(botClient, userService, activityService, activityPublisher)
+    {
+        //_activityPublisher = activityPublisher;
+    }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
         
@@ -26,7 +28,7 @@ public class AddOfferDescriptionHandler : AbstractHandler
 
         if (string.IsNullOrEmpty(selectedActivityTypeId))
         {
-            throw new ArgumentNullException("");
+            throw new ArgumentNullException($"Отсутствует события с идентификатором {selectedActivityTypeId}");
         }
 
         var selectedActivityType = ActivityService.GetActivityType(Guid.Parse(selectedActivityTypeId));

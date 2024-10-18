@@ -5,5 +5,5 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 public interface IHandler
 {
-    Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken);
+    Task HandleAsync(UserDto currentUser, Update update);
 }

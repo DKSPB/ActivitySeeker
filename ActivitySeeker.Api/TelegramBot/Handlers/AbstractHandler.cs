@@ -13,34 +13,37 @@ public abstract class AbstractHandler: IHandler
     protected string ResponseMessageText { get; set; } = default!;
     protected ITelegramBotClient BotClient { get; set; }
     protected UserDto CurrentUser { get; private set; } = default!;
+
+    private readonly ActivityPublisher _activityPublisher;
     
-    protected AbstractHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService)
+    protected AbstractHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
     {
         BotClient = botClient;
         UserService = userService;
         ActivityService = activityService;
+        _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update)
     {
         var callbackQuery = update.CallbackQuery;
         CurrentUser = currentUser;
 
-        await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id, cancellationToken: cancellationToken);
+        await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id);
 
         try
         {
-            await EditPreviousMessage(callbackQuery, cancellationToken);
+            await EditPreviousMessage(callbackQuery);
         }
         finally
         {
-            await ActionsAsync(callbackQuery, cancellationToken);
+            await ActionsAsync(callbackQuery);
 
             if (callbackQuery.Message is null)
             {
                 throw new ArgumentNullException(nameof(callbackQuery.Message));
             }
 
-            var message = await SendMessageAsync(callbackQuery.Message.Chat.Id, cancellationToken);
+            var message = await SendMessageAsync(callbackQuery.Message.Chat.Id);
 
             CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
@@ -48,28 +51,20 @@ public abstract class AbstractHandler: IHandler
 
     }
 
-    protected abstract Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken);
+    protected abstract Task ActionsAsync(CallbackQuery callbackQuery);
 
     protected abstract IReplyMarkup GetKeyboard();
 
-    protected virtual async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected virtual async Task EditPreviousMessage(CallbackQuery callbackQuery)
     {
-        await BotClient.EditMessageReplyMarkupAsync(
+        await _activityPublisher.EditMessageAsync(
             chatId: callbackQuery.Message.Chat.Id,
             messageId: CurrentUser.State.MessageId,
-            replyMarkup: InlineKeyboardMarkup.Empty(),
-            cancellationToken
-        );
+            replyMarkup: InlineKeyboardMarkup.Empty());
     }
 
-    protected virtual async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
+    protected virtual async Task<Message> SendMessageAsync(long chatId)
     {
-        var message = await BotClient.SendTextMessageAsync(
-            chatId,
-            text: ResponseMessageText,
-            replyMarkup: GetKeyboard(),
-            cancellationToken: cancellationToken);
-
-        return message;
+        return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
     }
 }

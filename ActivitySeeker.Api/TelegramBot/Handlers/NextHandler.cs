@@ -16,14 +16,14 @@ public class NextHandler: AbstractHandler
 
     private readonly ActivityPublisher _activityPublisher;
 
-    public NextHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) : 
-        base(botClient, userService, activityService)
+    public NextHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
+        base(botClient, userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
         ResponseMessageText = MessageText;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
     {
         if (CurrentUser.ActivityResult.Count > 0)
         {
@@ -50,14 +50,14 @@ public class NextHandler: AbstractHandler
         }
     }
 
-    protected override async Task<Message> SendMessageAsync(long chatId, CancellationToken cancellationToken)
+    protected override async Task<Message> SendMessageAsync(long chatId)
     {
         if (NextNode is null)
         {
-            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
+            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.PublishActivity(chatId, NextNode.LinkOrDescription, NextNode.Image, GetKeyboard(), cancellationToken);
+        return await _activityPublisher.PublishActivity(chatId, NextNode.LinkOrDescription, NextNode.Image, GetKeyboard());
 
     }
     
@@ -66,11 +66,13 @@ public class NextHandler: AbstractHandler
         return Keyboards.GetActivityPaginationKeyboard();
     }
 
-    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery)
     {
-        await BotClient.DeleteMessageAsync(
+        await _activityPublisher.DeleteMessage(callbackQuery.Message.Chat.Id, CurrentUser.State.MessageId);
+
+        /*await BotClient.DeleteMessageAsync(
             callbackQuery.Message.Chat.Id,
             CurrentUser.State.MessageId,
-            cancellationToken);
+            cancellationToken);*/
     }
 }

@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using System.Threading;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -36,6 +37,23 @@ namespace ActivitySeeker.Api.TelegramBot
                     replyMarkup: replyMarkup,
                     cancellationToken: _cancellationToken);
             }
+        }
+
+        public async Task<Message> EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)
+        {
+            return await _botClient.EditMessageReplyMarkupAsync(
+                chatId: chatId,
+                messageId: messageId,
+                replyMarkup: replyMarkup,
+                _cancellationToken);
+        }
+
+        public async Task DeleteMessage(ChatId chatId, int messageId)
+        {
+            await _botClient.DeleteMessageAsync(
+                chatId,
+                messageId,
+                _cancellationToken);
         }
     }
 }

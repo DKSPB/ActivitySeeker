@@ -13,13 +13,15 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class ConfirmOfferHandler : AbstractHandler
 {
     private readonly NotificationAdminHub _adminHub;
-    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, NotificationAdminHub adminHub)
-        : base(botClient, userService, activityService)
+    private readonly ActivityPublisher _activityPublisher;
+    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, NotificationAdminHub adminHub)
+        : base(botClient, userService, activityService, activityPublisher)
     {
         _adminHub = adminHub;
+        _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
     {
         CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
@@ -30,10 +32,15 @@ public class ConfirmOfferHandler : AbstractHandler
 
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
 
-        await BotClient.SendTextMessageAsync(
+        await _activityPublisher.PublishActivity(
+            callbackQuery.Message.Chat.Id, 
+            "Поздравляю! Твоя активность создана. Она будет опубликована после проверки", 
+            null, 
+            InlineKeyboardMarkup.Empty());
+        /*await BotClient.SendTextMessageAsync(
             callbackQuery.Message.Chat.Id,
             text:"Поздравляю! Твоя активность создана. Она будет опубликована после проверки",
-            cancellationToken: cancellationToken);
+            cancellationToken: cancellationToken);*/
             
         ResponseMessageText = $"{CurrentUser.State}";
 

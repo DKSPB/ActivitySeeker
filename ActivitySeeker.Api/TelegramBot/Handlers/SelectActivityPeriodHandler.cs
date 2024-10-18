@@ -11,12 +11,13 @@ public class SelectActivityPeriodHandler: AbstractHandler
 {
     private const string MessageText = "Выбери период проведения активности:";
     
-    public SelectActivityPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService) : base(botClient, userService, activityService)
+    public SelectActivityPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
+        base(botClient, userService, activityService, activityPublisher)
     {
         ResponseMessageText = MessageText;
     }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+    protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         CurrentUser.State.StateNumber = StatesEnum.ActivityPeriodChapter;
         return Task.CompletedTask;

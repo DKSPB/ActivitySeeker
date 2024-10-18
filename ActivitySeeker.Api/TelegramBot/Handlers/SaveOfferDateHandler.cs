@@ -6,6 +6,7 @@ using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -15,17 +16,19 @@ public class SaveOfferDateHandler : IHandler
     private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
     private readonly IActivityService _activityService;
+    private readonly ActivityPublisher _activityPublisher;
     private readonly ILogger<SaveOfferDateHandler> _logger;
 
-    public SaveOfferDateHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ILogger<SaveOfferDateHandler> logger)
+    public SaveOfferDateHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, ILogger<SaveOfferDateHandler> logger)
     {
         _logger = logger;
         _botClient = botClient;
         _userService = userService;
         _activityService = activityService;
+        _activityPublisher = activityPublisher;
     }
 
-    public async Task HandleAsync(UserDto currentUser, Update update, CancellationToken cancellationToken)
+    public async Task HandleAsync(UserDto currentUser, Update update)
     {
         var message = update.Message;
 
@@ -57,23 +60,35 @@ public class SaveOfferDateHandler : IHandler
         {
             currentUser.Offer.StartDate = startActivityDate;
 
-            var feedbackMessage = await _botClient.SendTextMessageAsync(
+            var feedbackMessage = await _activityPublisher.PublishActivity(message.Chat.Id, GetFullOfferContent(currentUser.Offer), null, Keyboards.ConfirmOffer());
+                
+                
+                /*_botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 text: GetFullOfferContent(currentUser.Offer),
                 replyMarkup: Keyboards.ConfirmOffer(),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken);*/
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
         {
-            var feedbackMessage = await _botClient.SendTextMessageAsync(
+            var feedbackMessage = await _activityPublisher.PublishActivity(
+                message.Chat.Id, 
+                $"Введёная дата не соответствует формату:" +
+                $"\n(дд.мм.гггг чч:мм)" +
+                $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}",
+                null,
+                InlineKeyboardMarkup.Empty());
+                
+                
+               /* _botClient.SendTextMessageAsync(
                 message.Chat.Id,
                 text: $"Введёная дата не соответствует формату:" +
                       $"\n(дд.мм.гггг чч:мм)" +
                       $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}",
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken);*/
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
