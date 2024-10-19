@@ -68,6 +68,6 @@ public abstract class AbstractHandler: IHandler
 
     protected virtual async Task<Message> SendMessageAsync(long chatId)
     {     
-        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText);
+        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
     }
 }

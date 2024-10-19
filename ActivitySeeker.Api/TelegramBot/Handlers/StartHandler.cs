@@ -24,7 +24,7 @@ public class StartHandler: IHandler
         
         currentUser.State.StateNumber = StatesEnum.MainMenu;
 
-        var message = await _activityPublisher.SendMessageAsync(chat.Id, currentUser.State.ToString(), null, Keyboards.GetToMainMenuKeyboard());
+        var message = await _activityPublisher.SendMessageAsync(chat.Id, currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
 
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);
