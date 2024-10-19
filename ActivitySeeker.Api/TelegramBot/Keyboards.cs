@@ -6,6 +6,11 @@ namespace ActivitySeeker.Api.TelegramBot
 {
     public static class Keyboards
     {
+        public static InlineKeyboardMarkup GetEmptyKeyboard()
+        {
+            return InlineKeyboardMarkup.Empty();
+        }
+
         public static InlineKeyboardMarkup GetMainMenuKeyboard()
         {
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>

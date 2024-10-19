@@ -9,7 +9,8 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.WeekPeriod)]
 public class SelectWeekPeriodHandler: AbstractHandler
 {
-    public SelectWeekPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
+    public SelectWeekPeriodHandler(ITelegramBotClient botClient, IUserService userService,
+        IActivityService activityService, ActivityPublisher activityPublisher) 
         : base(botClient, userService, activityService, activityPublisher)
     { }
 

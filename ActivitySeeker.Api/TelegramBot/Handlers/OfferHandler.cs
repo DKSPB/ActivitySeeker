@@ -13,7 +13,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.Offer)]
 public class OfferHandler : IHandler
 {
-    private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
     private readonly IActivityService _activityService;
     private readonly ILogger<OfferHandler> _loggerHandler;
@@ -21,7 +20,6 @@ public class OfferHandler : IHandler
 
     public OfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, ILogger<OfferHandler> loggerHandler)
     {
-        _botClient = botClient;
         _userService = userService;
         _activityService = activityService;
         _activityPublisher = activityPublisher;
@@ -47,11 +45,6 @@ public class OfferHandler : IHandler
         try
         {
             await _activityPublisher.EditMessageAsync(chat.Id, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
-            /*await _botClient.EditMessageReplyMarkupAsync(
-                chatId: chat.Id,
-                messageId: currentUser.State.MessageId,
-                replyMarkup: InlineKeyboardMarkup.Empty(),
-                cancellationToken);*/
         }
         catch (Exception)
         {
@@ -59,12 +52,7 @@ public class OfferHandler : IHandler
             _loggerHandler.LogError(errorMessage);
         }
 
-        var message = await _activityPublisher.PublishActivity(chat.Id, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
-            /*_botClient.SendTextMessageAsync(
-            chat.Id,
-            text: "Выбери тип активности",
-            replyMarkup: Keyboards.GetActivityTypesKeyboard(activityTypes),
-            cancellationToken: cancellationToken);*/
+        var message = await _activityPublisher.SendMessageAsync(chat.Id, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
         
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);

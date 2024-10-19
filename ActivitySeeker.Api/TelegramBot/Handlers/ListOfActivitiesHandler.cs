@@ -9,13 +9,10 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.ListOfActivities)]
 public class ListOfActivitiesHandler: AbstractHandler
 {
-    //private readonly ActivityPublisher _activityPublisher;
     public ListOfActivitiesHandler(ITelegramBotClient botClient, IUserService userService,
         IActivityService activityService, ActivityPublisher activityPublisher) :
         base(botClient, userService, activityService, activityPublisher)
-    {
-        //_activityPublisher = activityPublisher; 
-    }
+    { }
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {

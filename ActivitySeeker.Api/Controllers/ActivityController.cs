@@ -136,7 +136,7 @@ public class ActivityController : ControllerBase
         {
             publishedActivities.ToList().ForEach(async x => 
             {
-                await _activityPublisher.PublishActivity(_botConfig.TelegramChennel, x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty());
+                await _activityPublisher.SendMessageAsync(_botConfig.TelegramChennel, x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty());
             });
         }
 

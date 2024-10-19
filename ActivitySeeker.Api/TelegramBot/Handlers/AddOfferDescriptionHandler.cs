@@ -3,20 +3,16 @@ using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.AddOfferDescription)]
 public class AddOfferDescriptionHandler : AbstractHandler
 {
-    //private readonly ActivityPublisher _activityPublisher;
     public AddOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService,
         IActivityService activityService, ActivityPublisher activityPublisher)
         : base(botClient, userService, activityService, activityPublisher)
-    {
-        //_activityPublisher = activityPublisher;
-    }
+    { }
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
@@ -33,25 +29,25 @@ public class AddOfferDescriptionHandler : AbstractHandler
 
         var selectedActivityType = ActivityService.GetActivityType(Guid.Parse(selectedActivityTypeId));
 
+        CreateOfferIfNotExists(selectedActivityType.Id);
+        
+        return Task.CompletedTask;
+    }
+
+    private void CreateOfferIfNotExists(Guid activityTypeId)
+    {
         if (CurrentUser.Offer is null)
         {
             CurrentUser.Offer = new ActivityDto()
             {
-                ActivityTypeId = selectedActivityType.Id,
-                LinkOrDescription = "offer_in_create_process",
+                ActivityTypeId = activityTypeId,
+                LinkOrDescription = string.Empty,
                 OfferState = false
             };
         }
         else
         {
-            CurrentUser.Offer.ActivityTypeId = selectedActivityType.Id;
+            CurrentUser.Offer.ActivityTypeId = activityTypeId;
         }
-        
-        return Task.CompletedTask;
-    }
-
-    protected override IReplyMarkup GetKeyboard()
-    {
-        return InlineKeyboardMarkup.Empty();
     }
 }

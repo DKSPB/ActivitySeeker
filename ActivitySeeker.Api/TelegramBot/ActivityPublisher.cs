@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -8,15 +7,13 @@ namespace ActivitySeeker.Api.TelegramBot
     public class ActivityPublisher
     {
         private readonly ITelegramBotClient _botClient;
-        private readonly CancellationToken _cancellationToken;
 
-        public ActivityPublisher(ITelegramBotClient botClient, CancellationToken cancellationToken)
+        public ActivityPublisher(ITelegramBotClient botClient)
         {
             _botClient = botClient;
-            _cancellationToken = cancellationToken;
         }
 
-        public async Task<Message> PublishActivity(ChatId chatId, string postText, byte[]? postImage, IReplyMarkup replyMarkup)
+        public async Task<Message> SendMessageAsync(ChatId chatId, string postText, byte[]? postImage = null, IReplyMarkup? replyMarkup = null)
         {
             if (postImage is null)
             {
@@ -24,8 +21,7 @@ namespace ActivitySeeker.Api.TelegramBot
                     chatId: chatId,
                     text: postText, 
                     disableNotification: true,
-                    replyMarkup: replyMarkup,
-                    cancellationToken: _cancellationToken);
+                    replyMarkup: replyMarkup);
             }
             else
             {
@@ -34,8 +30,7 @@ namespace ActivitySeeker.Api.TelegramBot
                     photo: new InputFileStream(new MemoryStream(postImage)),
                     caption: postText,
                     disableNotification: true,
-                    replyMarkup: replyMarkup,
-                    cancellationToken: _cancellationToken);
+                    replyMarkup: replyMarkup);
             }
         }
 
@@ -44,16 +39,14 @@ namespace ActivitySeeker.Api.TelegramBot
             return await _botClient.EditMessageReplyMarkupAsync(
                 chatId: chatId,
                 messageId: messageId,
-                replyMarkup: replyMarkup,
-                _cancellationToken);
+                replyMarkup: replyMarkup);
         }
 
         public async Task DeleteMessage(ChatId chatId, int messageId)
         {
             await _botClient.DeleteMessageAsync(
                 chatId,
-                messageId,
-                _cancellationToken);
+                messageId);
         }
     }
 }

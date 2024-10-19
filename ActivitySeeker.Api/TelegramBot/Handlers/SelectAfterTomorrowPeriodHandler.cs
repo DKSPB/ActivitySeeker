@@ -18,6 +18,7 @@ public class SelectAfterTomorrowPeriodHandler: AbstractHandler
         CurrentUser.State.SearchFrom = DateTime.Now.AddDays(2).Date;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(3).Date;
         ResponseMessageText = CurrentUser.State.ToString();
+
         return Task.CompletedTask;
     }
 

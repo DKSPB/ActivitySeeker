@@ -18,6 +18,7 @@ public class SelectTodayPeriodHandler: AbstractHandler
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(1).Date;
         ResponseMessageText = CurrentUser.State.ToString();
+
         return Task.CompletedTask;
     }
 

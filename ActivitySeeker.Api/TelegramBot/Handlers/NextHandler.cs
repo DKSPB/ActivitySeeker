@@ -54,10 +54,10 @@ public class NextHandler: AbstractHandler
     {
         if (NextNode is null)
         {
-            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
+            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.PublishActivity(chatId, NextNode.LinkOrDescription, NextNode.Image, GetKeyboard());
+        return await _activityPublisher.SendMessageAsync(chatId, NextNode.LinkOrDescription, NextNode.Image, GetKeyboard());
 
     }
     
@@ -69,10 +69,5 @@ public class NextHandler: AbstractHandler
     protected override async Task EditPreviousMessage(CallbackQuery callbackQuery)
     {
         await _activityPublisher.DeleteMessage(callbackQuery.Message.Chat.Id, CurrentUser.State.MessageId);
-
-        /*await BotClient.DeleteMessageAsync(
-            callbackQuery.Message.Chat.Id,
-            CurrentUser.State.MessageId,
-            cancellationToken);*/
     }
 }

@@ -11,13 +11,11 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.PeriodToDate)]
 public class UserSetByDateHandler: IHandler
 {
-    private readonly ITelegramBotClient _botClient;
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
     
     public UserSetByDateHandler(ITelegramBotClient botClient, IUserService userService, ActivityPublisher activityPublisher)
     {
-        _botClient = botClient;
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
@@ -36,33 +34,18 @@ public class UserSetByDateHandler: IHandler
         {
             currentUser.State.SearchTo = byDate;
 
-            var feedbackMessage = await _activityPublisher.PublishActivity(message.Chat.Id, currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
-                
-                /*_botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                text: currentUser.State.ToString(),
-                replyMarkup: Keyboards.GetMainMenuKeyboard(),
-                cancellationToken: cancellationToken);*/
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
         {
-            var feedbackMessage = await _activityPublisher.PublishActivity(
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(
                 message.Chat.Id,
                 $"Введёная дата не соответствует форматам:" +
                 $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
-                $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}",
-                null,
-                InlineKeyboardMarkup.Empty());
-                
-                /*_botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                text: $"Введёная дата не соответствует форматам:" +
-                      $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
-                      $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}",
-                cancellationToken: cancellationToken);*/
+                $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}");
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);

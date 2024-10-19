@@ -60,36 +60,19 @@ public class SaveOfferDateHandler : IHandler
         {
             currentUser.Offer.StartDate = startActivityDate;
 
-            var feedbackMessage = await _activityPublisher.PublishActivity(message.Chat.Id, GetFullOfferContent(currentUser.Offer), null, Keyboards.ConfirmOffer());
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, GetFullOfferContent(currentUser.Offer), null, Keyboards.ConfirmOffer());
                 
-                
-                /*_botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                text: GetFullOfferContent(currentUser.Offer),
-                replyMarkup: Keyboards.ConfirmOffer(),
-                cancellationToken: cancellationToken);*/
-            
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
         {
-            var feedbackMessage = await _activityPublisher.PublishActivity(
-                message.Chat.Id, 
-                $"Введёная дата не соответствует формату:" +
+            var msgText = $"Введёная дата не соответствует формату:" +
                 $"\n(дд.мм.гггг чч:мм)" +
-                $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}",
-                null,
-                InlineKeyboardMarkup.Empty());
+                $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
+
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, msgText);
                 
-                
-               /* _botClient.SendTextMessageAsync(
-                message.Chat.Id,
-                text: $"Введёная дата не соответствует формату:" +
-                      $"\n(дд.мм.гггг чч:мм)" +
-                      $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}",
-                cancellationToken: cancellationToken);*/
-            
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }

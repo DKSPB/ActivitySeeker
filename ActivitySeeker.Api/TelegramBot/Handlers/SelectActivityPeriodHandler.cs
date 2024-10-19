@@ -20,6 +20,7 @@ public class SelectActivityPeriodHandler: AbstractHandler
     protected override Task ActionsAsync(CallbackQuery callbackQuery)
     {
         CurrentUser.State.StateNumber = StatesEnum.ActivityPeriodChapter;
+
         return Task.CompletedTask;
     }
 

@@ -9,7 +9,8 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
     [HandlerState(StatesEnum.UserPeriod)]
     public class SelectUserPeriodHandler: AbstractHandler
     {
-        public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
+        public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService,
+            IActivityService activityService, ActivityPublisher activityPublisher) 
             : base(botClient, userService, activityService, activityPublisher)
         { }
 
@@ -22,11 +23,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                                   $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
             
             return Task.CompletedTask;
-        }
-
-        protected override IReplyMarkup GetKeyboard()
-        {
-            return InlineKeyboardMarkup.Empty();
         }
     }
 }

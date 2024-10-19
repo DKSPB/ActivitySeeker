@@ -18,6 +18,7 @@ public class SelectActivityTypeHandler: AbstractHandler
     {
         ResponseMessageText = "Выбери тип активности:";
         CurrentUser.State.StateNumber = StatesEnum.ListOfActivities;
+
         return Task.CompletedTask;
     }
 

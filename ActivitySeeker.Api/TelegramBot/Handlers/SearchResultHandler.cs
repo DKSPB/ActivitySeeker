@@ -42,10 +42,10 @@ public class SearchResultHandler: AbstractHandler
     {
         if (CurrentActivity is null)
         {
-            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
+            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.PublishActivity(chatId, CurrentActivity.LinkOrDescription, CurrentActivity.Image, GetKeyboard());
+        return await _activityPublisher.SendMessageAsync(chatId, CurrentActivity.LinkOrDescription, CurrentActivity.Image, GetKeyboard());
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()
@@ -54,6 +54,7 @@ public class SearchResultHandler: AbstractHandler
         {
             return Keyboards.GetToMainMenuKeyboard();
         }
+
         return Keyboards.GetActivityPaginationKeyboard();
     }
 }
