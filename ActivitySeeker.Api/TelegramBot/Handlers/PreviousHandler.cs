@@ -54,10 +54,10 @@ public class PreviousHandler: AbstractHandler
     {
         if (PreviousNode is null)
         {
-            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard(), cancellationToken);
+            return await _activityPublisher.PublishActivity(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.PublishActivity(chatId, PreviousNode.LinkOrDescription, PreviousNode.Image, GetKeyboard(), cancellationToken);
+        return await _activityPublisher.PublishActivity(chatId, PreviousNode.LinkOrDescription, PreviousNode.Image, GetKeyboard());
 
     }
     
