@@ -1,6 +1,7 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using System;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -25,7 +26,7 @@ public class StartHandler: IHandler
         currentUser.State.StateNumber = StatesEnum.MainMenu;
 
         var message = await _activityPublisher.SendMessageAsync(chat.Id, currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
-
+         
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);
     }

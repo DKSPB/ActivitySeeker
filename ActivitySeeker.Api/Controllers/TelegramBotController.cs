@@ -18,81 +18,84 @@ public class TelegramBotController: ControllerBase
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IUserService _userService;
+    private readonly ILogger<TelegramBotController> _logger;
 
-    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService)
+    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService, ILogger<TelegramBotController> logger)
     {
         _serviceProvider = serviceProvider;
         _userService = userService;
+        _logger = logger;
     }
 
     [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken cancellationToken)
     {
-        var handlerTypes = GetAllHandlerTypes(); 
+        var handlerTypes = HandlerProvider.GetAllHandlerTypes(); 
 
         switch (update.Type)
         {
             case UpdateType.Message:
             {
-                if (update.Message != null)
+                if (update.Message is null || update.Message.Text is null)
                 {
-                    var currentUser = CreateUserIfNotExists(update.Message);
+                    _logger.LogError("Object Message is null or Message.Text is null");
+                    throw new NullReferenceException("Object Message is null or Message.Text is null");
+                }
+
+                var currentUser = CreateUserIfNotExists(update.Message);
+
+                var msgText = update.Message.Text;
                     
-                    if (update.Message.Text is not null && update.Message.Text.Equals("/start"))
-                    {
-                        var handler = _serviceProvider.GetRequiredService<StartHandler>();
-                        await handler.HandleAsync(currentUser, update);
-                        return Ok();
-                    }
-
-                    if (update.Message.Text is not null && update.Message.Text.Equals("/offer"))
-                    {
-                        var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
-                        await offerHandler.HandleAsync(currentUser, update);
-                        return Ok();
-                    }
-
-                    var handlerType = FindHandlerByState(handlerTypes, currentUser.State.StateNumber);
-
-                    if (handlerType is not null)
-                    {
-                        await HandleCommand(handlerType, currentUser,update);
-                    }
-                }
-                else
+                if (msgText.Equals("/start"))
                 {
-                    throw new NullReferenceException("Object Message is null");
+                    var handler = _serviceProvider.GetRequiredService<StartHandler>();
+                    await handler.HandleAsync(currentUser, update);
+                    return Ok();
                 }
+
+                if (msgText.Equals("/offer"))
+                {
+                    var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
+                    await offerHandler.HandleAsync(currentUser, update);
+                    return Ok();
+                }
+
+                var handlerType = HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
+
+                if (handlerType is not null)
+                {
+                    var handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
+                    await handler.HandleAsync(currentUser, update);
+                }
+
                 return Ok();
             }
             case UpdateType.CallbackQuery:
             {
                 var callbackQuery = update.CallbackQuery;
 
-                if (callbackQuery is null)
+                if (callbackQuery is null || callbackQuery.Data is null)
                 {
-                    throw new NullReferenceException("Callback query is null");
-                }
-                
-                if (callbackQuery.Data is null)
-                {
-                    throw new NullReferenceException("Object Data is null");
+                    _logger.LogError("Object Update.CallbackQuery is null or Update.CallbackQuery.Data is null or Update.CallbackQuery.Message is null");
+                    throw new NullReferenceException("Object Update.CallbackQuery is null or Update.CallbackQuery.Data is null or Update.CallbackQuery.Message is null");
                 }
 
-                var currentUser = _userService.GetUserById(callbackQuery.From.Id); 
+                var currentUser = _userService.GetUserById(callbackQuery.From.Id)?? throw new NullReferenceException("User not found");
 
-                var callbackData = callbackQuery.Data;
-                
                 var handlerType = handlerTypes.FirstOrDefault(x =>
-                    x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == callbackData);
+                    x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == callbackQuery.Data);
                 
                 if (handlerType is null)
                 {
-                    handlerType = FindHandlerByState(handlerTypes, currentUser.State.StateNumber);
+                    handlerType = HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
                 }
 
-                await HandleCommand(handlerType, currentUser, update);
+                if (handlerType is not null) 
+                {
+                    var handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
+                    await handler.HandleAsync(currentUser, update);
+                }
                 
                 return Ok();
             }
@@ -101,42 +104,6 @@ public class TelegramBotController: ControllerBase
     }
 
     #region Private methods
-
-    /// <summary>
-    /// Получить все обработчики команд кроме интерфейса и абстрактного класса
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerable<Type> GetAllHandlerTypes()
-    {
-        var type = typeof(IHandler);
-        return AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(s => s.GetTypes())
-            .Where(p => type.IsAssignableFrom(p)).Where(type => type is { IsClass: true, IsAbstract: false });
-    }
-    
-    /// <summary>
-    /// Создать экземпляр команды и выполнить на нём метод Handle
-    /// </summary>
-    /// <param name="handlerType"></param>
-    /// <param name="currentUser"></param>
-    /// <param name="update"></param>
-    private async Task HandleCommand(Type handlerType, UserDto currentUser, Update update)
-    {
-        var handler = _serviceProvider.GetRequiredService(handlerType) as IHandler;
-        await handler.HandleAsync(currentUser,update);
-    }
-
-    /// <summary>
-    /// Найти обработчик команды по состоянию диалога
-    /// </summary>
-    /// <param name="handlerTypes"></param>
-    /// <param name="state"></param>
-    /// <returns></returns>
-    private Type? FindHandlerByState(IEnumerable<Type> handlerTypes, StatesEnum state)
-    {
-        return handlerTypes.FirstOrDefault(x =>
-            x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState == state);
-    }
 
     /// <summary>
     /// Создание пользователя, если о нём нет записи в БД
