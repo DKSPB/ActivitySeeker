@@ -73,10 +73,15 @@ jobs:
             "BotConfiguration": {
               "BotToken": "${{ secrets.BOT_TOKEN }}",
               "WebhookUrl": "${{ secrets.WEBHOOK_URL }}",
+              "TelegramChennel": "${{ secrets.TELEGRAM_CHENNEL }}",
               "PathToCertificate": "/etc/letsencrypt/live/v2575056.hosted-by-vdsina.ru/telegram_ssl_public.pem"
             },
             "ConnectionStrings": {
               "ActivitySeekerConnection": "${{ secrets.CONNECTION_STRING }}"
+            },
+            "JwtOptions": {
+              "SecretKey": "${{ secrets.JWT_SECRET_KEY }}",
+              "ExpiresHours": "12"
             }
           }
           EOT
