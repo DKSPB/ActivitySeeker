@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
-[Route("api/admin")]
 [AllowAnonymous]
+[Route("api/admin")]
 public class AdminController : ControllerBase
 {
     private readonly IAdminService _adminService;

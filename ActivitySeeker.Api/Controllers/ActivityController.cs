@@ -2,6 +2,7 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Api.TelegramBot;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/activity")]
 public class ActivityController : ControllerBase
 {

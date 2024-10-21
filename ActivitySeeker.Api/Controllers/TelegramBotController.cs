@@ -13,6 +13,7 @@ using Telegram.Bot.Types.Enums;
 namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/message")]
 public class TelegramBotController: ControllerBase
 {
@@ -27,7 +28,6 @@ public class TelegramBotController: ControllerBase
         _logger = logger;
     }
 
-    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken cancellationToken)
     {

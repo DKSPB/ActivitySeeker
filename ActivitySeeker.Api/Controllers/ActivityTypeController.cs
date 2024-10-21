@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api/activityType")]
-[Authorize]
 public class ActivityTypeController : ControllerBase
 {
     private readonly ILogger<ActivityController> _logger;

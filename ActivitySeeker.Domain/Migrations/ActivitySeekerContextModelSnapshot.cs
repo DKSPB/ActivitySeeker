@@ -62,7 +62,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             IsPublished = true,
                             LinkOrDescription = "Тренеровки на открытом воздухе. Приглашаем всех присоединиться к тренировкам на открытом воздухе",
-                            StartDate = new DateTime(2024, 10, 23, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6115)
+                            StartDate = new DateTime(2024, 10, 29, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2506)
                         },
                         new
                         {
@@ -70,7 +70,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             IsPublished = true,
                             LinkOrDescription = "Игра в настолку Бункер. Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
-                            StartDate = new DateTime(2024, 10, 18, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6160)
+                            StartDate = new DateTime(2024, 10, 24, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2520)
                         },
                         new
                         {
@@ -78,7 +78,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             IsPublished = true,
                             LinkOrDescription = "Мастер-класс по изготовлению свечи. Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
-                            StartDate = new DateTime(2024, 10, 16, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6164)
+                            StartDate = new DateTime(2024, 10, 22, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2523)
                         },
                         new
                         {
@@ -86,7 +86,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("2a0c9a0f-3f73-4572-a9fd-39c503135f29"),
                             IsPublished = true,
                             LinkOrDescription = "Мастер-класс по изготовлению глиняной посуды. Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
-                            StartDate = new DateTime(2024, 11, 15, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6167)
+                            StartDate = new DateTime(2024, 11, 21, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2526)
                         },
                         new
                         {
@@ -94,7 +94,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("fd689706-6407-4665-a982-e39e4db3c608"),
                             IsPublished = true,
                             LinkOrDescription = "Вархаммер 40000. Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
-                            StartDate = new DateTime(2024, 10, 15, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6170)
+                            StartDate = new DateTime(2024, 10, 21, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2534)
                         },
                         new
                         {
@@ -102,7 +102,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             IsPublished = true,
                             LinkOrDescription = "Футбол в Мурино. Все желающие, присоединяйтесь к нашей команде для игры в футбол",
-                            StartDate = new DateTime(2024, 10, 17, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6176)
+                            StartDate = new DateTime(2024, 10, 23, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2537)
                         },
                         new
                         {
@@ -110,7 +110,7 @@ namespace ActivitySeeker.Domain.Migrations
                             ActivityTypeId = new Guid("34f4633c-13d8-478b-bb9a-83396e04e48d"),
                             IsPublished = true,
                             LinkOrDescription = "Соревнования по настольному теннису. Fitness House Мурино проводит соревнования по настольному теннису!",
-                            StartDate = new DateTime(2024, 10, 20, 20, 15, 1, 527, DateTimeKind.Local).AddTicks(6180)
+                            StartDate = new DateTime(2024, 10, 26, 12, 29, 23, 136, DateTimeKind.Local).AddTicks(2539)
                         });
                 });
 
