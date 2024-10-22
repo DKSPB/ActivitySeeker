@@ -14,6 +14,8 @@ public class ActivityBaseDto
     
     public Guid ActivityTypeId { get; set; }
     public bool OfferState { get; set; }
+    
+    public ActivityTypeDto? ActivityType { get; set; }
 
     public ActivityBaseDto(Activity activity)
     {
@@ -22,5 +24,6 @@ public class ActivityBaseDto
         LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
         OfferState = activity.IsPublished;
+        ActivityType = new ActivityTypeDto(activity.ActivityType);
     }
 }

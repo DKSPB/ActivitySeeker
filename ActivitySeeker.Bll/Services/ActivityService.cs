@@ -70,7 +70,9 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task<ActivityDto> GetActivityAsync(Guid activityId)
         {
-            var activityEntity = await _context.Activities.FirstOrDefaultAsync(x => x.Id.Equals(activityId));
+            var activityEntity = await _context.Activities
+                .Include(x => x.ActivityType)
+                .FirstOrDefaultAsync(x => x.Id.Equals(activityId));
 
             return activityEntity is null
                 ? throw new NullReferenceException($"Активность с идентификатором {activityId} не найдена")
@@ -135,7 +137,9 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task<IEnumerable<ActivityDto>?> PublishActivities(List<Guid> activityIds)
         {
-            var activityEntities = await _context.Activities.Where(x => activityIds.Contains(x.Id)).ToListAsync();
+            var activityEntities = await _context.Activities
+                .Include(x => x.ActivityType)
+                .Where(x => activityIds.Contains(x.Id)).ToListAsync();
 
             if(activityEntities is not null)
             {

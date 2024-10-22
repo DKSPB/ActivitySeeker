@@ -66,6 +66,7 @@ public class UserService: IUserService
         var user = _context.Users
                 .Include(x => x.ActivityType)
                 .Include(z => z.Offer)
+                .ThenInclude(y => y!.ActivityType)
                 .FirstOrDefault(x=>x.Id == id);
         
         return user is null ? null : new UserDto(user);
