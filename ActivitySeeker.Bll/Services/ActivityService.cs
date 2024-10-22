@@ -122,7 +122,6 @@ namespace ActivitySeeker.Bll.Services
                 activityEntity.LinkOrDescription = activity.LinkOrDescription;
                 activityEntity.StartDate = activity.StartDate;
                 activityEntity.ActivityTypeId = activity.ActivityTypeId;
-                //activityEntity.Link = activity.Link;
                 activityEntity.Image = activity.Image;
             }
 
@@ -149,21 +148,6 @@ namespace ActivitySeeker.Bll.Services
             }
 
             return activityEntities?.Select(x => new ActivityDto(x)).ToList();
-
-            /*activityIds.ForEach(async x => {
-
-                var activityEntity = await _context.Activities.FirstOrDefaultAsync(z => z.Id == x);
-
-                if (activityEntity is not null)
-                {
-                    activityEntity.OfferState = true;
-
-                    _context.Activities.Update(activityEntity);
-                }
-
-            });
-
-            await _context.SaveChangesAsync();*/
         }
     }
 }

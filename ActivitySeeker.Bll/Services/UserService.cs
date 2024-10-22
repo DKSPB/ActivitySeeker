@@ -44,7 +44,6 @@ public class UserService: IUserService
             userExists.Offer.ActivityTypeId = user.Offer.ActivityTypeId;
             userExists.Offer.IsPublished = user.Offer.OfferState;
             userExists.Offer.StartDate = user.Offer.StartDate;
-            //userExists.Offer.Link = user.Offer.Link;
             userExists.Offer.Image = user.Offer.Image;
         }
 

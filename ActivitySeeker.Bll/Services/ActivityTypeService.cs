@@ -33,42 +33,36 @@ public class ActivityTypeService: IActivityTypeService
 
     public async Task Create(ActivityTypeDto activityType)
     {
-
-            await _context.ActivityTypes.AddAsync(activityType.ToActivityType());
-            await _context.SaveChangesAsync();
-
+        await _context.ActivityTypes.AddAsync(activityType.ToActivityType());
+        await _context.SaveChangesAsync();
     }
 
     public async Task Update(ActivityTypeDto activityType)
     {
+        var activityTypeEntity = _context.ActivityTypes.FirstOrDefault(x => x.Id == activityType.Id);
 
-            var activityTypeEntity = _context.ActivityTypes.FirstOrDefault(x => x.Id == activityType.Id);
+        if (activityTypeEntity is null)
+        {
+            throw new NullReferenceException($"Тип активности с идентификатором {activityType.Id} не найден");
+        }
 
-            if (activityTypeEntity is null)
-            {
-                throw new NullReferenceException($"Тип активности с идентификатором {activityType.Id} не найден");
-            }
-
-            activityTypeEntity.TypeName = activityType.TypeName;
-            _context.ActivityTypes.Update(activityTypeEntity);
-            await _context.SaveChangesAsync();
-
+        activityTypeEntity.TypeName = activityType.TypeName;
+        _context.ActivityTypes.Update(activityTypeEntity);
+        await _context.SaveChangesAsync();
     }
     
     public async Task Delete(List<ActivityTypeDto> activityTypes)
     {
+        foreach (var type in activityTypes)
+        {
+            var typeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == type.Id);
 
-            foreach (var type in activityTypes)
+            if (typeEntity is not null)
             {
-                var typeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == type.Id);
-
-                if (typeEntity is not null)
-                {
-                    _context.ActivityTypes.Remove(typeEntity);
-                }
+                _context.ActivityTypes.Remove(typeEntity);
             }
+        }
 
-            await _context.SaveChangesAsync();
-
+        await _context.SaveChangesAsync();
     }
 }
