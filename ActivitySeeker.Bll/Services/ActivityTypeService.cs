@@ -51,11 +51,11 @@ public class ActivityTypeService: IActivityTypeService
         await _context.SaveChangesAsync();
     }
     
-    public async Task Delete(List<ActivityTypeDto> activityTypes)
+    public async Task Delete(List<Guid> activityTypeIds)
     {
-        foreach (var type in activityTypes)
+        foreach (var typeId in activityTypeIds)
         {
-            var typeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == type.Id);
+            var typeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == typeId);
 
             if (typeEntity is not null)
             {

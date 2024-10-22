@@ -14,7 +14,7 @@ public class UserSetByDateHandler: IHandler
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
     
-    public UserSetByDateHandler(ITelegramBotClient botClient, IUserService userService, ActivityPublisher activityPublisher)
+    public UserSetByDateHandler(IUserService userService, ActivityPublisher activityPublisher)
     {
         _userService = userService;
         _activityPublisher = activityPublisher;
@@ -24,11 +24,9 @@ public class UserSetByDateHandler: IHandler
         var message = update.Message;
 
         var byDateText = update.Message.Text;
-        var format = "dd.MM.yyyy";
-        var format1 = "dd.MM.yyyy HH:mm";
-        
-        var result = ParseDate(byDateText, format, out var byDate) ? true 
-            : ParseDate(byDateText, format1, out byDate);
+
+        var result = DateParser.ParseDate(byDateText, out var byDate) || 
+                     DateParser.ParseDateTime(byDateText, out byDate);
         
         if (result)
         {
@@ -41,19 +39,17 @@ public class UserSetByDateHandler: IHandler
         }
         else
         {
+            var msgText = $"Введёная дата не соответствует форматам:" +
+                          $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
+                          $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
+            
             var feedbackMessage = await _activityPublisher.SendMessageAsync(
                 message.Chat.Id,
-                $"Введёная дата не соответствует форматам:" +
-                $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
-                $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}");
+                msgText
+                );
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
-    }
-
-    bool ParseDate(string fromDateText, string format, out DateTime fromDate)
-    {
-        return DateTime.TryParseExact(fromDateText, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDate);
     }
 }

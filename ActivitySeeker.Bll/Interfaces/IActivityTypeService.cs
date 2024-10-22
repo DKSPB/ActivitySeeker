@@ -12,5 +12,5 @@ public interface IActivityTypeService
 
     Task Update(ActivityTypeDto activityType);
 
-    Task Delete(List<ActivityTypeDto> activityTypes);
+    Task Delete(List<Guid> activityTypeIds);
 }

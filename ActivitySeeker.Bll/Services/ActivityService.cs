@@ -91,30 +91,28 @@ namespace ActivitySeeker.Bll.Services
             
             await _context.Activities.AddAsync(activityEntity);
             await _context.SaveChangesAsync();
-
         }
         
         /// <inheritdoc />
-        public async Task DeleteActivity(List<ActivityDto> activitiesForRemove)
+        public async Task DeleteActivity(List<Guid> activitiesForRemove)
         {
-            foreach (var activity in activitiesForRemove)
+            foreach (var activityId in activitiesForRemove)
             {
                 var activityEntity =
-                    _context.Activities.FirstOrDefault(x => x.ActivityTypeId.Equals(activity.ActivityTypeId));
+                    _context.Activities.FirstOrDefault(x => x.Id.Equals(activityId));
 
                 if (activityEntity is not null)
                 {
                     _context.Activities.Remove(activityEntity);
                 }
             }
-
+            
             await _context.SaveChangesAsync();
         }
         
         /// <inheritdoc />
         public async Task UpdateActivity(ActivityDto activity)
         {
-
             var activityEntity = _context.Activities.FirstOrDefault(x => x.Id.Equals(activity.Id));
 
             if (activityEntity is not null)
@@ -126,7 +124,6 @@ namespace ActivitySeeker.Bll.Services
             }
 
             await _context.SaveChangesAsync();
-
         }
 
         /// <inheritdoc />

@@ -51,10 +51,9 @@ public class SaveOfferDateHandler : IHandler
             throw new ArgumentNullException($"Ошибка создания активности, объект offer is null");
         }
         
-        var dateTimeFormat = "dd.MM.yyyy HH:mm";
         var startActivityDateText = message.Text;
 
-        var parsingDateResult = ParseDate(startActivityDateText, dateTimeFormat, out var startActivityDate);
+        var parsingDateResult = DateParser.ParseDateTime(startActivityDateText, out var startActivityDate);
 
         if (parsingDateResult)
         {
@@ -76,11 +75,6 @@ public class SaveOfferDateHandler : IHandler
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
-    }
-    
-    private bool ParseDate(string fromDateText, string format, out DateTime fromDate)
-    {
-        return DateTime.TryParseExact(fromDateText, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDate);
     }
 
     private string GetFullOfferContent(ActivityDto offer)

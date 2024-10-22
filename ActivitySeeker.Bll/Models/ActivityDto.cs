@@ -16,7 +16,6 @@ public class ActivityDto: ActivityBaseDto
         LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
-        //Link = activity.Link;
         Image = activity.Image;
         OfferState = activity.IsPublished;
     }
@@ -30,7 +29,6 @@ public class ActivityDto: ActivityBaseDto
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
             Image = Image,
-            //Link = Link,
             IsPublished = OfferState
         };
     }
