@@ -46,6 +46,7 @@ public class ActivityController : ControllerBase
         var total = activities.Count();
 
         var data = await activities
+            .Include(x => x.ActivityType)
             .OrderByDescending(x => x.StartDate)
             .Skip(filters.Offset)
             .Take(filters.Limmit)
@@ -138,7 +139,7 @@ public class ActivityController : ControllerBase
         {
             publishedActivities.ToList().ForEach(async x => 
             {
-                await _activityPublisher.SendMessageAsync(_botConfig.TelegramChennel, x.LinkOrDescription, x.Image, InlineKeyboardMarkup.Empty());
+                await _activityPublisher.SendMessageAsync(_botConfig.TelegramChennel, x.GetActivityDescription().ToString(), x.Image, InlineKeyboardMarkup.Empty());
             });
         }
 

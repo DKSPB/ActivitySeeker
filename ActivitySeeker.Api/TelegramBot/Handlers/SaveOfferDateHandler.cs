@@ -51,16 +51,15 @@ public class SaveOfferDateHandler : IHandler
             throw new ArgumentNullException($"Ошибка создания активности, объект offer is null");
         }
         
-        var dateTimeFormat = "dd.MM.yyyy HH:mm";
         var startActivityDateText = message.Text;
 
-        var parsingDateResult = ParseDate(startActivityDateText, dateTimeFormat, out var startActivityDate);
+        var parsingDateResult = DateParser.ParseDateTime(startActivityDateText, out var startActivityDate);
 
         if (parsingDateResult)
         {
             currentUser.Offer.StartDate = startActivityDate;
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, GetFullOfferContent(currentUser.Offer), null, Keyboards.ConfirmOffer());
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, GetFinishOfferMessage(currentUser.Offer), null, Keyboards.ConfirmOffer());
                 
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
@@ -77,15 +76,17 @@ public class SaveOfferDateHandler : IHandler
             _userService.UpdateUser(currentUser);
         }
     }
-    
-    private bool ParseDate(string fromDateText, string format, out DateTime fromDate)
-    {
-        return DateTime.TryParseExact(fromDateText, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDate);
-    }
 
-    private string GetFullOfferContent(ActivityDto offer)
+    private string GetFinishOfferMessage(ActivityDto offer)
     {
-        StringBuilder builder = new();
+        List<string> prefix = new()
+        {
+            "Эта активность будет предложена для публикации.",
+            "Убедись, что данные заполнены корректно:"
+            
+        };
+        return offer.GetActivityDescription(prefix).ToString();
+        /*StringBuilder builder = new();
 
         builder.AppendLine("Эта активность будет предложена для публикации.");
         builder.AppendLine("Убедись, что данные заполнены корректно ");
@@ -94,8 +95,8 @@ public class SaveOfferDateHandler : IHandler
         builder.AppendLine("Дата и время начала:");
         builder.AppendLine(offer.StartDate.ToString("dd.MM.yyyy HH:mm"));
         builder.AppendLine("Описание активности:");
-        builder.AppendLine(offer.LinkOrDescription);
+        builder.AppendLine(offer.LinkOrDescription);*/
 
-        return builder.ToString();
+        //return builder.ToString();
     }
 }

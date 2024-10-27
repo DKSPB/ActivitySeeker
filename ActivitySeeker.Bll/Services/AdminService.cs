@@ -17,7 +17,7 @@ public class AdminService: IAdminService
         _passwordHasher = passwordHasher;
         _jwtProvider = jwtProvider;
     }
-    public async Task RegisterAsync(string userName, string login, string password)
+    public async Task RegisterAsync( string login, string password)
     {
         var adminExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Login == login);
 
@@ -27,20 +27,14 @@ public class AdminService: IAdminService
         }
 
         var hashedPassword = _passwordHasher.Generate(password);
-
-        var user = await _activitySeekerContext.Users.Include(x => x.AdminProfile)
-            .FirstOrDefaultAsync(x => x.UserName == userName);
-
-        if (user is null)
-        {
-            throw new Exception("Нет информации о пользователе");
-        }
-
-        user.AdminProfile = new Admin
+        
+        var admin = new Admin
         {
             Login = login,
             HashedPassword = hashedPassword
         };
+
+        await _activitySeekerContext.Admins.AddAsync(admin);
 
         await _activitySeekerContext.SaveChangesAsync();
     }
@@ -68,6 +62,6 @@ public class AdminService: IAdminService
 
     public async Task<IEnumerable<Admin>> GetAll()
     {
-        return await _activitySeekerContext.Admins.Include(x => x.User).ToListAsync();
+        return await _activitySeekerContext.Admins.ToListAsync();
     }
 }

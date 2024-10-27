@@ -10,8 +10,8 @@ public class Admin
     [Column("id")]
     public Guid Id { get; set; }
     
-    [Column("user_id")]
-    public long UserId { get; set; }
+    //[Column("user_id")]
+    //public long UserId { get; set; }
 
     [Column("login")] 
     public string Login { get; set; } = default!;
@@ -21,7 +21,7 @@ public class Admin
 
     #region NavigationProperties
 
-    public User User { get; set; } = null!;
+    //public User User { get; set; } = null!;
 
     #endregion
 

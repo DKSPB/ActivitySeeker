@@ -20,14 +20,14 @@ public class AdminController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegisterAdmin newAdmin)
     {
-        await _adminService.RegisterAsync(newAdmin.Username, newAdmin.Login, newAdmin.Password);
+        await _adminService.RegisterAsync(newAdmin.Login, newAdmin.Password);
         return Ok();
     }
     
     [HttpGet]
-    public async Task<IActionResult> Login([FromQuery] string username, [FromQuery] string password)
+    public async Task<IActionResult> Login([FromQuery] string login, [FromQuery] string password)
     {
-        var token  = await _adminService.LoginAsync(username, password);
+        var token  = await _adminService.LoginAsync(login, password);
         return Ok(token);
     }
 }

@@ -46,9 +46,9 @@ public class ActivityTypeController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] List<ActivityTypeDto> activityTypes)
+    public async Task<IActionResult> Delete([FromBody] List<Guid> activityTypeIds)
     {
-        await _activityTypeService.Delete(activityTypes);
+        await _activityTypeService.Delete(activityTypeIds);
         return Ok();
     }
 }

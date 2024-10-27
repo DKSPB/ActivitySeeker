@@ -1,3 +1,4 @@
+using System.Text;
 using Newtonsoft.Json;
 using ActivitySeeker.Domain.Entities;
 
@@ -16,9 +17,9 @@ public class ActivityDto: ActivityBaseDto
         LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
-        //Link = activity.Link;
         Image = activity.Image;
         OfferState = activity.IsPublished;
+        ActivityType = new ActivityTypeDto(activity.ActivityType);
     }
 
     public Activity ToActivity()
@@ -30,8 +31,24 @@ public class ActivityDto: ActivityBaseDto
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
             Image = Image,
-            //Link = Link,
             IsPublished = OfferState
         };
+    }
+
+    public StringBuilder GetActivityDescription(List<string>? prefixRows = null)
+    {
+        StringBuilder builder = new();
+
+        prefixRows?.ForEach(x => builder.AppendLine(x));
+        //builder.AppendLine("Эта активность будет предложена для публикации.");
+        //builder.AppendLine("Убедись, что данные заполнены корректно ");
+        builder.AppendLine("Тип активности:");
+        builder.AppendLine(ActivityType?.TypeName);
+        builder.AppendLine("Дата и время начала:");
+        builder.AppendLine(StartDate.ToString("dd.MM.yyyy HH:mm"));
+        builder.AppendLine("Описание активности:");
+        builder.AppendLine(LinkOrDescription);
+
+        return builder;
     }
 }

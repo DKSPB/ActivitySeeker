@@ -13,7 +13,7 @@ public class UserSetFromDateHandler: IHandler
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
 
-    public UserSetFromDateHandler(ITelegramBotClient botClient, IUserService userService, ActivityPublisher activityPublisher)
+    public UserSetFromDateHandler(IUserService userService, ActivityPublisher activityPublisher)
     {
         _userService = userService;
         _activityPublisher = activityPublisher;
@@ -23,11 +23,9 @@ public class UserSetFromDateHandler: IHandler
         var message = update.Message;
 
         var fromDateText = update.Message.Text;
-        var format = "dd.MM.yyyy";
-        var format1 = "dd.MM.yyyy HH:mm";
-        
-        var result = ParseDate(fromDateText, format, out var fromDate) ? true 
-            : ParseDate(fromDateText, format1, out fromDate);
+
+        var result = DateParser.ParseDate(fromDateText, out var fromDate) || 
+                     DateParser.ParseDateTime(fromDateText, out fromDate);
         
         if (result)
         {
@@ -46,18 +44,13 @@ public class UserSetFromDateHandler: IHandler
         else
         {
             var msgText = $"Введёная дата не соответствует форматам:" +
-                      $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
-                      $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
+              $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
+              $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
             var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, msgText);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
-    }
-
-    private bool ParseDate(string fromDateText, string format, out DateTime fromDate)
-    {
-        return DateTime.TryParseExact(fromDateText, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out fromDate);
     }
 }
