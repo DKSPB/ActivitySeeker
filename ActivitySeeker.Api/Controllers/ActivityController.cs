@@ -118,7 +118,7 @@ public class ActivityController : ControllerBase
     /// <param name="activities">Объект-список активностей, подлежащих удалению</param>
     /// <returns></returns>
     [HttpDelete]
-    public async Task<IActionResult> DeleteActivities(List<ActivityDto> activities)
+    public async Task<IActionResult> DeleteActivities(List<Guid> activities)
     {
         await _activityService.DeleteActivity(activities);
         return Ok();

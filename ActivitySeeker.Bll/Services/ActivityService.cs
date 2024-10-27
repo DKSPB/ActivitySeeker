@@ -95,18 +95,12 @@ namespace ActivitySeeker.Bll.Services
         }
         
         /// <inheritdoc />
-        public async Task DeleteActivity(List<ActivityDto> activitiesForRemove)
+        public async Task DeleteActivity(List<Guid> activityIds)
         {
-            foreach (var activity in activitiesForRemove)
-            {
-                var activityEntity =
-                    _context.Activities.FirstOrDefault(x => x.ActivityTypeId.Equals(activity.ActivityTypeId));
+            var activitiesForRemove =
+                await _context.Activities.Where(x => activityIds.Contains(x.Id)).ToListAsync();
 
-                if (activityEntity is not null)
-                {
-                    _context.Activities.Remove(activityEntity);
-                }
-            }
+            _context.Activities.RemoveRange(activitiesForRemove);
 
             await _context.SaveChangesAsync();
         }
@@ -114,7 +108,6 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public async Task UpdateActivity(ActivityDto activity)
         {
-
             var activityEntity = _context.Activities.FirstOrDefault(x => x.Id.Equals(activity.Id));
 
             if (activityEntity is not null)
@@ -122,12 +115,10 @@ namespace ActivitySeeker.Bll.Services
                 activityEntity.LinkOrDescription = activity.LinkOrDescription;
                 activityEntity.StartDate = activity.StartDate;
                 activityEntity.ActivityTypeId = activity.ActivityTypeId;
-                //activityEntity.Link = activity.Link;
                 activityEntity.Image = activity.Image;
             }
 
             await _context.SaveChangesAsync();
-
         }
 
         /// <inheritdoc />
@@ -149,21 +140,6 @@ namespace ActivitySeeker.Bll.Services
             }
 
             return activityEntities?.Select(x => new ActivityDto(x)).ToList();
-
-            /*activityIds.ForEach(async x => {
-
-                var activityEntity = await _context.Activities.FirstOrDefaultAsync(z => z.Id == x);
-
-                if (activityEntity is not null)
-                {
-                    activityEntity.OfferState = true;
-
-                    _context.Activities.Update(activityEntity);
-                }
-
-            });
-
-            await _context.SaveChangesAsync();*/
         }
     }
 }
