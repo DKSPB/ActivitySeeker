@@ -17,6 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.SignalR;
 using ActivitySeeker.Bll.Notification;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace ActivitySeeker.Api
 {
@@ -139,6 +141,20 @@ namespace ActivitySeeker.Api
                 builder.Host.UseNLog();
 
                 var app = builder.Build();
+
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("ru-RU"),
+                    new CultureInfo("ru"),
+                    new CultureInfo("en-US")
+                };
+
+                app.UseRequestLocalization(new RequestLocalizationOptions 
+                {
+                    DefaultRequestCulture = new RequestCulture("ru-RU"),
+                    SupportedCultures = supportedCultures,
+                    SupportedUICultures = supportedCultures
+                });
 
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
