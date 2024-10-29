@@ -24,10 +24,17 @@ public class ActivityTypeDto
     {
         return new ActivityType
         {
-            TypeName = TypeName
+            TypeName = TypeName,
+            ParentId = ParentId
         };
     }
 
     public Guid? Id { get; set; }
     public string TypeName { get; set; } = "Все виды активности";
+    
+    public Guid? ParentId { get; set; }
+    
+    public ActivityType? Parent { get; set; }
+    
+    public IEnumerable<ActivityType>? Children { get; set; }
 }

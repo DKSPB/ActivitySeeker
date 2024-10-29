@@ -9,6 +9,9 @@ public class ActivityType
     [Key]
     [Column("id")]
     public Guid Id { get; set; }
+    
+    [Column("parent_id")]
+    public Guid? ParentId { get; set; }
 
     [Column("type_name")]
     public string TypeName { get; set; } = default!;
@@ -16,6 +19,10 @@ public class ActivityType
     #region Navigation properties
 
     public IEnumerable<Activity>? Activities { get; set; }
+    
+    public IEnumerable<ActivityType>? Children { get; set; }
+    
+    public ActivityType? Parent { get; set; }
 
     #endregion
 }

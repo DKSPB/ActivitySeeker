@@ -16,7 +16,7 @@ public class ActivityTypeService: IActivityTypeService
     
     public async Task<List<ActivityTypeDto>> GetTypes()
     {
-        return await _context.ActivityTypes.Select(x => new ActivityTypeDto(x)).ToListAsync();
+        return await _context.ActivityTypes.Include(x => x.Parent).Select(x => new ActivityTypeDto(x)).ToListAsync();
     }
 
     public async Task<ActivityTypeDto> GetById(Guid id)
