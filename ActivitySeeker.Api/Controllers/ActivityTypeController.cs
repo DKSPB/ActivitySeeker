@@ -1,3 +1,4 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -22,7 +23,7 @@ public class ActivityTypeController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _activityTypeService.GetTypes());
+        return Ok(await _activityTypeService.GetAll());
     }
 
     [HttpGet("{id:guid}")]
@@ -32,16 +33,16 @@ public class ActivityTypeController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ActivityTypeDto activityType)
+    public async Task<IActionResult> Create([FromBody] NewActivityType activityType)
     {
-        await _activityTypeService.Create(activityType);
+        await _activityTypeService.Create(activityType.ToActivityTypeDto());
         return Ok();
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] ActivityTypeDto activityType)
+    public async Task<IActionResult> Update([FromBody] NewActivityType activityType)
     {
-        await _activityTypeService.Update(activityType);
+        await _activityTypeService.Update(activityType.ToActivityTypeDto());
         return Ok();
     }
 

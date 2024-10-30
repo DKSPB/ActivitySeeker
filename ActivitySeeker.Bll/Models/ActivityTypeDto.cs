@@ -14,10 +14,14 @@ public class ActivityTypeDto
         TypeName = typeName;
     }
 
-    public ActivityTypeDto(ActivityType activityType)
+    public ActivityTypeDto(ActivityType? activityType)
     {
-        Id = activityType.Id;
-        TypeName = activityType.TypeName;
+        Id = activityType?.Id;
+        TypeName = activityType?.TypeName ?? "";
+        ParentId = activityType?.ParentId;
+        Parent = new ActivityTypeDto(activityType?.Parent);
+        Children = activityType?.Children?.Select(x => new ActivityTypeDto(x));
+
     }
 
     public ActivityType ToActivityType()
@@ -34,7 +38,7 @@ public class ActivityTypeDto
     
     public Guid? ParentId { get; set; }
     
-    public ActivityType? Parent { get; set; }
+    public ActivityTypeDto? Parent { get;  set; }
     
-    public IEnumerable<ActivityType>? Children { get; set; }
+    public IEnumerable<ActivityTypeDto>? Children { get; set; }
 }

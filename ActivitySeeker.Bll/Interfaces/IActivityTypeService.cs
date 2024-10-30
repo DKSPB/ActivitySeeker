@@ -4,7 +4,7 @@ namespace ActivitySeeker.Bll.Interfaces;
 
 public interface IActivityTypeService
 {
-    Task<List<ActivityTypeDto>> GetTypes();
+    Task<List<ActivityTypeDto>> GetAll();
 
     Task<ActivityTypeDto> GetById(Guid id);
 

@@ -1,6 +1,7 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain;
+using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivitySeeker.Bll.Services;
@@ -14,14 +15,23 @@ public class ActivityTypeService: IActivityTypeService
         _context = context;
     }
     
-    public async Task<List<ActivityTypeDto>> GetTypes()
+    public async Task<List<ActivityTypeDto>> GetAll()
     {
-        return await _context.ActivityTypes.Include(x => x.Parent).Select(x => new ActivityTypeDto(x)).ToListAsync();
+        return await GetActivityTypes()
+            .Select(x => new ActivityTypeDto(x))
+            .ToListAsync();
+    }
+
+    private IQueryable<ActivityType> GetActivityTypes()
+    {
+        return _context.ActivityTypes
+            .Include(x => x.Parent)
+            .Include(z => z.Children);
     }
 
     public async Task<ActivityTypeDto> GetById(Guid id)
     {
-        var activityTypeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == id);
+        var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == id);
 
         if (activityTypeEntity is null)
         {
@@ -39,7 +49,7 @@ public class ActivityTypeService: IActivityTypeService
 
     public async Task Update(ActivityTypeDto activityType)
     {
-        var activityTypeEntity = _context.ActivityTypes.FirstOrDefault(x => x.Id == activityType.Id);
+        var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == activityType.Id);
 
         if (activityTypeEntity is null)
         {
@@ -53,15 +63,9 @@ public class ActivityTypeService: IActivityTypeService
     
     public async Task Delete(List<Guid> activityTypeIds)
     {
-        foreach (var typeId in activityTypeIds)
-        {
-            var typeEntity = await _context.ActivityTypes.FirstOrDefaultAsync(x => x.Id == typeId);
+        var activityEntities = _context.ActivityTypes.Where(x => activityTypeIds.Contains(x.Id));
 
-            if (typeEntity is not null)
-            {
-                _context.ActivityTypes.Remove(typeEntity);
-            }
-        }
+        _context.ActivityTypes.RemoveRange(activityEntities);
 
         await _context.SaveChangesAsync();
     }
