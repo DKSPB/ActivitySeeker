@@ -23,7 +23,15 @@ public class ActivityTypeController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        return Ok(await _activityTypeService.GetAll());
+        var activityTypes = await _activityTypeService.GetAll();
+
+        foreach (var activityType in activityTypes)
+        {
+            activityType.Parent = 
+                activityType.ParentId is null ? null : await _activityTypeService.GetById(activityType.ParentId.Value);
+        }
+        
+        return Ok(activityTypes.Select(x => new ActivityTypeViewModel(x)));
     }
 
     [HttpGet("{id:guid}")]

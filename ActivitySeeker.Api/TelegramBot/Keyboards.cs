@@ -1,4 +1,5 @@
-﻿using ActivitySeeker.Domain.Entities;
+﻿using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Domain.Entities;
 using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -45,7 +46,7 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
-        public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityType> activityTypes) 
+        public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityTypeDto> activityTypes) 
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
             foreach (var activityType in activityTypes)

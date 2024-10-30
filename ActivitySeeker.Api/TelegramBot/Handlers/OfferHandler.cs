@@ -16,13 +16,16 @@ public class OfferHandler : IHandler
 {
     private readonly IUserService _userService;
     private readonly IActivityService _activityService;
+    private readonly IActivityTypeService _activityTypeService;
     private readonly ILogger<OfferHandler> _loggerHandler;
     private readonly ActivityPublisher _activityPublisher;
 
-    public OfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, ILogger<OfferHandler> loggerHandler)
+    public OfferHandler(IUserService userService, IActivityService activityService, IActivityTypeService activityTypeService,
+        ActivityPublisher activityPublisher, ILogger<OfferHandler> loggerHandler)
     {
         _userService = userService;
         _activityService = activityService;
+        _activityTypeService = activityTypeService;
         _activityPublisher = activityPublisher;
         _loggerHandler = loggerHandler;
     }
@@ -41,7 +44,8 @@ public class OfferHandler : IHandler
         }
 
         currentUser.State.StateNumber = StatesEnum.AddOfferDescription;
-        var activityTypes = _activityService.GetActivityTypes();
+        var activityTypes = (await _activityTypeService.GetAll())
+            .Where(x => x.ParentId is null).ToList();
 
         try
         {
@@ -55,27 +59,6 @@ public class OfferHandler : IHandler
 
         var message = await _activityPublisher.SendMessageAsync(chat.Id, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
         
-        currentUser.State.MessageId = message.MessageId;
-        _userService.UpdateUser(currentUser);
-    }
-
-    public async Task HandleAsync(ChatId chatId, UserDto currentUser, string? msgText = null)
-    {
-        currentUser.State.StateNumber = StatesEnum.AddOfferDescription;
-        var activityTypes = _activityService.GetActivityTypes();
-
-        try
-        {
-            await _activityPublisher.EditMessageAsync(chatId, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
-        }
-        catch (Exception)
-        {
-            var errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
-            _loggerHandler.LogError(errorMessage);
-        }
-
-        var message = await _activityPublisher.SendMessageAsync(chatId, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
-
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);
     }

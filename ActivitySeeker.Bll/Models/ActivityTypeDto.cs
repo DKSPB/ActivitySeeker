@@ -14,14 +14,11 @@ public class ActivityTypeDto
         TypeName = typeName;
     }
 
-    public ActivityTypeDto(ActivityType? activityType)
+    public ActivityTypeDto(ActivityType activityType)
     {
-        Id = activityType?.Id;
-        TypeName = activityType?.TypeName ?? "";
-        ParentId = activityType?.ParentId;
-        Parent = new ActivityTypeDto(activityType?.Parent);
-        Children = activityType?.Children?.Select(x => new ActivityTypeDto(x));
-
+        Id = activityType.Id;
+        TypeName = activityType.TypeName;
+        ParentId = activityType.ParentId;
     }
 
     public ActivityType ToActivityType()

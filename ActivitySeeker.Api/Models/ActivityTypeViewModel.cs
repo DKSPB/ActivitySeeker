@@ -6,18 +6,18 @@ namespace ActivitySeeker.Api.Models
     {
         public Guid? Id { get; set; }
 
-        public string TypeName { get; set; } = string.Empty;
+        public string TypeName { get; set; }
 
-        public ActivityTypeViewModel? Parent { get; set; }
-
-        public IEnumerable<ActivityTypeViewModel>? Children { get; set; }
+        public Guid? ParentId { get; set; }
+        
+        public string? ParentTypeName { get; set; }
 
         public ActivityTypeViewModel(ActivityTypeDto? activityTypeDto)
         {
             Id = activityTypeDto?.Id;
             TypeName = activityTypeDto?.TypeName ?? "";
-            Parent = new ActivityTypeViewModel(activityTypeDto?.Parent);
-            Children = activityTypeDto?.Children?.Select(x => new ActivityTypeViewModel(x));
+            ParentId = activityTypeDto?.ParentId ?? null;
+            ParentTypeName = activityTypeDto?.Parent?.TypeName;
         }
     }
 }

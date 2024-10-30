@@ -20,19 +20,6 @@ public interface IActivityService
     IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
 
     /// <summary>
-    /// Получение списка всех типов активностей
-    /// </summary>
-    /// <returns></returns>
-    List<ActivityType> GetActivityTypes();
-
-    /// <summary>
-    /// Получение типа активностей по идентификатору
-    /// </summary>
-    /// <param name="activityId">Идентификатор типа активности</param>
-    /// <returns></returns>
-    ActivityType GetActivityType(Guid activityId);
-
-    /// <summary>
     /// Получение активностей по типу
     /// </summary>
     /// <param name="activityTypeId">Идентификатор типа активностей</param>

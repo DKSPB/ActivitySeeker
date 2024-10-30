@@ -13,20 +13,7 @@ namespace ActivitySeeker.Bll.Services
         {
             _context = context;
         }
-
-        /// <inheritdoc />
-        public List<ActivityType> GetActivityTypes()
-        {
-            return _context.ActivityTypes.ToList();
-        }
-
-        /// <inheritdoc />
-        public ActivityType GetActivityType(Guid activityId) 
-        {
-            var activityType = _context.ActivityTypes.FirstOrDefault(x => x.Id.Equals(activityId));
-            return activityType ?? throw new NullReferenceException($"activity type with {activityId} is null");
-        }
-
+        
         /// <inheritdoc />
         public LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(State currentUserState)
         {
