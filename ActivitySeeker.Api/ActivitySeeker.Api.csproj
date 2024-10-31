@@ -34,4 +34,10 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="City.sql">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
