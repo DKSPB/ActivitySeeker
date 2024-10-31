@@ -70,6 +70,8 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
                 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
                 builder.Services.AddScoped<IAdminService, AdminService>();
+                builder.Services.AddScoped<ICityService, CityService>();
+                builder.Services.AddScoped<SetDefaultSettingsHandler>();
                 builder.Services.AddScoped<StartHandler>();
                 builder.Services.AddScoped<MainMenuHandler>();
                 builder.Services.AddScoped<ListOfActivitiesHandler>();
@@ -92,6 +94,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<AddOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
+                
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
                 {

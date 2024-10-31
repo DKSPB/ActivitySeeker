@@ -129,5 +129,20 @@ namespace ActivitySeeker.Api.TelegramBot
                 }
             });
         }
+
+        public static InlineKeyboardMarkup GetDefaultSettingsKeyboard(int mskId, int spbId)
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Москва", mskId.ToString())
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Санкт-Петербург", spbId.ToString())
+                }
+            });
+        }
     }
 }
