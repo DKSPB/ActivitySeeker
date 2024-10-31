@@ -142,12 +142,6 @@ namespace ActivitySeeker.Api
 
                 var app = builder.Build();
 
-                using (var scope = app.Services.CreateScope())
-                {
-                    var context = scope.ServiceProvider.GetRequiredService<ActivitySeekerContext>();
-                    context.SeedCityData();
-                }
-
                 var supportedCultures = new[]
                 {
                     new CultureInfo("ru-RU"),

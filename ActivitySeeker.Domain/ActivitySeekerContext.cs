@@ -24,21 +24,6 @@ public class ActivitySeekerContext: DbContext
         modelBuilder.ApplyConfiguration(new ConfigureActivityTypes());
         modelBuilder.ApplyConfiguration(new ConfigureActivity());
     }
-    
-    public void SeedCityData()
-    {
-        if (!Cities.Any())
-        {
-            var sqlFilePath = "City.sql";
-
-            if (File.Exists(sqlFilePath))
-            {
-                var sql = File.ReadAllText(sqlFilePath);
-                
-                Database.ExecuteSqlRaw(sql);
-            }
-        }
-    }
 }
     
 
