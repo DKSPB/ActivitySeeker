@@ -10,6 +10,9 @@ public class User
 
     [Column("chat_id")]
     public long ChatId { get; set; }
+    
+    [Column("city_id")]
+    public int? CityId { get; set; }
 
     [Column("username")]
     public string UserName { get; set; } = default!;
@@ -41,6 +44,8 @@ public class User
     public ActivityType? ActivityType { get; set; }
     
     public Admin? AdminProfile { get; set; }
-    
+
+    public City? UserCity { get; set; }
+
     #endregion
 }

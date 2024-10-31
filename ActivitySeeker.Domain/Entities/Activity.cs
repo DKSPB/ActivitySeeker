@@ -8,6 +8,9 @@ public class Activity
 {
     [Key]
     public Guid Id { get; set; }
+    
+    [Column("city_id")]
+    public int? CityId { get; set; }
 
     [Column("link_description")]
     public string LinkOrDescription { get; set; } = null!;
@@ -27,6 +30,8 @@ public class Activity
     #region Навигационные свойства
 
     public ActivityType ActivityType { get; set; } = null!;
+    
+    public City? ActivityCity { get; set; }
 
     #endregion
 }
