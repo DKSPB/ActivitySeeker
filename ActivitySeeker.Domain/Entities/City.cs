@@ -7,6 +7,7 @@ namespace ActivitySeeker.Domain.Entities;
 public class City
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     [Column("id")]
     public int Id { get; set; }
     
