@@ -30,4 +30,9 @@ public class CityService: ICityService
             .Replace("-", "")
             .Contains(substring)).ToListAsync();
     }
+
+    public async Task<City?> GetById(int id)
+    {
+       return await _context.Cities.FirstOrDefaultAsync(x => x.Id == id);
+    }
 }

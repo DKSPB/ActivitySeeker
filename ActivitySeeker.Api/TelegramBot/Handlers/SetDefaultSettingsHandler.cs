@@ -7,6 +7,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
+[HandlerState(StatesEnum.SetDefaultSettings)]
 public class SetDefaultSettingsHandler: IHandler
 {
     private const string MessageText = $"Перед началом использования бота задайте Ваш Город." +
@@ -33,17 +34,16 @@ public class SetDefaultSettingsHandler: IHandler
 
         var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
-        var message = await _activityPublisher.SendMessageAsync(chat.Id, MessageText, null, GetKeyboard(mskId, spbId));
+        var message = await _activityPublisher.SendMessageAsync(
+            chat.Id, 
+            MessageText, 
+            null, 
+            Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));
          
         currentUser.State.MessageId = message.MessageId;
         
-        currentUser.State.StateNumber = StatesEnum.MainMenu;
+        currentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
         
         _userService.UpdateUser(currentUser);
-    }
-
-    private static IReplyMarkup GetKeyboard(int mskId, int spbId)
-    {
-        return Keyboards.GetDefaultSettingsKeyboard(mskId, spbId);
     }
 }

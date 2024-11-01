@@ -13,7 +13,7 @@ public class StartHandler: IHandler
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
     
-    public StartHandler(ITelegramBotClient botClient, IUserService userService, ActivityPublisher activityPublisher)
+    public StartHandler(IUserService userService, ActivityPublisher activityPublisher)
     {
         _userService = userService;
         _activityPublisher = activityPublisher;

@@ -47,8 +47,7 @@ public abstract class AbstractHandler: IHandler
 
             CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
-        }   
-
+        }
     }
 
     protected abstract Task ActionsAsync(CallbackQuery callbackQuery);

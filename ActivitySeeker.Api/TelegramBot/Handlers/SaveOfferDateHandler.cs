@@ -86,17 +86,5 @@ public class SaveOfferDateHandler : IHandler
             
         };
         return offer.GetActivityDescription(prefix).ToString();
-        /*StringBuilder builder = new();
-
-        builder.AppendLine("Эта активность будет предложена для публикации.");
-        builder.AppendLine("Убедись, что данные заполнены корректно ");
-        builder.AppendLine("Тип активности:");
-        builder.AppendLine(_activityService.GetActivityType(offer.ActivityTypeId).TypeName);
-        builder.AppendLine("Дата и время начала:");
-        builder.AppendLine(offer.StartDate.ToString("dd.MM.yyyy HH:mm"));
-        builder.AppendLine("Описание активности:");
-        builder.AppendLine(offer.LinkOrDescription);*/
-
-        //return builder.ToString();
     }
 }

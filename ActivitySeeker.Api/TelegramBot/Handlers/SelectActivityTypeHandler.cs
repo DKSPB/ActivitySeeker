@@ -31,7 +31,7 @@ public class SelectActivityTypeHandler: AbstractHandler
 
     protected override InlineKeyboardMarkup GetKeyboard()
     {
-        var activityTypes = GetRootActivityTypes().Result;//ActivityService.GetActivityTypes();
+        var activityTypes = GetRootActivityTypes().Result;
         activityTypes.Insert(0, new ActivityTypeDto{Id = Guid.Empty, TypeName = "Все виды активностей"});
         
         return Keyboards.GetActivityTypesKeyboard(activityTypes);

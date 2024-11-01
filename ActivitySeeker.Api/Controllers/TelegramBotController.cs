@@ -49,7 +49,15 @@ public class TelegramBotController: ControllerBase
                     
                 if (msgText.Equals("/start"))
                 {
-                    var handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
+                    IHandler handler;
+                    if (currentUser.CityId is null)
+                    {
+                        handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
+                    }
+                    else
+                    {
+                        handler = _serviceProvider.GetRequiredService<StartHandler>();
+                    }
                     await handler.HandleAsync(currentUser, update);
                     return Ok();
                 }

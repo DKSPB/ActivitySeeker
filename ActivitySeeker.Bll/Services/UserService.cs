@@ -21,6 +21,7 @@ public class UserService: IUserService
         var userExists = _context.Users.First(x => x.Id == user.Id);
         
         userExists.MessageId = user.State.MessageId;
+        userExists.CityId = user.CityId;
         userExists.State = user.State.StateNumber;
         userExists.ChatId = user.ChatId;
         userExists.UserName = user.UserName;

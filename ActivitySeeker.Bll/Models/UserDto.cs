@@ -9,6 +9,8 @@ public class UserDto
     public long Id { get; set; }
     
     public long ChatId { get; set; }
+    
+    public int? CityId { get; set; }
 
     public string UserName { get; set; } = default!;
 
@@ -28,6 +30,7 @@ public class UserDto
     {
         Id = user.Id;
         ChatId = user.ChatId;
+        CityId = user.CityId;
         UserName = user.UserName;
         Offer = user.Offer is null ? null : new ActivityDto(user.Offer);
         ActivityResult = JsonConvert.DeserializeObject<LinkedList<ActivityTelegramDto>>(user.ActivityResult) ??
@@ -50,6 +53,7 @@ public class UserDto
         {
             Id = user.Id,
             ChatId = user.ChatId,
+            CityId = user.CityId,
             UserName = user.UserName,
             MessageId = user.State.MessageId,
             State = user.State.StateNumber,

@@ -144,5 +144,28 @@ namespace ActivitySeeker.Api.TelegramBot
                 }
             });
         }
+
+        public static InlineKeyboardMarkup GetCityKeyboard(IEnumerable<City> cities)
+        {
+            List<List<InlineKeyboardButton>> activityTypeButtons = new();
+            
+            foreach (var city in cities)
+            {
+                activityTypeButtons.Add(new List<InlineKeyboardButton>
+                {
+                    InlineKeyboardButton.WithCallbackData(city.Name, city.Id.ToString())
+                });
+            }
+
+            /*activityTypeButtons.Add(new List<InlineKeyboardButton>
+            {
+                InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
+            });*/
+
+            InlineKeyboardMarkup countersButtons = new (activityTypeButtons);
+
+
+            return countersButtons;
+        }
     }
 }
