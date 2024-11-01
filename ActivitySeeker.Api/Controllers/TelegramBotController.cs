@@ -9,6 +9,7 @@ using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.Enums;
+using ActivitySeeker.Api.Models;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -33,85 +34,59 @@ public class TelegramBotController: ControllerBase
     [HttpPost]
     public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken cancellationToken)
     {
-        var handlerTypes = HandlerProvider.GetAllHandlerTypes(); 
+        var handlerTypes = HandlerProvider.GetAllHandlerTypes();
 
-        switch (update.Type)
+        var userMessage = GetUserMessageData(update);
+
+        if(userMessage is null)
         {
-            case UpdateType.Message:
-            {
-                if (update.Message is null || update.Message.Text is null)
-                {
-                    _logger.LogError("Object Message is null or Message.Text is null");
-                    throw new NullReferenceException("Object Message is null or Message.Text is null");
-                }
-
-                var currentUser = CreateUserIfNotExists(update.Message);
-
-                var msgText = update.Message.Text;
-                    
-                if (msgText.Equals("/start"))
-                {
-                    IHandler handler;
-                    if (currentUser.CityId is null)
-                    {
-                        handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
-                    }
-                    else
-                    {
-                        handler = _serviceProvider.GetRequiredService<StartHandler>();
-                    }
-                    await handler.HandleAsync(currentUser, update);
-                    return Ok();
-                }
-
-                if (msgText.Equals("/offer"))
-                {
-                    var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
-                    await offerHandler.HandleAsync(currentUser, update);
-                    return Ok();
-                }
-
-                var handlerType = HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
-
-                if (handlerType is not null)
-                {
-                    var handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
-                    await handler.HandleAsync(currentUser, update);
-                }
-
-                return Ok();
-            }
-            case UpdateType.CallbackQuery:
-            {
-                var callbackQuery = update.CallbackQuery;
-
-                if (callbackQuery is null || callbackQuery.Data is null)
-                {
-                    _logger.LogError("Object Update.CallbackQuery is null or Update.CallbackQuery.Data is null or Update.CallbackQuery.Message is null");
-                    throw new NullReferenceException("Object Update.CallbackQuery is null or Update.CallbackQuery.Data is null or Update.CallbackQuery.Message is null");
-                }
-
-                await _activityPublisher.AnswerOnPushButton(callbackQuery.Id);
-
-                var currentUser = _userService.GetUserById(callbackQuery.From.Id)?? throw new NullReferenceException("User not found");
-
-                var handlerType = handlerTypes.FirstOrDefault(x =>
-                    x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == callbackQuery.Data);
-                
-                if (handlerType is null)
-                {
-                    handlerType = HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
-                }
-
-                if (handlerType is not null) 
-                {
-                    var handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
-                    await handler.HandleAsync(currentUser, update);
-                }
-                
-                return Ok();
-            }
+            return Ok();
         }
+
+        if (userMessage.CallbackQueryId is not null)
+        {
+            await _activityPublisher.AnswerOnPushButton(userMessage.CallbackQueryId);
+        }
+
+        var currentUser = CreateUserIfNotExists(userMessage);
+
+        IHandler handler;
+
+        if (userMessage.Data.Equals("/start"))
+        {
+            if (currentUser.CityId is null)
+            {
+                handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
+            }
+            else
+            {
+                handler = _serviceProvider.GetRequiredService<StartHandler>();
+            }
+            await handler.HandleAsync(currentUser, update);
+            return Ok();
+        }
+
+        if (userMessage.Data.Equals("/offer"))
+        {
+            var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
+            await offerHandler.HandleAsync(currentUser, update);
+            return Ok();
+        }
+
+        var handlerType = HandlerProvider.FindhandlersTypeByCallbackData(handlerTypes, userMessage.Data);
+
+        if (handlerType is null)
+        {
+            handlerType = HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
+        }
+
+        if(handlerType is null)
+        {
+            return Ok();
+        }
+              
+        handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
+        await handler.HandleAsync(currentUser, update);
         return Ok();
     }
 
@@ -121,15 +96,9 @@ public class TelegramBotController: ControllerBase
     /// Создание пользователя, если о нём нет записи в БД
     /// </summary>
     /// <param name="message">Сообщение от пользователя</param>
-    private UserDto CreateUserIfNotExists(Message message)
+    private UserDto CreateUserIfNotExists(UserMessage message)
     {
-        var telegramUser = message.From;
-        if (telegramUser is null)
-        {
-            throw new NullReferenceException("Object user is null");
-        }
-
-        var user = _userService.GetUserById(telegramUser.Id);
+        var user = _userService.GetUserById(message.TelegramUserId);
 
         if (user is not null)
         {
@@ -138,9 +107,9 @@ public class TelegramBotController: ControllerBase
         
         user = new UserDto
         {
-            Id = telegramUser.Id,
-            UserName = telegramUser.Username ?? "",
-            ChatId = message.Chat.Id,
+            Id = message.TelegramUserId,
+            UserName = message.TelegramUsername ?? "",
+            ChatId = message.ChatId,
             State =
             {
                 SearchFrom = DateTime.Now,
@@ -151,6 +120,50 @@ public class TelegramBotController: ControllerBase
         _userService.CreateUser(user);
 
         return user;
+    }
+
+    private UserMessage? GetUserMessageData(Update update)
+    {
+        if (update.Type == UpdateType.Message)
+        {
+            var message = update.Message;
+
+            if (message?.Text is not null && message?.From is not null)
+            {
+                return new UserMessage
+                {
+                    TelegramUserId = message.From.Id,
+                    TelegramUsername = message.From.Username,
+                    ChatId = message.Chat.Id,
+                    Data = message.Text
+                };
+            }
+
+            return null;
+            
+        }
+
+        if (update.Type == UpdateType.CallbackQuery)
+        {
+            var callbackQuery = update.CallbackQuery;
+
+            if (callbackQuery?.Data is not null && callbackQuery?.Message is not null && callbackQuery.From is not null)
+            {
+                return new UserMessage
+                {
+                    TelegramUserId = callbackQuery.From.Id,
+                    TelegramUsername= callbackQuery.From.Username,
+                    MessageId = callbackQuery.Message.MessageId,
+                    CallbackQueryId = callbackQuery.Id,
+                    ChatId = callbackQuery.Message.Chat.Id,
+                    Data = callbackQuery.Data
+                };
+            }
+
+            return null;
+        }
+
+        return null;
     }
 
     #endregion

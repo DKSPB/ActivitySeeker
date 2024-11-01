@@ -1,6 +1,9 @@
 ﻿using ActivitySeeker.Api.TelegramBot.Handlers;
+using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.OpenApi.Extensions;
 using System.Reflection;
+using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot
 {
@@ -32,6 +35,12 @@ namespace ActivitySeeker.Api.TelegramBot
         {
             return handlerTypes.FirstOrDefault(x =>
                 x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState == state);
+        }
+
+        public static Type? FindhandlersTypeByCallbackData(IEnumerable<Type> handlerTypes, string calbackData)
+        {
+            return handlerTypes.FirstOrDefault(x =>
+                x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == calbackData);
         }
 
         /// <summary>
