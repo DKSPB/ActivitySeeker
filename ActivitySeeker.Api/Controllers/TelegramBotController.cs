@@ -17,12 +17,14 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/message")]
 public class TelegramBotController: ControllerBase
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly IUserService _userService;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ActivityPublisher _activityPublisher;
     private readonly ILogger<TelegramBotController> _logger;
 
-    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService, ILogger<TelegramBotController> logger)
+    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService, ActivityPublisher activityPublisher, ILogger<TelegramBotController> logger)
     {
+        _activityPublisher = activityPublisher;
         _serviceProvider = serviceProvider;
         _userService = userService;
         _logger = logger;
@@ -88,6 +90,8 @@ public class TelegramBotController: ControllerBase
                     _logger.LogError("Object Update.CallbackQuery is null or Update.CallbackQuery.Data is null or Update.CallbackQuery.Message is null");
                     throw new NullReferenceException("Object Update.CallbackQuery is null or Update.CallbackQuery.Data is null or Update.CallbackQuery.Message is null");
                 }
+
+                await _activityPublisher.AnswerOnPushButton(callbackQuery.Id);
 
                 var currentUser = _userService.GetUserById(callbackQuery.From.Id)?? throw new NullReferenceException("User not found");
 

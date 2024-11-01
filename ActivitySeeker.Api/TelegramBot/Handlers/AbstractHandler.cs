@@ -25,7 +25,7 @@ public abstract class AbstractHandler: IHandler
         var callbackQuery = update.CallbackQuery;
         CurrentUser = currentUser;
 
-        await _activityPublisher.AnswerOnPushButton(callbackQuery.Id);
+        //await _activityPublisher.AnswerOnPushButton(callbackQuery.Id);
 
         try
         {

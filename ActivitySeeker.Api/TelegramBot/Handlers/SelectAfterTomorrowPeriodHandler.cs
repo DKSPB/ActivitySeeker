@@ -9,8 +9,8 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.AfterTomorrowPeriod)]
 public class SelectAfterTomorrowPeriodHandler: AbstractHandler
 {
-    public SelectAfterTomorrowPeriodHandler(/*ITelegramBotClient botClient,*/ IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
-        : base(/*botClient,*/ userService, activityService, activityPublisher)
+    public SelectAfterTomorrowPeriodHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
+        : base(userService, activityService, activityPublisher)
     { }
 
     protected override Task ActionsAsync(CallbackQuery callbackQuery)

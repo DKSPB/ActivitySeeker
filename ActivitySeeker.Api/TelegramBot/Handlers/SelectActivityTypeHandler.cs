@@ -13,10 +13,10 @@ public class SelectActivityTypeHandler: AbstractHandler
 {
     private readonly IActivityTypeService _activityTypeService;
 
-    public SelectActivityTypeHandler(/*ITelegramBotClient botClient,*/ IUserService userService,
+    public SelectActivityTypeHandler(IUserService userService,
         IActivityService activityService, ActivityPublisher activityPublisher,
         IActivityTypeService activityTypeService) :
-        base(/*botClient,*/ userService, activityService, activityPublisher)
+        base(userService, activityService, activityPublisher)
     {
         _activityTypeService = activityTypeService;
     }
