@@ -14,8 +14,8 @@ public class SearchResultHandler: AbstractHandler
 
     private readonly ActivityPublisher _activityPublisher;
 
-    public SearchResultHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
-        : base(botClient, userService, activityService, activityPublisher)
+    public SearchResultHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
+        : base(userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
     }
@@ -50,11 +50,8 @@ public class SearchResultHandler: AbstractHandler
     
     protected override InlineKeyboardMarkup GetKeyboard()
     {
-        if (CurrentActivity is null)
-        {
-            return Keyboards.GetToMainMenuKeyboard();
-        }
-
-        return Keyboards.GetActivityPaginationKeyboard();
+        return CurrentActivity is null ? 
+            Keyboards.GetToMainMenuKeyboard() : 
+            Keyboards.GetActivityPaginationKeyboard();
     }
 }

@@ -8,9 +8,9 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
     [HandlerState(StatesEnum.UserPeriod)]
     public class SelectUserPeriodHandler: AbstractHandler
     {
-        public SelectUserPeriodHandler(ITelegramBotClient botClient, IUserService userService,
+        public SelectUserPeriodHandler(/*ITelegramBotClient botClient,*/ IUserService userService,
             IActivityService activityService, ActivityPublisher activityPublisher) 
-            : base(botClient, userService, activityService, activityPublisher)
+            : base(/*botClient,*/ userService, activityService, activityPublisher)
         { }
 
         protected override Task ActionsAsync(CallbackQuery callbackQuery)

@@ -13,9 +13,9 @@ public class AddOfferDescriptionHandler : AbstractHandler
     private readonly IActivityTypeService _activityTypeService;
     private IEnumerable<ActivityTypeDto> _children;
 
-    public AddOfferDescriptionHandler(ITelegramBotClient botClient, IUserService userService,
+    public AddOfferDescriptionHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService, ActivityPublisher activityPublisher)
-        : base(botClient, userService, activityService, activityPublisher)
+        : base(userService, activityService, activityPublisher)
     {
         _activityTypeService = activityTypeService;
         _children = new List<ActivityTypeDto>();

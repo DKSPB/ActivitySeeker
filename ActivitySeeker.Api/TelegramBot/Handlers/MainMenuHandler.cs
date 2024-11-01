@@ -1,7 +1,5 @@
-using ActivitySeeker.Api.Controllers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -12,8 +10,8 @@ public class MainMenuHandler: AbstractHandler
 {
     private const string MessageText = "Выбери тип активности и время проведения:";
 
-    public MainMenuHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) :
-        base(botClient, userService, activityService, activityPublisher)
+    public MainMenuHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) :
+        base(userService, activityService, activityPublisher)
     {
         ResponseMessageText = MessageText;
     }

@@ -14,8 +14,8 @@ public class ConfirmOfferHandler : AbstractHandler
 {
     private readonly NotificationAdminHub _adminHub;
     private readonly ActivityPublisher _activityPublisher;
-    public ConfirmOfferHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, NotificationAdminHub adminHub)
-        : base(botClient, userService, activityService, activityPublisher)
+    public ConfirmOfferHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, NotificationAdminHub adminHub)
+        : base(userService, activityService, activityPublisher)
     {
         _adminHub = adminHub;
         _activityPublisher = activityPublisher;

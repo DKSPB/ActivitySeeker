@@ -48,5 +48,10 @@ namespace ActivitySeeker.Api.TelegramBot
                 chatId,
                 messageId);
         }
+
+        public async Task AnswerOnPushButton(string callbackQueryId)
+        {
+            await _botClient.AnswerCallbackQueryAsync(callbackQueryId);
+        }
     }
 }

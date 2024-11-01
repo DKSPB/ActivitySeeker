@@ -11,8 +11,8 @@ public class SelectActivityPeriodHandler: AbstractHandler
 {
     private const string MessageText = "Выбери период проведения активности:";
     
-    public SelectActivityPeriodHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
-        base(botClient, userService, activityService, activityPublisher)
+    public SelectActivityPeriodHandler(/*ITelegramBotClient botClient,*/ IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
+        base(/*botClient,*/ userService, activityService, activityPublisher)
     {
         ResponseMessageText = MessageText;
     }

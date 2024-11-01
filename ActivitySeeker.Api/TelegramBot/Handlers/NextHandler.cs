@@ -1,7 +1,6 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -16,8 +15,8 @@ public class NextHandler: AbstractHandler
 
     private readonly ActivityPublisher _activityPublisher;
 
-    public NextHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
-        base(botClient, userService, activityService, activityPublisher)
+    public NextHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
+        base(userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
         ResponseMessageText = MessageText;

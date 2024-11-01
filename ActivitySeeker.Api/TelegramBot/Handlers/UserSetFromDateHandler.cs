@@ -1,8 +1,6 @@
-using System.Globalization;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;

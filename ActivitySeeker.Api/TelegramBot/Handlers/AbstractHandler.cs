@@ -1,6 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -11,14 +10,12 @@ public abstract class AbstractHandler: IHandler
     protected IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
     protected string ResponseMessageText { get; set; } = default!;
-    protected ITelegramBotClient BotClient { get; set; }
     protected UserDto CurrentUser { get; private set; } = default!;
 
     private readonly ActivityPublisher _activityPublisher;
     
-    protected AbstractHandler(ITelegramBotClient botClient, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
+    protected AbstractHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
     {
-        BotClient = botClient;
         UserService = userService;
         ActivityService = activityService;
         _activityPublisher = activityPublisher;
@@ -28,7 +25,7 @@ public abstract class AbstractHandler: IHandler
         var callbackQuery = update.CallbackQuery;
         CurrentUser = currentUser;
 
-        await BotClient.AnswerCallbackQueryAsync(callbackQuery.Id);
+        await _activityPublisher.AnswerOnPushButton(callbackQuery.Id);
 
         try
         {

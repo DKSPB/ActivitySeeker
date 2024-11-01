@@ -13,10 +13,10 @@ public class ListOfActivitiesHandler: AbstractHandler
     private readonly IActivityTypeService _activityTypeService;
     private IEnumerable<ActivityTypeDto> _childrenTypes;
 
-    public ListOfActivitiesHandler(ITelegramBotClient botClient, IUserService userService,
+    public ListOfActivitiesHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService,
         ActivityPublisher activityPublisher) :
-        base(botClient, userService, activityService, activityPublisher)
+        base(userService, activityService, activityPublisher)
     {
         _childrenTypes = new List<ActivityTypeDto>();
         _activityTypeService = activityTypeService;
