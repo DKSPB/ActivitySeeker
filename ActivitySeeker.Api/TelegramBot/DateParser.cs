@@ -1,6 +1,6 @@
 using System.Globalization;
 
-namespace ActivitySeeker.Api.TelegramBot.Handlers;
+namespace ActivitySeeker.Api.TelegramBot;
 
 public static class DateParser
 {

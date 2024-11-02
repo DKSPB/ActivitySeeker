@@ -1,7 +1,7 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -16,11 +16,9 @@ public class UserSetByDateHandler: IHandler
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, Update update)
+    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
     {
-        var message = update.Message;
-
-        var byDateText = update.Message.Text;
+        var byDateText = userData.Data;
 
         var result = DateParser.ParseDate(byDateText, out var byDate) || 
                      DateParser.ParseDateTime(byDateText, out byDate);
@@ -29,7 +27,8 @@ public class UserSetByDateHandler: IHandler
         {
             currentUser.State.SearchTo = byDate;
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(message.Chat.Id, currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId,
+                currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
@@ -41,7 +40,7 @@ public class UserSetByDateHandler: IHandler
                           $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
             
             var feedbackMessage = await _activityPublisher.SendMessageAsync(
-                message.Chat.Id,
+                userData.ChatId,
                 msgText
                 );
             

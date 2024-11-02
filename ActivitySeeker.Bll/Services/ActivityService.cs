@@ -27,7 +27,9 @@ namespace ActivitySeeker.Bll.Services
                 IsPublished = true
             };
 
-            var result = GetActivities(activityRequest)?.OrderBy(x => x.StartDate).ToList();
+            var result = GetActivities(activityRequest)?
+                .OrderBy(x => x.StartDate)
+                .Include(x => x.ActivityType);
 
             if (result == null || !result.Any())
             {

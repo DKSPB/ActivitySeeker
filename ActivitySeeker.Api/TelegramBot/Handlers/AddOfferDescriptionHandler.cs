@@ -1,8 +1,7 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -21,15 +20,13 @@ public class AddOfferDescriptionHandler : AbstractHandler
         _children = new List<ActivityTypeDto>();
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override async Task ActionsAsync(UserMessage userData)
     {
-        var activityTypeIdString = callbackQuery.Data;
-
-        var activityTypeIdParseResult = Guid.TryParse(activityTypeIdString, out var activityTypeId);
+        var activityTypeIdParseResult = Guid.TryParse(userData.Data, out var activityTypeId);
 
         if (!activityTypeIdParseResult)
         {
-            throw new ArgumentNullException($"Не удалось распарсить идентификатор типа активности {activityTypeIdString}");
+            throw new ArgumentNullException($"Не удалось распарсить идентификатор типа активности {userData.Data}");
         }
 
         _children = (await _activityTypeService.GetAll())

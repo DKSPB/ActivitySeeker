@@ -1,10 +1,9 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Notification;
 using ActivitySeeker.Domain.Entities;
 using Newtonsoft.Json;
-using Telegram.Bot;
-using Telegram.Bot.Types;
+
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -21,7 +20,7 @@ public class ConfirmOfferHandler : AbstractHandler
         _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override async Task ActionsAsync(UserMessage userData)
     {
         CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
@@ -33,7 +32,7 @@ public class ConfirmOfferHandler : AbstractHandler
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
 
         await _activityPublisher.SendMessageAsync(
-            callbackQuery.Message.Chat.Id, 
+            userData.ChatId,
             "Поздравляю! Твоя активность создана. Она будет опубликована после проверки", 
             null, 
             Keyboards.GetEmptyKeyboard());

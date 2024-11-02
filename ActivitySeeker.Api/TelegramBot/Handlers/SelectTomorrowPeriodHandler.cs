@@ -1,7 +1,6 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -13,7 +12,7 @@ public class SelectTomorrowPeriodHandler: AbstractHandler
         : base(userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override Task ActionsAsync(UserMessage userData)
     {
         CurrentUser.State.SearchFrom = DateTime.Now.AddDays(1).Date;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(2).Date;

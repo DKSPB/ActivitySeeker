@@ -1,7 +1,6 @@
-﻿using ActivitySeeker.Bll.Interfaces;
+﻿using ActivitySeeker.Api.Models;
+using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
@@ -12,7 +11,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             : base(userService, activityService, activityPublisher)
         { }
 
-        protected override Task ActionsAsync(CallbackQuery callbackQuery)
+        protected override Task ActionsAsync(UserMessage userData)
         {
             CurrentUser.State.StateNumber = StatesEnum.PeriodFromDate;
             

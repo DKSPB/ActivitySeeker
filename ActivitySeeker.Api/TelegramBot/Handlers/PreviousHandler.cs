@@ -1,4 +1,4 @@
-using Telegram.Bot;
+using ActivitySeeker.Api.Models;
 using Telegram.Bot.Types;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Interfaces;
@@ -24,7 +24,7 @@ public class PreviousHandler: AbstractHandler
         ResponseMessageText = MessageText;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override async Task ActionsAsync(UserMessage userData)
     {
         if (CurrentUser.ActivityResult.Count > 0)
         {
@@ -67,8 +67,8 @@ public class PreviousHandler: AbstractHandler
         return Keyboards.GetActivityPaginationKeyboard();
     }
 
-    protected override async Task EditPreviousMessage(CallbackQuery callbackQuery)
+    protected override async Task EditPreviousMessage(ChatId chatId)
     {
-        await _activityPublisher.DeleteMessage(callbackQuery.Message.Chat.Id, CurrentUser.State.MessageId);
+        await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);
     }
 }

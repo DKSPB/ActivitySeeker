@@ -37,10 +37,10 @@ namespace ActivitySeeker.Api.TelegramBot
                 x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState == state);
         }
 
-        public static Type? FindhandlersTypeByCallbackData(IEnumerable<Type> handlerTypes, string calbackData)
+        public static Type? FindHandlersTypeByCallbackData(IEnumerable<Type> handlerTypes, string callbackData)
         {
             return handlerTypes.FirstOrDefault(x =>
-                x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == calbackData);
+                x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == callbackData);
         }
 
         /// <summary>

@@ -157,11 +157,6 @@ namespace ActivitySeeker.Api.TelegramBot
                 });
             }
 
-            /*activityTypeButtons.Add(new List<InlineKeyboardButton>
-            {
-                InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
-            });*/
-
             InlineKeyboardMarkup countersButtons = new (activityTypeButtons);
 
 

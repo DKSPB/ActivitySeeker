@@ -4,6 +4,7 @@ using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using ActivitySeeker.Api.Models;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -30,26 +31,16 @@ public class OfferHandler : IHandler
         _loggerHandler = loggerHandler;
     }
 
-    public async Task HandleAsync(UserDto currentUser, Update update)
+    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
     {
-        Chat? chat = null;
-        if (update.Message is not null)
-        {
-            chat = update.Message.Chat;
-        }
-
-        if (update.CallbackQuery is not null)
-        {
-            chat = update.CallbackQuery.Message.Chat;
-        }
-
         currentUser.State.StateNumber = StatesEnum.AddOfferDescription;
+        
         var activityTypes = (await _activityTypeService.GetAll())
             .Where(x => x.ParentId is null).ToList();
 
         try
         {
-            await _activityPublisher.EditMessageAsync(chat.Id, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
+            await _activityPublisher.EditMessageAsync(userData.ChatId, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
         }
         catch (Exception)
         {
@@ -57,7 +48,7 @@ public class OfferHandler : IHandler
             _loggerHandler.LogError(errorMessage);
         }
 
-        var message = await _activityPublisher.SendMessageAsync(chat.Id, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
+        var message = await _activityPublisher.SendMessageAsync(userData.ChatId, "Выбери тип активности", null, Keyboards.GetActivityTypesKeyboard(activityTypes));
         
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);

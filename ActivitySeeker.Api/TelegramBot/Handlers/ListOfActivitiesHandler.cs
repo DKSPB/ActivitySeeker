@@ -1,8 +1,7 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -22,16 +21,14 @@ public class ListOfActivitiesHandler: AbstractHandler
         _activityTypeService = activityTypeService;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override async Task ActionsAsync(UserMessage userData)
     {
-        var activityTypeIdString = callbackQuery.Data;
-
-        var activityTypeIdParseResult = Guid.TryParse(activityTypeIdString, out var selectedActivityId);
+        var activityTypeIdParseResult = Guid.TryParse(userData.Data, out var selectedActivityId);
 
         if (!activityTypeIdParseResult)
         {
             throw new ArgumentNullException(
-                $"Не удалось преобразовать идентификатор типа активности {activityTypeIdString} в Guid");
+                $"Не удалось преобразовать идентификатор типа активности {userData.Data} в Guid");
         }
 
         if (selectedActivityId == Guid.Empty)

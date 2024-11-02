@@ -1,13 +1,10 @@
-using System.Reflection;
 using ActivitySeeker.Api.TelegramBot;
 using Telegram.Bot.Types;
 using Microsoft.AspNetCore.Mvc;
 using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.Enums;
 using ActivitySeeker.Api.Models;
 
@@ -32,9 +29,9 @@ public class TelegramBotController: ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> UpdateReceived([FromBody]Update update, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateReceived([FromBody]Update update)
     {
-        var handlerTypes = HandlerProvider.GetAllHandlerTypes();
+        var handlerTypes = HandlerProvider.GetAllHandlerTypes().ToList();
 
         var userMessage = GetUserMessageData(update);
 
@@ -62,23 +59,19 @@ public class TelegramBotController: ControllerBase
             {
                 handler = _serviceProvider.GetRequiredService<StartHandler>();
             }
-            await handler.HandleAsync(currentUser, update);
+            await handler.HandleAsync(currentUser, /*update*/ userMessage);
             return Ok();
         }
 
         if (userMessage.Data.Equals("/offer"))
         {
             var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
-            await offerHandler.HandleAsync(currentUser, update);
+            await offerHandler.HandleAsync(currentUser, userMessage/*update*/);
             return Ok();
         }
 
-        var handlerType = HandlerProvider.FindhandlersTypeByCallbackData(handlerTypes, userMessage.Data);
-
-        if (handlerType is null)
-        {
-            handlerType = HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
-        }
+        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userMessage.Data) ??
+                          HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
 
         if(handlerType is null)
         {
@@ -86,7 +79,7 @@ public class TelegramBotController: ControllerBase
         }
               
         handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
-        await handler.HandleAsync(currentUser, update);
+        await handler.HandleAsync(currentUser, userMessage/*update*/);
         return Ok();
     }
 
@@ -122,7 +115,7 @@ public class TelegramBotController: ControllerBase
         return user;
     }
 
-    private UserMessage? GetUserMessageData(Update update)
+    private static UserMessage? GetUserMessageData(Update update)
     {
         if (update.Type == UpdateType.Message)
         {
@@ -140,14 +133,13 @@ public class TelegramBotController: ControllerBase
             }
 
             return null;
-            
         }
 
         if (update.Type == UpdateType.CallbackQuery)
         {
             var callbackQuery = update.CallbackQuery;
 
-            if (callbackQuery?.Data is not null && callbackQuery?.Message is not null && callbackQuery.From is not null)
+            if (callbackQuery?.Data is not null && callbackQuery?.Message is not null && callbackQuery?.From is not null)
             {
                 return new UserMessage
                 {

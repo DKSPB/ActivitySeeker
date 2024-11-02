@@ -1,7 +1,7 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -18,11 +18,11 @@ public class SaveDefaultSettingsHandler: IHandler
         _userService = userService;
         _publisher = publisher;
     }
-    public async Task HandleAsync(UserDto currentUser, Update update)
+    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
     {
-        if (update.Message?.Text != null)
+        if (userData.CallbackQueryId is null)
         {
-            var cityName = update.Message.Text;
+            var cityName = userData.Data;
 
             var cities = (await _cityService.GetCitiesByName(cityName)).ToList();
 
@@ -37,42 +37,41 @@ public class SaveDefaultSettingsHandler: IHandler
                 var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
                 await _publisher.EditMessageAsync(
-                    update.Message.Chat.Id, 
-                    currentUser.State.MessageId, 
+                    userData.ChatId,
+                    currentUser.State.MessageId,
                     Keyboards.GetEmptyKeyboard());
-                
+
                 var feedbackMessage = await _publisher.SendMessageAsync(
-                    update.Message.Chat.Id, 
-                    msgText, 
-                    null, 
+                    userData.ChatId,
+                    msgText,
+                    null,
                     Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));
-                
+
                 currentUser.State.MessageId = feedbackMessage.MessageId;
             }
             else
             {
                 await _publisher.EditMessageAsync(
-                    update.Message.Chat.Id, 
-                    currentUser.State.MessageId, 
+                    userData.ChatId,
+                    currentUser.State.MessageId,
                     Keyboards.GetEmptyKeyboard());
-                
+
                 msgText = $"Найденные города:";
                 var feedbackMessage = await _publisher.SendMessageAsync(
-                    update.Message.Chat.Id,
+                    userData.ChatId,
                     msgText,
                     null,
                     Keyboards.GetCityKeyboard(cities.ToList())
                 );
-                
+
                 currentUser.State.MessageId = feedbackMessage.MessageId;
             }
-            
+
             _userService.UpdateUser(currentUser);
         }
-
-        if (update.CallbackQuery?.Message?.Text != null)
+        else
         {
-            var cityIdString = update.CallbackQuery.Data;
+            var cityIdString = userData.Data;
 
             var parseResult = int.TryParse(cityIdString, out var cityId);
 
@@ -92,12 +91,12 @@ public class SaveDefaultSettingsHandler: IHandler
             currentUser.State.StateNumber = StatesEnum.MainMenu;
             
             await _publisher.EditMessageAsync(
-                update.Message.Chat.Id, 
+                userData.ChatId,
                 currentUser.State.MessageId, 
                 Keyboards.GetEmptyKeyboard());
 
             var feedbackMessage = await _publisher.SendMessageAsync(
-                update.CallbackQuery.Message.Chat.Id,
+                userData.ChatId,
                 currentUser.State.ToString(),
                 null,
                 Keyboards.GetMainMenuKeyboard());

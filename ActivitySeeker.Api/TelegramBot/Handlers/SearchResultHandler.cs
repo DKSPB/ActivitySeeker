@@ -1,4 +1,4 @@
-using Telegram.Bot;
+using ActivitySeeker.Api.Models;
 using Telegram.Bot.Types;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
@@ -20,7 +20,7 @@ public class SearchResultHandler: AbstractHandler
         _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override async Task ActionsAsync(UserMessage userData)
     {
         var activities = ActivityService.GetActivitiesLinkedList(CurrentUser.State);
 

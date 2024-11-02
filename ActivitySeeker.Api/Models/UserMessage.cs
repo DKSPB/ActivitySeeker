@@ -2,16 +2,16 @@
 {
     public class UserMessage
     {
-        public long ChatId {  get; set; }
+        public long ChatId {  get; init; }
 
-        public int MessageId { get; set; }
+        public int MessageId { get; init; }
 
-        public string? CallbackQueryId { get; set; }
+        public string? CallbackQueryId { get; init; }
 
-        public long TelegramUserId { get; set; }
+        public long TelegramUserId { get; init; }
 
-        public string? TelegramUsername { get; set; }
+        public string? TelegramUsername { get; init; }
 
-        public string Data { get; set; } = string.Empty;
+        public string Data { get; init; } = string.Empty;
     }
 }

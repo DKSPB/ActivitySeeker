@@ -1,3 +1,4 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using Telegram.Bot.Types;
@@ -7,7 +8,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 public abstract class AbstractHandler: IHandler
 {
-    protected IUserService UserService { get; set; }
+    private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
     protected string ResponseMessageText { get; set; } = default!;
     protected UserDto CurrentUser { get; private set; } = default!;
@@ -20,44 +21,41 @@ public abstract class AbstractHandler: IHandler
         ActivityService = activityService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, Update update)
+    public async Task HandleAsync(UserDto currentUser, UserMessage userMessage)
     {
-        var callbackQuery = update.CallbackQuery;
         CurrentUser = currentUser;
-
-        //await _activityPublisher.AnswerOnPushButton(callbackQuery.Id);
 
         try
         {
-            await EditPreviousMessage(callbackQuery);
+            await EditPreviousMessage(userMessage.ChatId);
         }
         finally
         {
-            await ActionsAsync(callbackQuery);
+            await ActionsAsync(userMessage);
 
-            if (callbackQuery.Message is null)
+            if (userMessage.Data is null)
             {
-                throw new ArgumentNullException(nameof(callbackQuery.Message));
+                throw new ArgumentNullException(nameof(userMessage.Data));
             }
 
-            var message = await SendMessageAsync(callbackQuery.Message.Chat.Id);
+            var message = await SendMessageAsync(userMessage.ChatId);
 
             CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
         }
     }
 
-    protected abstract Task ActionsAsync(CallbackQuery callbackQuery);
+    protected abstract Task ActionsAsync(UserMessage userData);
 
     protected virtual IReplyMarkup GetKeyboard()
     {
         return Keyboards.GetEmptyKeyboard();
     }
 
-    protected virtual async Task EditPreviousMessage(CallbackQuery callbackQuery)
+    protected virtual async Task EditPreviousMessage(ChatId chatId)
     {
         await _activityPublisher.EditMessageAsync(
-            chatId: callbackQuery.Message.Chat.Id,
+            chatId: chatId,
             messageId: CurrentUser.State.MessageId,
             replyMarkup: InlineKeyboardMarkup.Empty());
     }

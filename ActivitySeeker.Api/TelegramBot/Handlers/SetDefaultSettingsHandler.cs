@@ -1,9 +1,7 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -26,16 +24,14 @@ public class SetDefaultSettingsHandler: IHandler
         _activityPublisher = activityPublisher;
     }
     
-    public async Task HandleAsync(UserDto currentUser, Update update)
+    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
     {
-        var chat = update.Message.Chat;
-
         var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 
         var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
         var message = await _activityPublisher.SendMessageAsync(
-            chat.Id, 
+            userData.ChatId,
             MessageText, 
             null, 
             Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));

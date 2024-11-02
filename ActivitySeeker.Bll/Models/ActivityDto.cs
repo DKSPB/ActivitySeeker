@@ -40,8 +40,6 @@ public class ActivityDto: ActivityBaseDto
         StringBuilder builder = new();
 
         prefixRows?.ForEach(x => builder.AppendLine(x));
-        //builder.AppendLine("Эта активность будет предложена для публикации.");
-        //builder.AppendLine("Убедись, что данные заполнены корректно ");
         builder.AppendLine("Тип активности:");
         builder.AppendLine(ActivityType?.TypeName);
         builder.AppendLine("Дата и время начала:");

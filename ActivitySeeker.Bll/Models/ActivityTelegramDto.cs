@@ -13,5 +13,5 @@ public class ActivityTelegramDto: ActivityBaseDto
 
     public byte[]? Image { get; set; }
 
-    public bool Selected { get; set; } = false;
+    public bool Selected { get; set; }
 }

@@ -1,6 +1,6 @@
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -15,7 +15,7 @@ public class MainMenuHandler: AbstractHandler
     {
         ResponseMessageText = MessageText;
     }
-    protected override Task ActionsAsync(CallbackQuery callbackQuery)
+    protected override Task ActionsAsync(UserMessage userMessage)
     {
         ResponseMessageText = CurrentUser.State.ToString();
         return Task.CompletedTask;
