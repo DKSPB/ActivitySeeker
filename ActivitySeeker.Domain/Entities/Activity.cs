@@ -12,6 +12,9 @@ public class Activity
     [Column("city_id")]
     public int? CityId { get; set; }
 
+    [Column("is_online")]
+    public bool IsOnline { get; set; }
+
     [Column("link_description")]
     public string LinkOrDescription { get; set; } = null!;
     

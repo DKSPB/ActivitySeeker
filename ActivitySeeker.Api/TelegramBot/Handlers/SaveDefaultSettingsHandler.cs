@@ -2,6 +2,7 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -20,6 +21,8 @@ public class SaveDefaultSettingsHandler: IHandler
     }
     public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
+        Message message;
+
         if (userData.CallbackQueryId is null)
         {
             var cityName = userData.Data;
@@ -27,6 +30,7 @@ public class SaveDefaultSettingsHandler: IHandler
             var cities = (await _cityService.GetCitiesByName(cityName)).ToList();
 
             string msgText;
+
             if (!cities.Any())
             {
                 msgText = $"Поиск не дал результатов." +
@@ -41,13 +45,11 @@ public class SaveDefaultSettingsHandler: IHandler
                     currentUser.State.MessageId,
                     Keyboards.GetEmptyKeyboard());
 
-                var feedbackMessage = await _publisher.SendMessageAsync(
+                message = await _publisher.SendMessageAsync(
                     userData.ChatId,
                     msgText,
                     null,
                     Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));
-
-                currentUser.State.MessageId = feedbackMessage.MessageId;
             }
             else
             {
@@ -57,17 +59,14 @@ public class SaveDefaultSettingsHandler: IHandler
                     Keyboards.GetEmptyKeyboard());
 
                 msgText = $"Найденные города:";
-                var feedbackMessage = await _publisher.SendMessageAsync(
+
+                message = await _publisher.SendMessageAsync(
                     userData.ChatId,
                     msgText,
                     null,
                     Keyboards.GetCityKeyboard(cities.ToList())
                 );
-
-                currentUser.State.MessageId = feedbackMessage.MessageId;
             }
-
-            _userService.UpdateUser(currentUser);
         }
         else
         {
@@ -95,15 +94,14 @@ public class SaveDefaultSettingsHandler: IHandler
                 currentUser.State.MessageId, 
                 Keyboards.GetEmptyKeyboard());
 
-            var feedbackMessage = await _publisher.SendMessageAsync(
+            message = await _publisher.SendMessageAsync(
                 userData.ChatId,
                 currentUser.State.ToString(),
                 null,
                 Keyboards.GetMainMenuKeyboard());
-
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            
-            _userService.UpdateUser(currentUser);
         }
+
+        currentUser.State.MessageId = message.MessageId;
+        _userService.UpdateUser(currentUser);
     }
 }
