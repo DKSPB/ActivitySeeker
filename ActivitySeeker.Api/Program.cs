@@ -15,7 +15,6 @@ using Telegram.Bot;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.SignalR;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
@@ -26,7 +25,7 @@ namespace ActivitySeeker.Api
     {
         public static void Main(string[] args)
         {
-            var logger = NLog.LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
             logger.Info("init main");
             
             try
@@ -189,7 +188,7 @@ namespace ActivitySeeker.Api
             }
             finally
             {
-                NLog.LogManager.Shutdown();
+                LogManager.Shutdown();
             }
         }
     }
@@ -203,7 +202,7 @@ namespace ActivitySeeker.Api
 
         public string? PathToCertificate { get; set; }
 
-        public string TelegramChennel { get; set; } = default!;
+        public string TelegramChannel { get; set; } = default!;
     }
 }
 

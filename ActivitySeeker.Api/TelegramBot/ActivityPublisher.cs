@@ -34,9 +34,9 @@ namespace ActivitySeeker.Api.TelegramBot
             }
         }
 
-        public async Task<Message> EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)
+        public async Task EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)
         {
-            return await _botClient.EditMessageReplyMarkupAsync(
+            await _botClient.EditMessageReplyMarkupAsync(
                 chatId: chatId,
                 messageId: messageId,
                 replyMarkup: replyMarkup);
