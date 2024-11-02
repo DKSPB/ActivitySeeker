@@ -24,7 +24,7 @@ public class SetDefaultSettingsHandler: IHandler
         _activityPublisher = activityPublisher;
     }
     
-    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
         var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 

@@ -16,9 +16,9 @@ public class UserSetFromDateHandler: IHandler
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserMessage userMessage)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userUpdate)
     {
-        var fromDateText = userMessage.Data;
+        var fromDateText = userUpdate.Data;
 
         var result = DateParser.ParseDate(fromDateText, out var fromDate) || 
                      DateParser.ParseDateTime(fromDateText, out fromDate);
@@ -31,7 +31,7 @@ public class UserSetFromDateHandler: IHandler
 
             currentUser.State.SearchFrom = fromDate;
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userMessage.ChatId, msgText);
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, msgText);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             currentUser.State.StateNumber = StatesEnum.PeriodToDate;
@@ -43,7 +43,7 @@ public class UserSetFromDateHandler: IHandler
               $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
               $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userMessage.ChatId, msgText);
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, msgText);
             
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);

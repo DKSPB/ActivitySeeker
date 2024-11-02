@@ -13,7 +13,7 @@ public class SelectWeekPeriodHandler: AbstractHandler
         : base(userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(UserMessage userData)
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(7).Date;

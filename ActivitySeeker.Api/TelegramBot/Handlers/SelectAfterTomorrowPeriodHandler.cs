@@ -12,7 +12,7 @@ public class SelectAfterTomorrowPeriodHandler: AbstractHandler
         : base(userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(UserMessage userData)
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         CurrentUser.State.SearchFrom = DateTime.Now.AddDays(2).Date;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(3).Date;

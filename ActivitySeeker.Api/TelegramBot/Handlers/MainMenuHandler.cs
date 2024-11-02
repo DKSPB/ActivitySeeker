@@ -15,7 +15,7 @@ public class MainMenuHandler: AbstractHandler
     {
         ResponseMessageText = MessageText;
     }
-    protected override Task ActionsAsync(UserMessage userMessage)
+    protected override Task ActionsAsync(UserUpdate userUpdate)
     {
         ResponseMessageText = CurrentUser.State.ToString();
         return Task.CompletedTask;

@@ -16,7 +16,7 @@ public class UserSetByDateHandler: IHandler
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
         var byDateText = userData.Data;
 

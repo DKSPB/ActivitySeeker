@@ -7,6 +7,7 @@ using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Authorization;
 using Telegram.Bot.Types.Enums;
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -20,7 +21,8 @@ public class TelegramBotController: ControllerBase
     private readonly ActivityPublisher _activityPublisher;
     private readonly ILogger<TelegramBotController> _logger;
 
-    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService, ActivityPublisher activityPublisher, ILogger<TelegramBotController> logger)
+    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService, 
+        ActivityPublisher activityPublisher, ILogger<TelegramBotController> logger)
     {
         _activityPublisher = activityPublisher;
         _serviceProvider = serviceProvider;
@@ -33,44 +35,44 @@ public class TelegramBotController: ControllerBase
     {
         var handlerTypes = HandlerProvider.GetAllHandlerTypes().ToList();
 
-        var userMessage = GetUserMessageData(update);
+        var userUpdate = GetUserMessageData(update);
 
-        if(userMessage is null)
+        if(userUpdate is null)
         {
             return Ok();
         }
 
-        if (userMessage.CallbackQueryId is not null)
+        if (userUpdate.CallbackQueryId is not null)
         {
-            await _activityPublisher.AnswerOnPushButton(userMessage.CallbackQueryId);
+            await _activityPublisher.AnswerOnPushButton(userUpdate.CallbackQueryId);
         }
 
-        var currentUser = CreateUserIfNotExists(userMessage);
+        var currentUser = CreateUserIfNotExists(userUpdate);
 
         IHandler handler;
 
-        if (userMessage.Data.Equals("/start"))
+        if (userUpdate.Data.Equals("/start"))
         {
-            if (currentUser.CityId is null)
-            {
-                handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
-            }
-            else
-            {
-                handler = _serviceProvider.GetRequiredService<StartHandler>();
-            }
-            await handler.HandleAsync(currentUser, /*update*/ userMessage);
+            //if (currentUser.CityId is null)
+            //{
+            //    handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
+            //}
+            //else
+            //{
+            handler = _serviceProvider.GetRequiredService<StartHandler>();
+            //}
+            await handler.HandleAsync(currentUser, userUpdate);
             return Ok();
         }
 
-        if (userMessage.Data.Equals("/offer"))
+        if (userUpdate.Data.Equals("/offer"))
         {
             var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
-            await offerHandler.HandleAsync(currentUser, userMessage/*update*/);
+            await offerHandler.HandleAsync(currentUser, userUpdate);
             return Ok();
         }
 
-        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userMessage.Data) ??
+        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data) ??
                           HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
 
         if(handlerType is null)
@@ -79,7 +81,7 @@ public class TelegramBotController: ControllerBase
         }
               
         handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
-        await handler.HandleAsync(currentUser, userMessage/*update*/);
+        await handler.HandleAsync(currentUser, userUpdate);
         return Ok();
     }
 
@@ -88,10 +90,10 @@ public class TelegramBotController: ControllerBase
     /// <summary>
     /// Создание пользователя, если о нём нет записи в БД
     /// </summary>
-    /// <param name="message">Сообщение от пользователя</param>
-    private UserDto CreateUserIfNotExists(UserMessage message)
+    /// <param name="update">Сообщение от пользователя</param>
+    private UserDto CreateUserIfNotExists(UserUpdate update)
     {
-        var user = _userService.GetUserById(message.TelegramUserId);
+        var user = _userService.GetUserById(update.TelegramUserId);
 
         if (user is not null)
         {
@@ -100,14 +102,15 @@ public class TelegramBotController: ControllerBase
         
         user = new UserDto
         {
-            Id = message.TelegramUserId,
-            UserName = message.TelegramUsername ?? "",
-            ChatId = message.ChatId,
+            Id = update.TelegramUserId,
+            UserName = update.TelegramUsername ?? "",
+            ChatId = update.ChatId,
             State =
             {
+                StateNumber = StatesEnum.Start,
                 SearchFrom = DateTime.Now,
                 SearchTo = DateTime.Now.AddDays(1).Date,
-                MessageId = message.MessageId
+                MessageId = update.MessageId
             }
         };
         _userService.CreateUser(user);
@@ -115,15 +118,15 @@ public class TelegramBotController: ControllerBase
         return user;
     }
 
-    private static UserMessage? GetUserMessageData(Update update)
+    private static UserUpdate? GetUserMessageData(Update update)
     {
         if (update.Type == UpdateType.Message)
         {
             var message = update.Message;
 
-            if (message?.Text is not null && message?.From is not null)
+            if (message?.Text is not null && message.From is not null)
             {
-                return new UserMessage
+                return new UserUpdate
                 {
                     TelegramUserId = message.From.Id,
                     TelegramUsername = message.From.Username,
@@ -139,9 +142,9 @@ public class TelegramBotController: ControllerBase
         {
             var callbackQuery = update.CallbackQuery;
 
-            if (callbackQuery?.Data is not null && callbackQuery?.Message is not null && callbackQuery?.From is not null)
+            if (callbackQuery?.Data is not null && callbackQuery.Message is not null)
             {
-                return new UserMessage
+                return new UserUpdate
                 {
                     TelegramUserId = callbackQuery.From.Id,
                     TelegramUsername= callbackQuery.From.Username,

@@ -20,7 +20,7 @@ public class AddOfferDescriptionHandler : AbstractHandler
         _children = new List<ActivityTypeDto>();
     }
 
-    protected override async Task ActionsAsync(UserMessage userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         var activityTypeIdParseResult = Guid.TryParse(userData.Data, out var activityTypeId);
 

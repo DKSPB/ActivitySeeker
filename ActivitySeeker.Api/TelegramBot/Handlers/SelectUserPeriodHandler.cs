@@ -11,7 +11,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             : base(userService, activityService, activityPublisher)
         { }
 
-        protected override Task ActionsAsync(UserMessage userData)
+        protected override Task ActionsAsync(UserUpdate userData)
         {
             CurrentUser.State.StateNumber = StatesEnum.PeriodFromDate;
             

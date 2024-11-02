@@ -20,7 +20,7 @@ public class SearchResultHandler: AbstractHandler
         _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(UserMessage userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         var activities = ActivityService.GetActivitiesLinkedList(CurrentUser.State);
 

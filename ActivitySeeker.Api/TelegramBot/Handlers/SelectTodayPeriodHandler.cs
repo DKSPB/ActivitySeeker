@@ -12,7 +12,7 @@ public class SelectTodayPeriodHandler: AbstractHandler
         : base(userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(UserMessage userData)
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(1).Date;

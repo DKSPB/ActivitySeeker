@@ -20,7 +20,7 @@ public class ConfirmOfferHandler : AbstractHandler
         _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(UserMessage userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 

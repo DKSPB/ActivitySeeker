@@ -17,12 +17,15 @@ public class StartHandler: IHandler
         _activityPublisher = activityPublisher;
     }
     
-    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
-        currentUser.State.StateNumber = StatesEnum.MainMenu;
-
-        var message = await _activityPublisher.SendMessageAsync(userData.ChatId, currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
+        var message = await _activityPublisher.SendMessageAsync(
+            userData.ChatId, 
+            currentUser.State.ToString(),
+            null, 
+            Keyboards.GetMainMenuKeyboard());
          
+        currentUser.State.StateNumber = StatesEnum.MainMenu;
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);
     }

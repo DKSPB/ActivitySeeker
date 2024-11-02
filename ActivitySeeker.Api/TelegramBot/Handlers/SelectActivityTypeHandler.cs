@@ -19,7 +19,7 @@ public class SelectActivityTypeHandler: AbstractHandler
         _activityTypeService = activityTypeService;
     }
 
-    protected override Task ActionsAsync(UserMessage userData)
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         ResponseMessageText = "Выбери тип активности:";
         CurrentUser.State.StateNumber = StatesEnum.ListOfActivities;

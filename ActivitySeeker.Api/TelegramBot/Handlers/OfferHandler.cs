@@ -31,7 +31,7 @@ public class OfferHandler : IHandler
         _loggerHandler = loggerHandler;
     }
 
-    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
         currentUser.State.StateNumber = StatesEnum.AddOfferDescription;
         

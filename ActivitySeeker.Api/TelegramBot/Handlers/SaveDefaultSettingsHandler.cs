@@ -18,7 +18,7 @@ public class SaveDefaultSettingsHandler: IHandler
         _userService = userService;
         _publisher = publisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
         if (userData.CallbackQueryId is null)
         {

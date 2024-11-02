@@ -12,7 +12,7 @@ public class SelectMonthPeriodHandler: AbstractHandler
         : base(userService, activityService, activityPublisher)
     { }
 
-    protected override Task ActionsAsync(UserMessage userData)
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddMonths(1).AddDays(1).Date;

@@ -24,7 +24,7 @@ public class PreviousHandler: AbstractHandler
         ResponseMessageText = MessageText;
     }
 
-    protected override async Task ActionsAsync(UserMessage userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         if (CurrentUser.ActivityResult.Count > 0)
         {

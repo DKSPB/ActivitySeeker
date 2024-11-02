@@ -1,6 +1,8 @@
-﻿namespace ActivitySeeker.Api.Models
+﻿using ActivitySeeker.Bll.Models;
+
+namespace ActivitySeeker.Api.Models
 {
-    public class UserMessage
+    public class UserUpdate
     {
         public long ChatId {  get; init; }
 
@@ -13,5 +15,6 @@
         public string? TelegramUsername { get; init; }
 
         public string Data { get; init; } = string.Empty;
+        
     }
 }

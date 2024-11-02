@@ -21,31 +21,31 @@ public abstract class AbstractHandler: IHandler
         ActivityService = activityService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserMessage userMessage)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userUpdate)
     {
         CurrentUser = currentUser;
 
         try
         {
-            await EditPreviousMessage(userMessage.ChatId);
+            await EditPreviousMessage(userUpdate.ChatId);
         }
         finally
         {
-            await ActionsAsync(userMessage);
+            await ActionsAsync(userUpdate);
 
-            if (userMessage.Data is null)
+            if (userUpdate.Data is null)
             {
-                throw new ArgumentNullException(nameof(userMessage.Data));
+                throw new ArgumentNullException(nameof(userUpdate.Data));
             }
 
-            var message = await SendMessageAsync(userMessage.ChatId);
+            var message = await SendMessageAsync(userUpdate.ChatId);
 
             CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
         }
     }
 
-    protected abstract Task ActionsAsync(UserMessage userData);
+    protected abstract Task ActionsAsync(UserUpdate userData);
 
     protected virtual IReplyMarkup GetKeyboard()
     {

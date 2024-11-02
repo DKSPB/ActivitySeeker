@@ -20,7 +20,7 @@ public class SaveOfferDateHandler : IHandler
         _activityPublisher = activityPublisher;
     }
 
-    public async Task HandleAsync(UserDto currentUser, UserMessage userData)
+    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
         var message = userData.Data;
 
