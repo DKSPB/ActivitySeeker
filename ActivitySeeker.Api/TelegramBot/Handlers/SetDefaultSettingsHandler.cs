@@ -2,21 +2,21 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SetDefaultSettings)]
 public class SetDefaultSettingsHandler: IHandler
 {
-    private const string MessageText = $"Перед началом использования бота задайте Ваш Город." +
-                                   $"\nЕсли Ваш город не Москва и Санкт-Петербург, ввведите его название, как текст сообщения" +
-                                   $"\nВы всегда сможете изменить эту настройку в разделе:" +
-                                   $"\nМеню > Настройки";
+    private const string MessageText = $"Задайте Ваш Город." +
+                                   $"\nЕсли Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения";
 
+    
     private readonly ICityService _cityService;
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
-    
+
     public SetDefaultSettingsHandler(ICityService cityService, IUserService userService, ActivityPublisher activityPublisher)
     {
         _cityService = cityService;
@@ -26,6 +26,9 @@ public class SetDefaultSettingsHandler: IHandler
     
     public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
     {
+
+        await _activityPublisher.EditMessageAsync(userData.ChatId, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
+
         var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 
         var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;

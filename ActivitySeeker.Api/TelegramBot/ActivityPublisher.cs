@@ -36,10 +36,18 @@ namespace ActivitySeeker.Api.TelegramBot
 
         public async Task EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)
         {
-            await _botClient.EditMessageReplyMarkupAsync(
-                chatId: chatId,
-                messageId: messageId,
-                replyMarkup: replyMarkup);
+            try
+            {
+                await _botClient.EditMessageReplyMarkupAsync(
+                    chatId: chatId,
+                    messageId: messageId,
+                    replyMarkup: replyMarkup);
+            }
+            catch (Exception ex) 
+            {
+                var errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
+            }
+
         }
 
         public async Task DeleteMessage(ChatId chatId, int messageId)

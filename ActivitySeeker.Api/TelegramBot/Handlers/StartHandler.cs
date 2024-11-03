@@ -10,9 +10,9 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class StartHandler: IHandler
 {
     private const string MessageText = $"Перед началом использования бота задайте Ваш Город." +
-                                   $"\nЕсли Ваш город не Москва и Санкт-Петербург, ввведите его название, как текст сообщения" +
+                                   $"\nЕсли Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения" +
                                    $"\nВы всегда сможете изменить эту настройку в разделе:" +
-                                   $"\nМеню > Настройки";
+                                   $"\nМеню > Выбрать город";
 
     private readonly ICityService _cityService;
     private readonly IUserService _userService;

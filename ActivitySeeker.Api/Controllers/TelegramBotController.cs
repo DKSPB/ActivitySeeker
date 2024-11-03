@@ -53,22 +53,22 @@ public class TelegramBotController: ControllerBase
 
         if (userUpdate.Data.Equals("/start"))
         {
-            //if (currentUser.CityId is null)
-            //{
-            //    handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
-            //}
-            //else
-            //{
             handler = _serviceProvider.GetRequiredService<StartHandler>();
-            //}
             await handler.HandleAsync(currentUser, userUpdate);
             return Ok();
         }
 
         if (userUpdate.Data.Equals("/offer"))
         {
-            var offerHandler = _serviceProvider.GetRequiredService<OfferHandler>();
-            await offerHandler.HandleAsync(currentUser, userUpdate);
+            handler = _serviceProvider.GetRequiredService<OfferHandler>();
+            await handler.HandleAsync(currentUser, userUpdate);
+            return Ok();
+        }
+
+        if(userUpdate.Data.Equals("/city"))
+        {
+            handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
+            await handler.HandleAsync(currentUser, userUpdate);
             return Ok();
         }
 
