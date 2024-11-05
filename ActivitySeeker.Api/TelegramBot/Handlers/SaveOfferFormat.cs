@@ -1,6 +1,7 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -8,29 +9,66 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class SaveOfferFormat: AbstractHandler
 {
     private readonly ILogger<SaveOfferFormat> _logger;
+    private readonly ICityService _cityService;
+    private int _mskId = -1;
+    private int _spbId = -1;
+    private bool _withSkipButton;
+    private string _userData = string.Empty;
     
     public SaveOfferFormat(ILogger<SaveOfferFormat> logger, IUserService userService, 
-        IActivityService activityService, ActivityPublisher activityPublisher) 
+        IActivityService activityService, ActivityPublisher activityPublisher, ICityService cityService) 
         : base(userService, activityService, activityPublisher)
     {
         _logger = logger;
+        _cityService = cityService;
     }
 
-    protected override Task ActionsAsync(UserUpdate userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
+        _userData = userData.Data;
         if (CurrentUser.Offer is null)
         {
             var msg = $"Объект CurrentUser.Offer = null";
             _logger.LogError(msg);
             throw new ArgumentNullException(msg);
         }
-        
-        CurrentUser.Offer.IsOnline = userData.Data.Equals("online");
-        CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
-        
-        ResponseMessageText = $"Заполни описание события";
 
+        if (_userData.Equals("online"))
+        {
+            CurrentUser.Offer.IsOnline = true;
+            CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
+            ResponseMessageText = $"Заполни описание события";
+        }
+        else
+        {
+            CurrentUser.Offer.IsOnline = false;
+            CurrentUser.State.StateNumber = StatesEnum.SelectOfferCity;
+            
+            _spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
+            _mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 
-        return Task.CompletedTask;
+            if (CurrentUser.CityId is not null)
+            {
+                _withSkipButton = true;
+                ResponseMessageText = $"Выберите город проведения активности" +
+                                      $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название как текст сообщения" +
+                                      $"\nНажмите кнопку \"Пропустить\", что бы оставить стандартные настройки города" +
+                                      $"\nВаш город: {(await _cityService.GetById(CurrentUser.CityId.Value))?.Name}";
+            }
+            else
+            {
+                _withSkipButton = false;
+
+                ResponseMessageText = $"Выберите город проведения активности" +
+                                      $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название как текст сообщения";
+            }
+        }
+    }
+
+    protected override IReplyMarkup GetKeyboard()
+    {
+        return _userData.Equals("online") ? 
+            Keyboards.GetEmptyKeyboard() : 
+            Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, _withSkipButton);
     }
 }

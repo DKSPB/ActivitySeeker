@@ -37,7 +37,7 @@ public class SetDefaultSettingsHandler: IHandler
             userData.ChatId,
             MessageText, 
             null, 
-            Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));
+            Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
          
         currentUser.State.MessageId = message.MessageId;
         

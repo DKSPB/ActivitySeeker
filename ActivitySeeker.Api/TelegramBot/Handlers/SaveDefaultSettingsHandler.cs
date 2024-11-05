@@ -49,7 +49,7 @@ public class SaveDefaultSettingsHandler: IHandler
                     userData.ChatId,
                     msgText,
                     null,
-                    Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));
+                    Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
             }
             else
             {

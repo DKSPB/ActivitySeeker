@@ -79,6 +79,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveActivityFormatHandler>();
                 builder.Services.AddScoped<SelectActivityFormat>();
                 builder.Services.AddScoped<SaveOfferFormat>();
+                builder.Services.AddScoped<SelectOfferCity>();
                 builder.Services.AddScoped<SelectActivityPeriodHandler>();
                 builder.Services.AddScoped<SelectTodayPeriodHandler>();
                 builder.Services.AddScoped<SelectTomorrowPeriodHandler>();

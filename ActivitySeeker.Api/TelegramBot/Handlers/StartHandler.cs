@@ -9,10 +9,10 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.Start)]
 public class StartHandler: IHandler
 {
-    private const string MessageText = $"Перед началом использования бота задайте Ваш Город." +
-                                   $"\nЕсли Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения" +
-                                   $"\nВы всегда сможете изменить эту настройку в разделе:" +
-                                   $"\nМеню > Выбрать город";
+    private const string MessageText = $"РџРµСЂРµРґ РЅР°С‡Р°Р»РѕРј РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ Р±РѕС‚Р° РІС‹Р±РµСЂРёС‚Рµ Р’Р°С€ Р“РѕСЂРѕРґ." +
+                                   $"\nР•СЃР»Рё Р’Р°С€ РіРѕСЂРѕРґ РЅРµ РњРѕСЃРєРІР° РёР»Рё РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі, РІРІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ, РєР°Рє С‚РµРєСЃС‚ СЃРѕРѕР±С‰РµРЅРёСЏ" +
+                                   $"\nР’С‹ РІСЃРµРіРґР° СЃРјРѕР¶РµС‚Рµ РёР·РјРµРЅРёС‚СЊ Р’Р°С€ РіРѕСЂРѕРґ РІ СЂР°Р·РґРµР»Рµ:" +
+                                   $"\nРњРµРЅСЋ > Р’С‹Р±СЂР°С‚СЊ РіРѕСЂРѕРґ";
 
     private readonly ICityService _cityService;
     private readonly IUserService _userService;
@@ -41,15 +41,15 @@ public class StartHandler: IHandler
         }
         else
         {
-            var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
+            var mskId = (await _cityService.GetCitiesByName("РњРѕСЃРєРІР°")).First().Id;
 
-            var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
+            var spbId = (await _cityService.GetCitiesByName("РЎР°РЅРєС‚-РџРµС‚РµСЂР±СѓСЂРі")).First().Id;
 
             message = await _activityPublisher.SendMessageAsync(
                 userData.ChatId,
                 MessageText,
                 null,
-                Keyboards.GetDefaultSettingsKeyboard(mskId, spbId));
+                Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
             
             currentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
         }

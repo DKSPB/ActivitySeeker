@@ -159,11 +159,11 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
-        public static InlineKeyboardMarkup GetDefaultSettingsKeyboard(int mskId, int spbId)
+        public static InlineKeyboardMarkup GetDefaultSettingsKeyboard(int mskId, int spbId, bool withSkip)
         {
-            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            var buttons = new List<InlineKeyboardButton[]>
             {
-                new []
+                new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Москва", mskId.ToString())
                 },
@@ -171,7 +171,17 @@ namespace ActivitySeeker.Api.TelegramBot
                 {
                     InlineKeyboardButton.WithCallbackData("Санкт-Петербург", spbId.ToString())
                 }
-            });
+            };
+
+            if (withSkip)
+            {
+                const int skip = -1;
+                buttons.Add( new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Пропустить", skip.ToString())
+                });
+            }
+            return new InlineKeyboardMarkup(buttons);
         }
 
         public static InlineKeyboardMarkup GetCityKeyboard(IEnumerable<City> cities)

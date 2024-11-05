@@ -27,5 +27,6 @@ public enum StatesEnum
     SaveOfferDate,
     ConfirmOffer,
     SetDefaultSettings,
-    SaveDefaultSettings
+    SaveDefaultSettings,
+    SelectOfferCity
 }
