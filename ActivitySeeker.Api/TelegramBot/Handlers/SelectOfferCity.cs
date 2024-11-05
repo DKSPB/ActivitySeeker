@@ -12,7 +12,7 @@ public class SelectOfferCity : AbstractHandler
     private int _mskId = -1;
     private int _spbId = -1;
     private bool _anyCity = false;
-    private List<City> _cities = new List<City>();
+    private List<City> _cities = new ();
     private string? _callbackQueryId;
 
     public SelectOfferCity(ICityService cityService, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 

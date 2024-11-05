@@ -47,26 +47,41 @@ public class SaveOfferDateHandler : IHandler
 
         var parsingDateResult = DateParser.ParseDateTime(startActivityDateText, out var startActivityDate);
 
-        if (parsingDateResult)
-        {
-            currentUser.Offer.StartDate = startActivityDate;
+        var result = DateTime.Compare(startActivityDate, DateTime.Now);
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, 
-                GetFinishOfferMessage(currentUser.Offer), null, Keyboards.ConfirmOffer());
+        if (result < 1)
+        {
+            var msgText = $"Дата начала активности должна быть позднее текущей даты." +
+                          $"\nВведите дату повторно:";
+
+            var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, msgText);
                 
             currentUser.State.MessageId = feedbackMessage.MessageId;
             _userService.UpdateUser(currentUser);
         }
         else
         {
-            var msgText = $"Введёная дата не соответствует формату:" +
-                $"\n(дд.мм.гггг чч:мм)" +
-                $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
+            if (parsingDateResult)
+            {
+                currentUser.Offer.StartDate = startActivityDate;
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, msgText);
+                var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, 
+                    GetFinishOfferMessage(currentUser.Offer), null, Keyboards.ConfirmOffer());
                 
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
+                currentUser.State.MessageId = feedbackMessage.MessageId;
+                _userService.UpdateUser(currentUser);
+            }
+            else
+            {
+                var msgText = $"Введёная дата не соответствует формату:" +
+                              $"\n(дд.мм.гггг чч:мм)" +
+                              $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
+
+                var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, msgText);
+                
+                currentUser.State.MessageId = feedbackMessage.MessageId;
+                _userService.UpdateUser(currentUser);
+            }
         }
     }
 
