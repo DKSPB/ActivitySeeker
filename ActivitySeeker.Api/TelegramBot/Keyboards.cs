@@ -72,23 +72,29 @@ namespace ActivitySeeker.Api.TelegramBot
             return countersButtons;
         }
 
-        public static InlineKeyboardMarkup GetActivityFormatsKeyboard()
+        public static InlineKeyboardMarkup GetActivityFormatsKeyboard(bool withAny)
         {
-            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            var buttons = new List<InlineKeyboardButton[]>
             {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Любой формат", "any"),
-                },
-                new []
+                new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Онлайн", "online"),
                 },
-                new []
+                new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Офлайн", "offline"),
                 }
-            });
+            };
+            
+            if (withAny)
+            {
+                buttons.Add( new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Любой формат", "any"),
+                });
+            }
+            
+            return new InlineKeyboardMarkup(buttons);
         }
 
         public static InlineKeyboardMarkup GetPeriodActivityKeyboard()

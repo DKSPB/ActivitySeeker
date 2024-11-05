@@ -26,19 +26,19 @@ namespace ActivitySeeker.Bll.Models
             stringBuilder.AppendLine("- Тип активности:");
             stringBuilder.AppendLine(string.Concat("\t\t\t", ActivityType.TypeName));
 
-            stringBuilder.AppendLine("Формат проведения:");
+            stringBuilder.AppendLine("- Формат проведения:");
 
             if (ActivityFormat is null)
             {
-                stringBuilder.AppendLine("Любой");
+                stringBuilder.AppendLine("\t\t\tЛюбой");
             }
             else if (ActivityFormat.Value)
             {
-                stringBuilder.AppendLine($"Онлайн");
+                stringBuilder.AppendLine("\t\t\tОнлайн");
             }
             else 
             {
-                stringBuilder.AppendLine($"Офлайн");
+                stringBuilder.AppendLine("\t\t\tОфлайн");
             }
             
             stringBuilder.AppendLine("- Дата и время проведения:");

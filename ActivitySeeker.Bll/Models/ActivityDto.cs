@@ -45,7 +45,7 @@ public class ActivityDto: ActivityBaseDto
         builder.AppendLine("Тип активности:");
         builder.AppendLine(ActivityType?.TypeName);
         builder.AppendLine("Формат проведения:");
-        builder.Append(IsOnline ? "Онлайн": "Вживую");
+        builder.AppendLine(IsOnline ? "Онлайн": "Офлайн");
         builder.AppendLine("Дата и время начала:");
         builder.AppendLine(StartDate.ToString("dd.MM.yyyy HH:mm"));
         builder.AppendLine("Описание активности:");

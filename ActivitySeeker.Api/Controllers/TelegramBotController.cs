@@ -51,28 +51,23 @@ public class TelegramBotController: ControllerBase
 
         IHandler handler;
 
-        if (userUpdate.Data.Equals("/start"))
+        switch (userUpdate.Data)
         {
-            handler = _serviceProvider.GetRequiredService<StartHandler>();
-            await handler.HandleAsync(currentUser, userUpdate);
-            return Ok();
+            case "/start":
+                handler = _serviceProvider.GetRequiredService<StartHandler>();
+                await handler.HandleAsync(currentUser, userUpdate);
+                return Ok();
+            case "/offer":
+                handler = _serviceProvider.GetRequiredService<OfferHandler>();
+                await handler.HandleAsync(currentUser, userUpdate);
+                return Ok();
+            case "/city":
+                handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
+                await handler.HandleAsync(currentUser, userUpdate);
+                return Ok();
         }
 
-        if (userUpdate.Data.Equals("/offer"))
-        {
-            handler = _serviceProvider.GetRequiredService<OfferHandler>();
-            await handler.HandleAsync(currentUser, userUpdate);
-            return Ok();
-        }
-
-        if(userUpdate.Data.Equals("/city"))
-        {
-            handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
-            await handler.HandleAsync(currentUser, userUpdate);
-            return Ok();
-        }
-
-          var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data) ??
+        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data) ??
                           HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
 
         if(handlerType is null)

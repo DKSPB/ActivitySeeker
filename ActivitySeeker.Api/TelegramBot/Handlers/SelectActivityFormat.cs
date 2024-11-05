@@ -22,7 +22,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override InlineKeyboardMarkup GetKeyboard()
         {
-            return Keyboards.GetActivityFormatsKeyboard();
+            return Keyboards.GetActivityFormatsKeyboard(true);
         }
     }
 }

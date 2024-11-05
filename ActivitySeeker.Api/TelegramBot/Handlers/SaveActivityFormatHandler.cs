@@ -15,20 +15,13 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override Task ActionsAsync(UserUpdate userData)
         {
-            if (userData.Data.Equals("any"))
+            CurrentUser.State.ActivityFormat = userData.Data switch
             {
-                CurrentUser.State.ActivityFormat = null;
-            }
-
-            if(userData.Data.Equals("online"))
-            {
-                CurrentUser.State.ActivityFormat = true;
-            }
-
-            if(userData.Data.Equals("offline"))
-            {
-                CurrentUser.State.ActivityFormat = false;
-            }
+                "any" => null,
+                "online" => true,
+                "offline" => false,
+                _ => CurrentUser.State.ActivityFormat
+            };
 
             CurrentUser.State.StateNumber = StatesEnum.MainMenu;
             ResponseMessageText = CurrentUser.State.ToString();

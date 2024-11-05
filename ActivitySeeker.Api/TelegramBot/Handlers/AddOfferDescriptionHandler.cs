@@ -34,9 +34,12 @@ public class AddOfferDescriptionHandler : AbstractHandler
 
         if (!_children.Any())
         {
-            CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
+            //CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
         
-            ResponseMessageText = $"Заполни описание события";
+            //ResponseMessageText = $"Заполни описание события";
+
+            ResponseMessageText = "Выбери формат проведения:";
+            CurrentUser.State.StateNumber = StatesEnum.SaveOfferFormat;
             
             CreateOfferIfNotExists(activityTypeId);
         }
@@ -48,8 +51,8 @@ public class AddOfferDescriptionHandler : AbstractHandler
     
     protected override IReplyMarkup GetKeyboard()
     {
-        return CurrentUser.State.StateNumber == StatesEnum.SaveOfferDescription ? 
-            Keyboards.GetEmptyKeyboard() : 
+        return CurrentUser.State.StateNumber == StatesEnum.SaveOfferFormat ?//StatesEnum.SaveOfferDescription ? 
+            /*Keyboards.GetEmptyKeyboard()*/ Keyboards.GetActivityFormatsKeyboard(false) : 
             Keyboards.GetActivityTypesKeyboard(_children.ToList());
     }
     private void CreateOfferIfNotExists(Guid activityTypeId)
@@ -60,7 +63,8 @@ public class AddOfferDescriptionHandler : AbstractHandler
             {
                 ActivityTypeId = activityTypeId,
                 LinkOrDescription = string.Empty,
-                OfferState = false
+                OfferState = false,
+                IsOnline = false
             };
         }
         else
