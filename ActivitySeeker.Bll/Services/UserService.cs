@@ -26,6 +26,7 @@ public class UserService: IUserService
         userExists.ChatId = user.ChatId;
         userExists.UserName = user.UserName;
         userExists.ActivityResult = JsonConvert.SerializeObject(user.ActivityResult);
+        userExists.ActivityFormat = user.State.ActivityFormat;
         userExists.ActivityTypeId = user.State.ActivityType.Id;
         userExists.SearchFrom = user.State.SearchFrom.GetValueOrDefault();
         userExists.SearchTo = user.State.SearchTo.GetValueOrDefault();

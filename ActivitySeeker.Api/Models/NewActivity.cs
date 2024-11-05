@@ -12,6 +12,8 @@ public class NewActivity
 
     public Guid ActivityTypeId { get; set; }
 
+    public bool IsOnline { get; set; }
+
     public string LinkOrDescription { get; set; } = null!;
     
     public DateTime StartDate { get; set; }
@@ -24,6 +26,7 @@ public class NewActivity
         {
             Id = Id,
             ActivityTypeId = ActivityTypeId,
+            IsOnline = IsOnline,
             StartDate = StartDate,
             LinkOrDescription = LinkOrDescription,
             Image = ImageToByteArray()

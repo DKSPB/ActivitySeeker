@@ -6,6 +6,8 @@ namespace ActivitySeeker.Api.Models
     {
         public Guid? Id { get; set; }
 
+        public bool IsOnline { get; set; }
+
         public string TypeName { get; set; }
 
         public Guid? ParentId { get; set; }

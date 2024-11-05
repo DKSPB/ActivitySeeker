@@ -13,7 +13,10 @@ public class ActivityBaseDto
     public DateTime StartDate { get; set; }
     
     public Guid ActivityTypeId { get; set; }
+
     public bool OfferState { get; set; }
+
+    public bool IsOnline { get; set; }
     
     public ActivityTypeDto? ActivityType { get; set; }
 
@@ -24,6 +27,7 @@ public class ActivityBaseDto
         LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
         OfferState = activity.IsPublished;
+        IsOnline = activity.IsOnline;
         ActivityType = new ActivityTypeDto(activity.ActivityType);
     }
 }

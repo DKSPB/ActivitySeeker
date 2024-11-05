@@ -17,6 +17,7 @@ public class ActivityDto: ActivityBaseDto
         LinkOrDescription = activity.LinkOrDescription;
         StartDate = activity.StartDate;
         ActivityTypeId = activity.ActivityTypeId;
+        IsOnline = activity.IsOnline;
         Image = activity.Image;
         OfferState = activity.IsPublished;
         ActivityType = new ActivityTypeDto(activity.ActivityType);
@@ -30,6 +31,7 @@ public class ActivityDto: ActivityBaseDto
             LinkOrDescription = LinkOrDescription,
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
+            IsOnline = IsOnline,
             Image = Image,
             IsPublished = OfferState
         };
@@ -42,6 +44,8 @@ public class ActivityDto: ActivityBaseDto
         prefixRows?.ForEach(x => builder.AppendLine(x));
         builder.AppendLine("Тип активности:");
         builder.AppendLine(ActivityType?.TypeName);
+        builder.AppendLine("Формат проведения:");
+        builder.Append(IsOnline ? "Онлайн": "Вживую");
         builder.AppendLine("Дата и время начала:");
         builder.AppendLine(StartDate.ToString("dd.MM.yyyy HH:mm"));
         builder.AppendLine("Описание активности:");

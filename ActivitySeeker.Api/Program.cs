@@ -57,6 +57,7 @@ namespace ActivitySeeker.Api
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                         };
                     });
+
                 builder.Services.AddAuthorization();
                 builder.Services.AddSignalR();
                 builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
@@ -75,6 +76,8 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<MainMenuHandler>();
                 builder.Services.AddScoped<ListOfActivitiesHandler>();
                 builder.Services.AddScoped<SelectActivityTypeHandler>();
+                builder.Services.AddScoped<SaveActivityFormatHandler>();
+                builder.Services.AddScoped<SelectActivityFormat>();
                 builder.Services.AddScoped<SelectActivityPeriodHandler>();
                 builder.Services.AddScoped<SelectTodayPeriodHandler>();
                 builder.Services.AddScoped<SelectTomorrowPeriodHandler>();

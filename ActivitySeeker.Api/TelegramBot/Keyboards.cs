@@ -26,6 +26,10 @@ namespace ActivitySeeker.Api.TelegramBot
                 },
                 new[]
                 {
+                    InlineKeyboardButton.WithCallbackData("Формат проведения", StatesEnum.SelectActivityFormat.GetDisplayName())
+                },
+                new[]
+                {
                     InlineKeyboardButton.WithCallbackData("Найти", StatesEnum.Result.GetDisplayName())
                 }
             });
@@ -66,6 +70,25 @@ namespace ActivitySeeker.Api.TelegramBot
 
 
             return countersButtons;
+        }
+
+        public static InlineKeyboardMarkup GetActivityFormatsKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Любой формат", "any"),
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Онлайн", "online"),
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Офлайн", "offline"),
+                }
+            });
         }
 
         public static InlineKeyboardMarkup GetPeriodActivityKeyboard()

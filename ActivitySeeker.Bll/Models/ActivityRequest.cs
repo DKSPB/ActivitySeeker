@@ -8,5 +8,7 @@ public class ActivityRequest
     
     public DateTime? SearchTo { get; set; }
 
+    public bool? IsOnline { get; set; }
+
     public bool? IsPublished { get; set; }
 }

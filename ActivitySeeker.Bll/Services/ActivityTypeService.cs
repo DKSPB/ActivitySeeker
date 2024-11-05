@@ -14,7 +14,8 @@ public class ActivityTypeService: IActivityTypeService
     {
         _context = context;
     }
-    
+
+    /// <inheritdoc />
     public async Task<List<ActivityTypeDto>> GetAll()
     {
         return await GetActivityTypes()
@@ -29,6 +30,7 @@ public class ActivityTypeService: IActivityTypeService
             .Include(z => z.Children);
     }
 
+    /// <inheritdoc />
     public async Task<ActivityTypeDto> GetById(Guid id)
     {
         var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == id);
@@ -41,12 +43,14 @@ public class ActivityTypeService: IActivityTypeService
         return new ActivityTypeDto(activityTypeEntity);
     }
 
+    /// <inheritdoc />
     public async Task Create(ActivityTypeDto activityType)
     {
         await _context.ActivityTypes.AddAsync(activityType.ToActivityType());
         await _context.SaveChangesAsync();
     }
 
+    /// <inheritdoc />
     public async Task Update(ActivityTypeDto activityType)
     {
         var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == activityType.Id);
@@ -60,7 +64,8 @@ public class ActivityTypeService: IActivityTypeService
         _context.ActivityTypes.Update(activityTypeEntity);
         await _context.SaveChangesAsync();
     }
-    
+
+    /// <inheritdoc />
     public async Task Delete(List<Guid> activityTypeIds)
     {
         var activityEntities = _context.ActivityTypes.Where(x => activityTypeIds.Contains(x.Id));

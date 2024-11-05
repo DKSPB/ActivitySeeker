@@ -5,6 +5,8 @@ namespace ActivitySeeker.Bll.Models
 {
     public class State
     {
+        public bool? ActivityFormat { get; set; }
+
         public ActivityTypeDto ActivityType { get; set; } = new("Все виды активности");
 
         public DateTime? SearchFrom { get; set; }
@@ -23,6 +25,21 @@ namespace ActivitySeeker.Bll.Models
             
             stringBuilder.AppendLine("- Тип активности:");
             stringBuilder.AppendLine(string.Concat("\t\t\t", ActivityType.TypeName));
+
+            stringBuilder.AppendLine("Формат проведения:");
+
+            if (ActivityFormat is null)
+            {
+                stringBuilder.AppendLine("Любой");
+            }
+            else if (ActivityFormat.Value)
+            {
+                stringBuilder.AppendLine($"Онлайн");
+            }
+            else 
+            {
+                stringBuilder.AppendLine($"Офлайн");
+            }
             
             stringBuilder.AppendLine("- Дата и время проведения:");
             stringBuilder.AppendLine($"\t\t\tСобытия, проходящие\n\t\t\tс " +

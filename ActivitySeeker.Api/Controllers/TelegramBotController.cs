@@ -72,7 +72,7 @@ public class TelegramBotController: ControllerBase
             return Ok();
         }
 
-        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data) ??
+          var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data) ??
                           HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
 
         if(handlerType is null)

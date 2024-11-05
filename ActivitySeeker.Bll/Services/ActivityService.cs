@@ -21,6 +21,7 @@ namespace ActivitySeeker.Bll.Services
             
             var activityRequest = new ActivityRequest
             {
+                IsOnline = currentUserState.ActivityFormat,
                 ActivityTypeId = currentUserState.ActivityType.Id,
                 SearchFrom = currentUserState.SearchFrom,
                 SearchTo = currentUserState.SearchTo,
@@ -51,7 +52,8 @@ namespace ActivitySeeker.Bll.Services
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
                 .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
                 .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
-                .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished);
+                .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished)
+                .Where(x => !requestParams.IsOnline.HasValue || x.IsOnline == requestParams.IsOnline);
             
             return result;
         }

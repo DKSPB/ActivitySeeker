@@ -5,6 +5,8 @@ public enum StatesEnum
     Start,
     MainMenu,
     ActivityTypeChapter,
+    SelectActivityFormat,
+    SaveActivityFormat,
     ListOfActivities,
     ActivityPeriodChapter,
     NextActivity,

@@ -1,4 +1,3 @@
-using System.Text;
 using ActivitySeeker.Domain.Entities;
 using Newtonsoft.Json;
 
@@ -40,6 +39,7 @@ public class UserDto
         State = new State
         {
             ActivityType = user.ActivityType == null ? new ActivityTypeDto() : new ActivityTypeDto(user.ActivityType),
+            ActivityFormat = user.ActivityFormat,
             SearchFrom = user.SearchFrom,
             SearchTo = user.SearchTo,
             MessageId = user.MessageId,
@@ -58,6 +58,7 @@ public class UserDto
             MessageId = user.State.MessageId,
             State = user.State.StateNumber,
             ActivityTypeId = user.State.ActivityType.Id,
+            ActivityFormat = user.State.ActivityFormat,
             SearchFrom = user.State.SearchFrom.GetValueOrDefault(),
             SearchTo = user.State.SearchTo.GetValueOrDefault(),
             ActivityResult = JsonConvert.SerializeObject(user.ActivityResult)
