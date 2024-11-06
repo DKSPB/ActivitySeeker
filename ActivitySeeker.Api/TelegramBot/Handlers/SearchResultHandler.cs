@@ -22,7 +22,7 @@ public class SearchResultHandler: AbstractHandler
 
     protected override async Task ActionsAsync(UserUpdate userData)
     {
-        var activities = ActivityService.GetActivitiesLinkedList(CurrentUser.State);
+        var activities = ActivityService.GetActivitiesLinkedList(CurrentUser);
 
         if (activities.Count > 0)
         {

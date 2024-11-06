@@ -8,16 +8,17 @@ public interface IActivityService
     /// <summary>
     /// Получение связанного списка, содержащего активности, найденные по запросу пользователя
     /// </summary>
-    /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
+    /// <param name="currentUser">Объект, содержащий запрос пользователя</param>
     /// <returns>Двусвязный список активностей</returns>
-    LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(State requestParams);
+    LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(UserDto currentUser);
 
     /// <summary>
     /// Получение списка активностей
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
+    /// <param name="userCityId">Идентификатор города, котороый задан у пользователя</param>
     /// <returns>Список активностей</returns>
-    IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
+    IQueryable<Activity>? GetActivities(ActivityRequest requestParams, int? userCityId);
 
     /// <summary>
     /// Получение активностей по типу

@@ -15,8 +15,9 @@ namespace ActivitySeeker.Bll.Services
         }
         
         /// <inheritdoc />
-        public LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(State currentUserState)
+        public LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(UserDto currentUser)
         {
+            var currentUserState = currentUser.State;
             var activities = new LinkedList<ActivityTelegramDto>();
             
             var activityRequest = new ActivityRequest
@@ -28,7 +29,7 @@ namespace ActivitySeeker.Bll.Services
                 IsPublished = true
             };
 
-            var result = GetActivities(activityRequest)?
+            var result = GetActivities(activityRequest, currentUser.CityId)?
                 .OrderBy(x => x.StartDate)
                 .Include(x => x.ActivityType);
 
@@ -46,15 +47,18 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
+        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams, int? userCityId = null)
         {
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
-                .Where(x => !requestParams.SearchFrom.HasValue || x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
-                .Where(x => !requestParams.SearchTo.HasValue || x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
+                .Where(x => !requestParams.SearchFrom.HasValue ||
+                            x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
+                .Where(x => !requestParams.SearchTo.HasValue ||
+                            x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
                 .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished)
-                .Where(x => !requestParams.IsOnline.HasValue || x.IsOnline == requestParams.IsOnline);
-            
+                .Where(x => !requestParams.IsOnline.HasValue || x.IsOnline == requestParams.IsOnline)
+                .Where(x => !x.CityId.HasValue || !userCityId.HasValue || x.CityId.Value == userCityId.Value);
+
             return result;
         }
 
@@ -127,12 +131,9 @@ namespace ActivitySeeker.Bll.Services
                 .Include(x => x.ActivityType)
                 .Where(x => activityIds.Contains(x.Id)).ToListAsync();
 
-            if(activityEntities is not null)
-            {
-                activityEntities.ForEach(x => x.IsPublished = true);
-                _context.Activities.UpdateRange(activityEntities);
-                await _context.SaveChangesAsync();
-            }
+            activityEntities.ForEach(x => x.IsPublished = true);
+            _context.Activities.UpdateRange(activityEntities);
+            await _context.SaveChangesAsync();
 
             return activityEntities?.Select(x => new ActivityDto(x)).ToList();
         }

@@ -27,16 +27,16 @@ public class ActivityController : ControllerBase
         _activityPublisher = activityPublisher;
         _botConfig = botOptions.Value;
     }
-    
+
     /// <summary>
     /// Получение списка активностей
     /// </summary>
-    /// <param name="request">Набор необязательных параметров</param>
+    /// <param name="filters">Набор необязательных параметров</param>
     /// <returns>Список объектов-активностей</returns>
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] ActivityFilters filters)
     {
-        var activities = _activityService.GetActivities(filters.ActivityRequest);
+        var activities = _activityService.GetActivities(filters.ActivityRequest, null);
 
         if (activities == null) 
         {
@@ -135,13 +135,13 @@ public class ActivityController : ControllerBase
     {
         var publishedActivities = await _activityService.PublishActivities(activityIds);
 
-        if (publishedActivities is not null)
+        publishedActivities?.ToList().ForEach(async x => 
         {
-            publishedActivities.ToList().ForEach(async x => 
-            {
-                await _activityPublisher.SendMessageAsync(_botConfig.TelegramChannel, x.GetActivityDescription().ToString(), x.Image, InlineKeyboardMarkup.Empty());
-            });
-        }
+            await _activityPublisher.SendMessageAsync(
+                _botConfig.TelegramChannel, 
+                x.GetActivityDescription().ToString(), 
+                x.Image, InlineKeyboardMarkup.Empty());
+        });
 
         return Ok();
     }

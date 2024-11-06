@@ -6,10 +6,12 @@ namespace ActivitySeeker.Api.TelegramBot
 {
     public class ActivityPublisher
     {
+        private readonly ILogger<ActivityPublisher> _logger;
         private readonly ITelegramBotClient _botClient;
 
-        public ActivityPublisher(ITelegramBotClient botClient)
+        public ActivityPublisher(ILogger<ActivityPublisher> logger, ITelegramBotClient botClient)
         {
+            _logger = logger;
             _botClient = botClient;
         }
 
@@ -23,15 +25,13 @@ namespace ActivitySeeker.Api.TelegramBot
                     disableNotification: true,
                     replyMarkup: replyMarkup);
             }
-            else
-            {
-                return await _botClient.SendPhotoAsync(
-                    chatId: chatId,
-                    photo: new InputFileStream(new MemoryStream(postImage)),
-                    caption: postText,
-                    disableNotification: true,
-                    replyMarkup: replyMarkup);
-            }
+
+            return await _botClient.SendPhotoAsync(
+                chatId: chatId,
+                photo: new InputFileStream(new MemoryStream(postImage)),
+                caption: postText,
+                disableNotification: true,
+                replyMarkup: replyMarkup);
         }
 
         public async Task EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)
@@ -43,9 +43,10 @@ namespace ActivitySeeker.Api.TelegramBot
                     messageId: messageId,
                     replyMarkup: replyMarkup);
             }
-            catch (Exception ex) 
+            catch (Exception)
             {
-                var errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
+                const string errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
+                _logger.LogError(errorMessage);
             }
 
         }
