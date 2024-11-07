@@ -3,6 +3,7 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -29,7 +30,9 @@ public class StartHandler: IHandler
     {
         Message message;
 
-        if(currentUser.CityId is not null)
+        await _activityPublisher.EditMessageAsync(userData.ChatId, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
+
+        if (currentUser.CityId is not null)
         {
             message = await _activityPublisher.SendMessageAsync(
                 userData.ChatId,

@@ -9,15 +9,6 @@ namespace ActivitySeeker.Domain.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            var sqlFilePath = "City.sql";
-
-            if (File.Exists(sqlFilePath))
-            {
-                var sql = File.ReadAllText(sqlFilePath);
-            
-                migrationBuilder.Sql(sql);
-            }
-
             migrationBuilder.UpdateData(
                 schema: "activity_seeker",
                 table: "activity",
