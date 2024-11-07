@@ -26,10 +26,11 @@ namespace ActivitySeeker.Bll.Services
                 ActivityTypeId = currentUserState.ActivityType.Id,
                 SearchFrom = currentUserState.SearchFrom,
                 SearchTo = currentUserState.SearchTo,
-                IsPublished = true
+                IsPublished = true,
+                CityId = currentUser.CityId
             };
 
-            var result = GetActivities(activityRequest, currentUser.CityId)?
+            var result = GetActivities(activityRequest)?
                 .OrderBy(x => x.StartDate)
                 .Include(x => x.ActivityType);
 
@@ -47,7 +48,7 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams, int? userCityId = null)
+        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
         {
             var result = _context.Activities
                 .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
@@ -57,7 +58,7 @@ namespace ActivitySeeker.Bll.Services
                             x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
                 .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished)
                 .Where(x => !requestParams.IsOnline.HasValue || x.IsOnline == requestParams.IsOnline)
-                .Where(x => !x.CityId.HasValue || !userCityId.HasValue || x.CityId.Value == userCityId.Value);
+                .Where(x => !x.CityId.HasValue || x.CityId == requestParams.CityId);
 
             return result;
         }

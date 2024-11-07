@@ -36,24 +36,25 @@ public class ActivityController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] ActivityFilters filters)
     {
-        var activities = _activityService.GetActivities(filters.ActivityRequest, null);
+        var activities = _activityService.GetActivities(filters.ActivityRequest);
 
         if (activities == null) 
         {
-            return Ok(new PageDto<ActivityBaseDto>());
+            return Ok(new PageDto<ActivityViewModel>());
         }
 
         var total = activities.Count();
 
         var data = await activities
             .Include(x => x.ActivityType)
+            .Include(z => z.ActivityCity)
             .OrderByDescending(x => x.StartDate)
             .Skip(filters.Offset)
             .Take(filters.Limmit)
-            .Select(x => new ActivityBaseDto(x))
+            .Select(x => new ActivityViewModel(x))
             .ToListAsync();
 
-        return Ok(new PageDto<ActivityBaseDto>
+        return Ok(new PageDto<ActivityViewModel>
         {
             Total = total,
             Data = data

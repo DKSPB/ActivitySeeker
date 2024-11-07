@@ -11,4 +11,6 @@ public class ActivityRequest
     public bool? IsOnline { get; set; }
 
     public bool? IsPublished { get; set; }
+
+    public int? CityId { get; set; }
 }

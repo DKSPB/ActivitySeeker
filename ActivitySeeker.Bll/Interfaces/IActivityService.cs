@@ -16,9 +16,8 @@ public interface IActivityService
     /// Получение списка активностей
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
-    /// <param name="userCityId">Идентификатор города, котороый задан у пользователя</param>
     /// <returns>Список активностей</returns>
-    IQueryable<Activity>? GetActivities(ActivityRequest requestParams, int? userCityId);
+    IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
 
     /// <summary>
     /// Получение активностей по типу
