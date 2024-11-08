@@ -50,7 +50,7 @@ public class ActivityController : ControllerBase
             .Include(z => z.ActivityCity)
             .OrderByDescending(x => x.StartDate)
             .Skip(filters.Offset)
-            .Take(filters.Limmit)
+            .Take(filters.Limit)
             .Select(x => new ActivityViewModel(x))
             .ToListAsync();
 

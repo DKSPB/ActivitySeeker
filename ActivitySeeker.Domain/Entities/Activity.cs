@@ -7,6 +7,7 @@ namespace ActivitySeeker.Domain.Entities;
 public class Activity
 {
     [Key]
+    [Column("id")]
     public Guid Id { get; set; }
     
     [Column("city_id")]
