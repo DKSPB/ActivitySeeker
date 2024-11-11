@@ -35,4 +35,9 @@ public class CityService: ICityService
     {
        return await _context.Cities.FirstOrDefaultAsync(x => x.Id == id);
     }
+
+    public async Task<List<City>> GetCities()
+    {
+        return await _context.Cities.ToListAsync();
+    }
 }

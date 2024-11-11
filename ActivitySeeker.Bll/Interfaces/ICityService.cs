@@ -15,6 +15,12 @@ public interface ICityService
     Task<IEnumerable<City>> GetCitiesByName(string name);
 
     /// <summary>
+    /// Получение всех городов
+    /// </summary>
+    /// <returns></returns>
+    Task<List<City>> GetCities();
+
+    /// <summary>
     /// Получение города по его идентификатору
     /// </summary>
     /// <param name="id">Идентификатор города</param>
