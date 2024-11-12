@@ -19,5 +19,11 @@ namespace ActivitySeeker.Api.Controllers
         {
             return Ok(await _cityService.GetCities());
         }
+
+        [HttpGet("{cityName}")]
+        public async Task<IActionResult> GetCitiesByName(string cityName)
+        {
+            return Ok(await _cityService.GetCitiesByName(cityName));
+        }
     }
 }
