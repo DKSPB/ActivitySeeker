@@ -6,7 +6,8 @@ namespace ActivitySeeker.Bll.Models;
 
 [JsonObject]
 public class ActivityDto: ActivityBaseDto
-{    
+{   
+    public int? CityId { get; set; }
     public byte[]? Image { get; set; }
     public ActivityDto()
     { }
@@ -32,6 +33,7 @@ public class ActivityDto: ActivityBaseDto
             StartDate = StartDate,
             ActivityTypeId = ActivityTypeId,
             IsOnline = IsOnline,
+            CityId = CityId,
             Image = Image,
             IsPublished = OfferState
         };

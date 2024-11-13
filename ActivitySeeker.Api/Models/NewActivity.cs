@@ -17,6 +17,8 @@ public class NewActivity
     public string LinkOrDescription { get; set; } = null!;
     
     public DateTime StartDate { get; set; }
+
+    public int? CityId { get; set; }
     
     public IFormFile? Image { get; set; }
 
@@ -27,6 +29,7 @@ public class NewActivity
             Id = Id,
             ActivityTypeId = ActivityTypeId,
             IsOnline = IsOnline,
+            CityId = CityId,
             StartDate = StartDate,
             LinkOrDescription = LinkOrDescription,
             Image = ImageToByteArray()
