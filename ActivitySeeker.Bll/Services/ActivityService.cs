@@ -113,6 +113,8 @@ namespace ActivitySeeker.Bll.Services
                 activityEntity.LinkOrDescription = activity.LinkOrDescription;
                 activityEntity.StartDate = activity.StartDate;
                 activityEntity.ActivityTypeId = activity.ActivityTypeId;
+                activityEntity.IsOnline = activity.IsOnline;
+                activityEntity.CityId = activity.CityId;
                 activityEntity.Image = activity.Image;
             }
 
