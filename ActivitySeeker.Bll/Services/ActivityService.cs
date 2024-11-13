@@ -58,7 +58,7 @@ namespace ActivitySeeker.Bll.Services
                             x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
                 .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished)
                 .Where(x => !requestParams.IsOnline.HasValue || x.IsOnline == requestParams.IsOnline)
-                .Where(x => !x.CityId.HasValue || x.CityId == requestParams.CityId);
+                .Where(x => !requestParams.CityId.HasValue || x.CityId == requestParams.CityId);
 
             return result;
         }
