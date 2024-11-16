@@ -61,6 +61,8 @@ public class ActivityTypeService: IActivityTypeService
         }
 
         activityTypeEntity.TypeName = activityType.TypeName;
+        activityTypeEntity.ParentId = activityType.ParentId;
+
         _context.ActivityTypes.Update(activityTypeEntity);
         await _context.SaveChangesAsync();
     }
