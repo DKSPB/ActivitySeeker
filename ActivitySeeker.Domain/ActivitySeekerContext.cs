@@ -21,11 +21,11 @@ public class ActivitySeekerContext: DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        /*modelBuilder
+        modelBuilder
             .Entity<ActivityType>()
-            .HasOne(e => e.Children)
-            .WithMany()
-            .OnDelete(DeleteBehavior.SetNull);*/
+            .HasOne(e => e.Parent)
+            .WithMany(x => x.Children)
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder
             .Entity<User>()

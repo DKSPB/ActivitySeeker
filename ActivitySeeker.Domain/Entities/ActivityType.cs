@@ -20,7 +20,7 @@ public class ActivityType
 
     public IEnumerable<Activity>? Activities { get; set; }
     
-    public IEnumerable<ActivityType>? Children { get; set; }
+    public List<ActivityType>? Children { get; set; }
     
     public ActivityType? Parent { get; set; }
 
