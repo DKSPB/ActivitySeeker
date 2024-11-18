@@ -45,8 +45,8 @@ namespace ActivitySeeker.Api.TelegramBot
             }
             catch (Exception)
             {
-                const string errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
-                _logger.LogError(errorMessage);
+                //const string errorMessage = "Пользователь очистил историю сообщений или открыл предложку, не нажимая кнопку старт";
+                //_logger.LogError(errorMessage);
             }
 
         }
