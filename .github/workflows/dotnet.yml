@@ -73,7 +73,7 @@ jobs:
             "BotConfiguration": {
               "BotToken": "${{ secrets.BOT_TOKEN }}",
               "WebhookUrl": "${{ secrets.WEBHOOK_URL }}",
-              "TelegramChennel": "${{ secrets.TELEGRAM_CHANNEL }}",
+              "TelegramChannel": "${{ secrets.TELEGRAM_CHANNEL }}",
               "PathToCertificate": "/etc/letsencrypt/live/v2575056.hosted-by-vdsina.ru/telegram_ssl_public.pem"
             },
             "ConnectionStrings": {
