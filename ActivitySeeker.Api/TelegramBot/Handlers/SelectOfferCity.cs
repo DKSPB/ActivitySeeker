@@ -64,6 +64,15 @@ public class SelectOfferCity : AbstractHandler
                 throw new NullReferenceException("По заданному идентификатору городов не обнаружено");
             }
 
+            if(cityId == -1)
+            {
+                CurrentUser.Offer.CityId = CurrentUser.CityId;
+            }
+            else if (cityId != -1)
+            {
+                CurrentUser.Offer.CityId = cityId;
+            }
+
             ResponseMessageText = "Заполни описание активности:";
             CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
         }
