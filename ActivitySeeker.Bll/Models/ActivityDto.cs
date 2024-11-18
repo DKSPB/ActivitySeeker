@@ -22,6 +22,7 @@ public class ActivityDto: ActivityBaseDto
         Image = activity.Image;
         OfferState = activity.IsPublished;
         ActivityType = new ActivityTypeDto(activity.ActivityType);
+        CityId = activity.CityId;
     }
 
     public Activity ToActivity()

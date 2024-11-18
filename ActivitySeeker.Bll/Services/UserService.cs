@@ -47,6 +47,7 @@ public class UserService: IUserService
             userExists.Offer.IsPublished = user.Offer.OfferState;
             userExists.Offer.StartDate = user.Offer.StartDate;
             userExists.Offer.Image = user.Offer.Image;
+            userExists.Offer.CityId = user.Offer.CityId;
         }
 
         _context.Users.Update(userExists);
