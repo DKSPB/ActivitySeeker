@@ -27,8 +27,16 @@ namespace ActivitySeeker.Bll.Services
                 SearchFrom = currentUserState.SearchFrom,
                 SearchTo = currentUserState.SearchTo,
                 IsPublished = true,
-                CityId = currentUser.CityId
             };
+
+            if (activityRequest.IsOnline.HasValue && !activityRequest.IsOnline.Value)
+            {
+                activityRequest.CityId = currentUser.CityId;
+            }
+            else
+            {
+                activityRequest.CityId = null;
+            }
 
             var result = GetActivities(activityRequest)?
                 .OrderBy(x => x.StartDate)
