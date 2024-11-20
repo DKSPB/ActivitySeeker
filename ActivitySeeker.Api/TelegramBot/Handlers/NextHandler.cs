@@ -57,7 +57,7 @@ public class NextHandler: AbstractHandler
             return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.SendMessageAsync(chatId, NextNode.LinkOrDescription, NextNode.Image, GetKeyboard());
+        return await _activityPublisher.SendMessageAsync(chatId, NextNode.GetActivityDescription().ToString(), NextNode.Image, GetKeyboard());
 
     }
     

@@ -1,3 +1,4 @@
+using System.Text;
 using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Bll.Models;
@@ -29,5 +30,22 @@ public class ActivityBaseDto
         OfferState = activity.IsPublished;
         IsOnline = activity.IsOnline;
         ActivityType = new ActivityTypeDto(activity.ActivityType);
+    }
+    
+    public StringBuilder GetActivityDescription(List<string>? prefixRows = null)
+    {
+        StringBuilder builder = new();
+
+        prefixRows?.ForEach(x => builder.AppendLine(x));
+        builder.AppendLine("Тип активности:");
+        builder.AppendLine(ActivityType?.TypeName);
+        builder.AppendLine("Формат проведения:");
+        builder.AppendLine(IsOnline ? "Онлайн": "Офлайн");
+        builder.AppendLine("Дата и время начала:");
+        builder.AppendLine(StartDate.ToString("dd.MM.yyyy HH:mm"));
+        builder.AppendLine("Описание активности:");
+        builder.AppendLine(LinkOrDescription);
+
+        return builder;
     }
 }
