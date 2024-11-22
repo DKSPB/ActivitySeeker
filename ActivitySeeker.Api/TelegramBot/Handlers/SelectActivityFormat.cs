@@ -15,14 +15,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override Task ActionsAsync(UserUpdate userData)
         {
-            var prefix = new List<string>
-            {
-                "Шаблон активности"
-            };
-            
-            var messageBuilder = CurrentUser.Offer.GetActivityDescription(prefix);
-            messageBuilder.AppendLine("Выбери формат проведения активности:");
-            ResponseMessageText = messageBuilder.ToString();
+            ResponseMessageText = "Выбери формат проведения активности:";
             CurrentUser.State.StateNumber = StatesEnum.SaveActivityFormat;
 
             return Task.CompletedTask;

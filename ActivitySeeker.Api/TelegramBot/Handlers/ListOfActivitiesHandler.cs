@@ -12,6 +12,8 @@ public class ListOfActivitiesHandler: AbstractHandler
     private readonly IActivityTypeService _activityTypeService;
     private IEnumerable<ActivityTypeDto> _childrenTypes;
 
+    private InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
+
     public ListOfActivitiesHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService,
         ActivityPublisher activityPublisher) :
@@ -27,43 +29,46 @@ public class ListOfActivitiesHandler: AbstractHandler
 
         if (!activityTypeIdParseResult)
         {
-            throw new ArgumentNullException(
-                $"Не удалось преобразовать идентификатор типа активности {userData.Data} в Guid");
-        }
-
-        if (selectedActivityId == Guid.Empty)
-        {
-            CurrentUser.State.ActivityType = new();
-                
-            ResponseMessageText = CurrentUser.State.ToString();
-            CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+            var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
+            activityTypes.Insert(0,new ActivityTypeDto{Id = Guid.Empty, TypeName = "Все виды активностей"});
+            ResponseMessageText = "Не найден заданный тип активности. Выберите тип активности из приведённых.";
+            _keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes);
         }
         else
         {
-            var selectedActivityType = await _activityTypeService.GetById(selectedActivityId);
-
-            _childrenTypes = (await _activityTypeService.GetAll())
-                .Where(x => x.ParentId == selectedActivityType.Id);
-
-            if (!_childrenTypes.Any())
+            if (selectedActivityId == Guid.Empty)
             {
-                CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
-                CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
+                CurrentUser.State.ActivityType = new();
                 
                 ResponseMessageText = CurrentUser.State.ToString();
                 CurrentUser.State.StateNumber = StatesEnum.MainMenu;
             }
             else
             {
-                ResponseMessageText = "Выбери тип активности:";
+                var selectedActivityType = await _activityTypeService.GetById(selectedActivityId);
+
+                _childrenTypes = (await _activityTypeService.GetAll())
+                    .Where(x => x.ParentId == selectedActivityType.Id).ToList();
+
+                if (!_childrenTypes.Any())
+                {
+                    CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
+                    CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
+                
+                    ResponseMessageText = CurrentUser.State.ToString();
+                    CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+                }
+                else
+                {
+                    ResponseMessageText = "Выбери тип активности:";
+                    _keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList());
+                }
             }
         }
     }
 
     protected override InlineKeyboardMarkup GetKeyboard()
     {
-        return CurrentUser.State.StateNumber == StatesEnum.MainMenu ? 
-            Keyboards.GetMainMenuKeyboard() : 
-            Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList());
+        return _keyboard;
     }
 }
