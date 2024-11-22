@@ -92,6 +92,10 @@ namespace ActivitySeeker.Api.TelegramBot
                 {
                     InlineKeyboardButton.WithCallbackData("Любой формат", "any"),
                 });
+                buttons.Add(new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.MainMenu.GetDisplayName())
+                });
             }
             
             return new InlineKeyboardMarkup(buttons);
