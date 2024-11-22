@@ -86,7 +86,7 @@ namespace ActivitySeeker.Api.TelegramBot
                 },
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Назад","SelectActivityFormat")
+                    InlineKeyboardButton.WithCallbackData("Назад","ListOfActivities")
                 }
             };
             
