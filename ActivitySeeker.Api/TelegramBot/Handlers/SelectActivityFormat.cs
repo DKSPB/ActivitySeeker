@@ -1,4 +1,5 @@
-﻿using ActivitySeeker.Api.Models;
+﻿using System.Text;
+using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -14,7 +15,14 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override Task ActionsAsync(UserUpdate userData)
         {
-            ResponseMessageText = "Выбери формат проведения активности:";
+            var prefix = new List<string>
+            {
+                "Шаблон активности"
+            };
+            
+            var messageBuilder = CurrentUser.Offer.GetActivityDescription(prefix);
+            messageBuilder.AppendLine("Выбери формат проведения активности:");
+            ResponseMessageText = messageBuilder.ToString();
             CurrentUser.State.StateNumber = StatesEnum.SaveActivityFormat;
 
             return Task.CompletedTask;

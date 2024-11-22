@@ -83,6 +83,10 @@ namespace ActivitySeeker.Api.TelegramBot
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Офлайн", "offline"),
+                },
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Назад","SelectActivityFormat")
                 }
             };
             
