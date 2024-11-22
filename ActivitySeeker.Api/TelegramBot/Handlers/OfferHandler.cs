@@ -34,7 +34,7 @@ public class OfferHandler : IHandler
         var message = await _activityPublisher.SendMessageAsync(
             userData.ChatId, "Выбери тип активности", 
             null, 
-            Keyboards.GetActivityTypesKeyboard(activityTypes));
+            Keyboards.GetActivityTypesKeyboard(activityTypes, "К поиску активностей"));
         
         currentUser.State.MessageId = message.MessageId;
         _userService.UpdateUser(currentUser);
