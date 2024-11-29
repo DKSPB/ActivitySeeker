@@ -18,6 +18,8 @@ using Microsoft.OpenApi.Models;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Quartz;
+using Quartz.AspNetCore;
 
 namespace ActivitySeeker.Api
 {
@@ -115,36 +117,55 @@ namespace ActivitySeeker.Api
                 builder.Services.AddControllers().AddNewtonsoftJson();
 
                 #endregion
-
-                builder.Services.AddSwaggerGen(opt =>
-                {
-                    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
-                    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                    {
-                        In = ParameterLocation.Header,
-                        Description = "Please enter token",
-                        Name = "Authorization",
-                        Type = SecuritySchemeType.Http,
-                        BearerFormat = "JWT",
-                        Scheme = "bearer"
-                    });
-                    
-                    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-                    {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type=ReferenceType.SecurityScheme,
-                                    Id="Bearer"
-                                }
-                            },
-                            new string[]{}
-                        }
-                    });
-                });
                 
+                #region swagger settings
+                
+                    builder.Services.AddSwaggerGen(opt =>
+                    {
+                        opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+                        opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                        {
+                            In = ParameterLocation.Header,
+                            Description = "Please enter token",
+                            Name = "Authorization",
+                            Type = SecuritySchemeType.Http,
+                            BearerFormat = "JWT",
+                            Scheme = "bearer"
+                        });
+                        
+                        opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+                        {
+                            {
+                                new OpenApiSecurityScheme
+                                {
+                                    Reference = new OpenApiReference
+                                    {
+                                        Type=ReferenceType.SecurityScheme,
+                                        Id="Bearer"
+                                    }
+                                },
+                                new string[]{}
+                            }
+                        });
+                    });
+                
+                #endregion
+
+                #region quartz settings
+
+                builder.Services.AddQuartz(q => {
+                });
+
+                // ASP.NET Core hosting
+                builder.Services.AddQuartzHostedService(quartz =>
+                {
+                    quartz.AwaitApplicationStarted = true;
+                    // ждать завершения задач при завершении работы сервиса
+                    quartz.WaitForJobsToComplete = true;
+                });
+
+                #endregion
+
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
 
