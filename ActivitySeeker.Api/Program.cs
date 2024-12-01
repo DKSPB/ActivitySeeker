@@ -148,17 +148,7 @@ namespace ActivitySeeker.Api
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
 
-                builder.Services.AddCors(options =>
-                {
-                    options.AddPolicy("AllowAll",
-                        policy => policy.AllowAnyOrigin()
-                                        .AllowAnyHeader()
-                                        .AllowAnyMethod());
-                });
-
                 var app = builder.Build();
-
-                app.UseCors("AllowAll");
 
                 var supportedCultures = new[]
                 {
