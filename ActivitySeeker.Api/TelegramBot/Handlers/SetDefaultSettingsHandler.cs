@@ -1,3 +1,4 @@
+using System.Text;
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
@@ -9,10 +10,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.SetDefaultSettings)]
 public class SetDefaultSettingsHandler: IHandler
 {
-    private const string MessageText = $"Задайте Ваш Город." +
-                                   $"\nЕсли Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения";
-
-    
     private readonly ICityService _cityService;
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
@@ -33,9 +30,20 @@ public class SetDefaultSettingsHandler: IHandler
 
         var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
+        var currentCity = "не задан";
+        if (currentUser.CityId.HasValue)
+        {
+            var userCity = await _cityService.GetById(currentUser.CityId.Value);
+
+            if (userCity is not null)
+            {
+                currentCity = userCity.Name;
+            }
+        }
+        
         var message = await _activityPublisher.SendMessageAsync(
             userData.ChatId,
-            MessageText, 
+            CreateResponseMessage(currentCity), 
             null, 
             Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
          
@@ -44,5 +52,14 @@ public class SetDefaultSettingsHandler: IHandler
         currentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
         
         _userService.UpdateUser(currentUser);
+    }
+
+    private string CreateResponseMessage(string currentCity)
+    {
+        var stringBuilder = new StringBuilder();
+        stringBuilder.AppendLine("Задайте Ваш Город.");
+        stringBuilder.AppendLine("Если Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения.");
+        stringBuilder.AppendLine($"Текущий город: {currentCity}.");
+        return stringBuilder.ToString();
     }
 }

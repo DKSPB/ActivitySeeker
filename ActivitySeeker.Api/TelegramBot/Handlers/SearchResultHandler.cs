@@ -45,7 +45,7 @@ public class SearchResultHandler: AbstractHandler
             return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
         }
 
-        return await _activityPublisher.SendMessageAsync(chatId, CurrentActivity.LinkOrDescription, CurrentActivity.Image, GetKeyboard());
+        return await _activityPublisher.SendMessageAsync(chatId, CurrentActivity.GetActivityDescription().ToString(), CurrentActivity.Image, GetKeyboard());
     }
     
     protected override InlineKeyboardMarkup GetKeyboard()

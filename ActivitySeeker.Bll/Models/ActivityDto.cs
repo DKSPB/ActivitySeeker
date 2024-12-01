@@ -39,21 +39,4 @@ public class ActivityDto: ActivityBaseDto
             IsPublished = OfferState
         };
     }
-
-    public StringBuilder GetActivityDescription(List<string>? prefixRows = null)
-    {
-        StringBuilder builder = new();
-
-        prefixRows?.ForEach(x => builder.AppendLine(x));
-        builder.AppendLine("Тип активности:");
-        builder.AppendLine(ActivityType?.TypeName);
-        builder.AppendLine("Формат проведения:");
-        builder.AppendLine(IsOnline ? "Онлайн": "Офлайн");
-        builder.AppendLine("Дата и время начала:");
-        builder.AppendLine(StartDate.ToString("dd.MM.yyyy HH:mm"));
-        builder.AppendLine("Описание активности:");
-        builder.AppendLine(LinkOrDescription);
-
-        return builder;
-    }
 }

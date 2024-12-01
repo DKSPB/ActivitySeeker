@@ -12,6 +12,8 @@ public class AddOfferDescriptionHandler : AbstractHandler
     private readonly IActivityTypeService _activityTypeService;
     private IEnumerable<ActivityTypeDto> _children;
 
+    private InlineKeyboardMarkup _keyboard; 
+
     public AddOfferDescriptionHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService, ActivityPublisher activityPublisher)
         : base(userService, activityService, activityPublisher)
@@ -26,30 +28,34 @@ public class AddOfferDescriptionHandler : AbstractHandler
 
         if (!activityTypeIdParseResult)
         {
-            throw new ArgumentNullException($"Не удалось распарсить идентификатор типа активности {userData.Data}");
-        }
-
-        _children = (await _activityTypeService.GetAll())
-            .Where(x => x.ParentId == activityTypeId);
-
-        if (!_children.Any())
-        {
-            ResponseMessageText = "Выбери формат проведения:";
-            CurrentUser.State.StateNumber = StatesEnum.SaveOfferFormat;
-            
-            CreateOfferIfNotExists(activityTypeId);
+            var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
+            ResponseMessageText = "Не найден заданный тип активности. Выберите тип активности из приведённых.";
+            _keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, "К поиску активностей");
         }
         else
         {
-            ResponseMessageText = "Выбери тип активности";
+            _children = (await _activityTypeService.GetAll())
+                .Where(x => x.ParentId == activityTypeId).ToList();
+
+            if (!_children.Any())
+            {
+                ResponseMessageText = "Выбери формат проведения:";
+                CurrentUser.State.StateNumber = StatesEnum.SaveOfferFormat;
+                _keyboard = Keyboards.GetActivityFormatsKeyboard(false);
+            
+                CreateOfferIfNotExists(activityTypeId);
+            }
+            else
+            {
+                ResponseMessageText = "Выбери тип активности";
+                _keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList());
+            }
         }
     }
     
     protected override IReplyMarkup GetKeyboard()
     {
-        return CurrentUser.State.StateNumber == StatesEnum.SaveOfferFormat ?
-            Keyboards.GetActivityFormatsKeyboard(false) : 
-            Keyboards.GetActivityTypesKeyboard(_children.ToList());
+        return _keyboard;
     }
     private void CreateOfferIfNotExists(Guid activityTypeId)
     {
