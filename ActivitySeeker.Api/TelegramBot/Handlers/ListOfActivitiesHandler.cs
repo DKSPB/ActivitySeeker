@@ -10,7 +10,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class ListOfActivitiesHandler: AbstractHandler
 {
     private readonly IActivityTypeService _activityTypeService;
-    private IEnumerable<ActivityTypeDto> _childrenTypes;
+    private List<ActivityTypeDto> _childrenTypes;
 
     private InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
 
@@ -30,7 +30,7 @@ public class ListOfActivitiesHandler: AbstractHandler
         if (!activityTypeIdParseResult)
         {
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
-            activityTypes.Insert(0,new ActivityTypeDto{Id = Guid.Empty, TypeName = "Все виды активностей"});
+            activityTypes.Insert(0, new ActivityTypeDto{ Id = Guid.Empty, TypeName = "Все виды активностей" });
             ResponseMessageText = "Не найден заданный тип активности. Выберите тип активности из приведённых.";
             _keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes);
         }
@@ -61,6 +61,7 @@ public class ListOfActivitiesHandler: AbstractHandler
                 else
                 {
                     ResponseMessageText = "Выбери тип активности:";
+                    _childrenTypes.Add(new ActivityTypeDto { Id = selectedActivityType.Id, TypeName = "Далее" });
                     _keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList());
                 }
             }
