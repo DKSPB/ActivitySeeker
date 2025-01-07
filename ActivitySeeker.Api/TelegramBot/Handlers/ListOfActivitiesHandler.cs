@@ -2,6 +2,7 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -9,10 +10,10 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.ListOfActivities)]
 public class ListOfActivitiesHandler: AbstractHandler
 {
-    private readonly IActivityTypeService _activityTypeService;
-    private List<ActivityTypeDto> _childrenTypes;
+    protected readonly IActivityTypeService _activityTypeService;
+    protected List<ActivityTypeDto> _childrenTypes;
 
-    private InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
+    protected InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
 
     public ListOfActivitiesHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService,
@@ -31,8 +32,8 @@ public class ListOfActivitiesHandler: AbstractHandler
         {
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
             activityTypes.Insert(0, new ActivityTypeDto{ Id = Guid.Empty, TypeName = "Все виды активностей" });
-            ResponseMessageText = "Не найден заданный тип активности. Выберите тип активности из приведённых.";
-            _keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes);
+            ResponseMessageText = "Выбери тип активности:";
+            _keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
         }
         else
         {
@@ -60,9 +61,25 @@ public class ListOfActivitiesHandler: AbstractHandler
                 }
                 else
                 {
-                    ResponseMessageText = "Выбери тип активности:";
-                    _childrenTypes.Add(new ActivityTypeDto { Id = selectedActivityType.Id, TypeName = "Далее" });
-                    _keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList());
+                    if(CurrentUser.State.ActivityType.Id == selectedActivityType.Id && CurrentUser.State.StateNumber == StatesEnum.ListOfChildrenActivities)
+                    {
+                        ResponseMessageText = CurrentUser.State.ToString();
+                        CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+                    }
+                    else
+                    {
+                        ResponseMessageText = "Выбери тип активности:";
+                        _childrenTypes.Add(new ActivityTypeDto { Id = selectedActivityType.Id, TypeName = $"Выбрать все {selectedActivityType.TypeName}" });
+
+                        var backButtonValue = selectedActivityType.ParentId is null ? StatesEnum.ListOfActivities.GetDisplayName() : selectedActivityType.ParentId.ToString();
+
+                        _keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList(), backButtonValue);
+
+                        CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
+                        CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
+                    }
+
+                    CurrentUser.State.StateNumber = StatesEnum.ListOfChildrenActivities;
                 }
             }
         }

@@ -9,6 +9,7 @@ public enum StatesEnum
     SaveOfferFormat,
     SaveActivityFormat,
     ListOfActivities,
+    ListOfChildrenActivities,
     ActivityPeriodChapter,
     NextActivity,
     PreviousActivity,

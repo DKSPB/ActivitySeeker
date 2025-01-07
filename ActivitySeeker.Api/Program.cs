@@ -75,6 +75,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<StartHandler>();
                 builder.Services.AddScoped<MainMenuHandler>();
                 builder.Services.AddScoped<ListOfActivitiesHandler>();
+                builder.Services.AddScoped<ListOfChildrenActivitiesHandler>();
                 builder.Services.AddScoped<SelectActivityTypeHandler>();
                 builder.Services.AddScoped<SaveActivityFormatHandler>();
                 builder.Services.AddScoped<SelectActivityFormat>();

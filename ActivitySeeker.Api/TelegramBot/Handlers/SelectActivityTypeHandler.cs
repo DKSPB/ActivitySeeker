@@ -2,6 +2,7 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -32,7 +33,7 @@ public class SelectActivityTypeHandler: AbstractHandler
         var activityTypes = GetRootActivityTypes().Result;
         activityTypes.Insert(0, new ActivityTypeDto{Id = Guid.Empty, TypeName = "Все виды активностей"});
         
-        return Keyboards.GetActivityTypesKeyboard(activityTypes);
+        return Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
     }
 
     private async Task<List<ActivityTypeDto>> GetRootActivityTypes()

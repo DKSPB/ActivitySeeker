@@ -50,7 +50,7 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
-        public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityTypeDto> activityTypes, string backButtonText = "Назад") 
+        public static InlineKeyboardMarkup GetActivityTypesKeyboard(List<ActivityTypeDto> activityTypes, string backButtonValue,  string backButtonText = "Назад") 
         {
             List<List<InlineKeyboardButton>> activityTypeButtons = new();
             foreach (var activityType in activityTypes)
@@ -63,7 +63,7 @@ namespace ActivitySeeker.Api.TelegramBot
 
             activityTypeButtons.Add(new List<InlineKeyboardButton>
             {
-                InlineKeyboardButton.WithCallbackData(backButtonText, StatesEnum.MainMenu.GetDisplayName())
+                InlineKeyboardButton.WithCallbackData(backButtonText, backButtonValue)
             });
 
             InlineKeyboardMarkup countersButtons = new (activityTypeButtons);
