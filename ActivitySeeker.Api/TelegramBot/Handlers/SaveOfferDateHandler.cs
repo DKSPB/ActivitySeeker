@@ -23,7 +23,7 @@ public class SaveOfferDateHandler : AbstractHandler
         _activityPublisher = activityPublisher;
     }
 
-    protected override async Task ActionsAsync(UserUpdate userData)
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         var message = userData.Data;
 
@@ -50,28 +50,30 @@ public class SaveOfferDateHandler : AbstractHandler
 
         var parsingDateResult = DateParser.ParseDateTime(startActivityDateText, out var startActivityDate);
 
-        var result = DateTime.Compare(startActivityDate, DateTime.Now);
+        if (parsingDateResult)
+        {
+            var result = DateTime.Compare(startActivityDate, DateTime.Now);
 
-        if (result < 1)
-        {
-            ResponseMessageText = $"Дата начала активности должна быть позднее текущей даты." +
-                          $"\nВведите дату повторно:";
-        }
-        else
-        {
-            if (parsingDateResult)
+            if (result < 1)
+            {
+                ResponseMessageText = $"Дата начала активности должна быть позднее текущей даты." +
+                              $"\nВведите дату повторно:";
+            }
+            else
             {
                 CurrentUser.Offer.StartDate = startActivityDate;
 
                 _keyboard = Keyboards.ConfirmOffer();
             }
-            else
-            {
-                ResponseMessageText = $"Введёная дата не соответствует формату:" +
-                              $"\n(дд.мм.гггг чч:мм)" +
-                              $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
-            }
         }
+        else
+        {
+            ResponseMessageText = $"Введёная дата не соответствует формату:" +
+                          $"\n(дд.мм.гггг чч:мм)" +
+                          $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
+        }
+
+        return Task.CompletedTask;
     }
 
     protected override InlineKeyboardMarkup GetKeyboard()

@@ -74,7 +74,7 @@ public class SaveDefaultSettingsHandler : AbstractHandler
             CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
             ResponseMessageText = CurrentUser.State.ToString();
-            Keyboards.GetMainMenuKeyboard();
+            _keyboard = Keyboards.GetMainMenuKeyboard();
         }
     }
 
