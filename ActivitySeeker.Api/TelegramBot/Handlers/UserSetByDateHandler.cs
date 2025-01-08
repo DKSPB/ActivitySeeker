@@ -1,51 +1,53 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.PeriodToDate)]
-public class UserSetByDateHandler: IHandler
+public class UserSetByDateHandler: AbstractHandler
 {
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
+
+    private InlineKeyboardMarkup _keyboardMarkup = Keyboards.GetEmptyKeyboard();
     
-    public UserSetByDateHandler(IUserService userService, ActivityPublisher activityPublisher)
+    public UserSetByDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
+        :base(userService, activityService, activityPublisher)
     {
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
+
+    protected override Task ActionsAsync(UserUpdate userData)
     {
         var byDateText = userData.Data;
 
-        var result = DateParser.ParseDate(byDateText, out var byDate) || 
+        var result = DateParser.ParseDate(byDateText, out var byDate) ||
                      DateParser.ParseDateTime(byDateText, out byDate);
-        
+
         if (result)
         {
-            currentUser.State.SearchTo = byDate;
+            CurrentUser.State.SearchTo = byDate;
 
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId,
-                currentUser.State.ToString(), null, Keyboards.GetMainMenuKeyboard());
-            
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
+            ResponseMessageText = CurrentUser.State.ToString();
+
+            _keyboardMarkup = Keyboards.GetMainMenuKeyboard();
         }
         else
         {
-            var msgText = $"Введёная дата не соответствует форматам:" +
+            ResponseMessageText = $"Введёная дата не соответствует форматам:" +
                           $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
                           $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
-            
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(
-                userData.ChatId,
-                msgText
-                );
-            
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
+
         }
+
+        return Task.CompletedTask;
+    }
+
+    protected override InlineKeyboardMarkup GetKeyboard()
+    {
+        return _keyboardMarkup;
     }
 }

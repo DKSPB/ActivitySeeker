@@ -8,7 +8,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.ActivityTypeChapter)]
-public class SelectActivityTypeHandler: AbstractHandler
+public class SelectActivityTypeHandler : AbstractHandler
 {
     private readonly IActivityTypeService _activityTypeService;
 

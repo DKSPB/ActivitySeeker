@@ -12,8 +12,7 @@ public class AddOfferDescriptionHandler : AbstractHandler
     public AddOfferDescriptionHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService, ActivityPublisher activityPublisher)
         : base(userService, activityService, activityPublisher)
-    {
-    }
+    {}
 
     protected override Task ActionsAsync(UserUpdate userData)
     {

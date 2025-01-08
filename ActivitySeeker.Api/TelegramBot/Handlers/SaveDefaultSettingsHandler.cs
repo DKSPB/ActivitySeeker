@@ -1,28 +1,29 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SaveDefaultSettings)]
-public class SaveDefaultSettingsHandler: IHandler
+public class SaveDefaultSettingsHandler : AbstractHandler
 {
     private readonly ICityService _cityService;
     private readonly IUserService _userService;
     private readonly ActivityPublisher _publisher;
+
+    private InlineKeyboardMarkup _keyboard = Keyboards.GetEmptyKeyboard();
     
-    public SaveDefaultSettingsHandler(ICityService cityService, IUserService userService, ActivityPublisher publisher)
+    public SaveDefaultSettingsHandler(ICityService cityService, IUserService userService, IActivityService activityService, ActivityPublisher publisher)
+        :base(userService, activityService, publisher)
     {
         _cityService = cityService;
         _userService = userService;
         _publisher = publisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
-    {
-        Message message;
 
+    protected override async Task ActionsAsync(UserUpdate userData)
+    {
         if (userData.CallbackQueryId is null)
         {
             var cityName = userData.Data;
@@ -34,38 +35,21 @@ public class SaveDefaultSettingsHandler: IHandler
             if (!cities.Any())
             {
                 msgText = $"Поиск не дал результатов." +
-                          $"\nУточните название и попробуйте ещё раз";
+                          $"\nУточните название и попробуйте ещё раз                                                                                                             ";
 
                 var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 
                 var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
-                await _publisher.EditMessageAsync(
-                    userData.ChatId,
-                    currentUser.State.MessageId,
-                    Keyboards.GetEmptyKeyboard());
+                ResponseMessageText = msgText;
+                _keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
 
-                message = await _publisher.SendMessageAsync(
-                    userData.ChatId,
-                    msgText,
-                    null,
-                    Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
             }
             else
             {
-                await _publisher.EditMessageAsync(
-                    userData.ChatId,
-                    currentUser.State.MessageId,
-                    Keyboards.GetEmptyKeyboard());
+                ResponseMessageText = $"Найденные города:";
 
-                msgText = $"Найденные города:";
-
-                message = await _publisher.SendMessageAsync(
-                    userData.ChatId,
-                    msgText,
-                    null,
-                    Keyboards.GetCityKeyboard(cities.ToList())
-                );
+                _keyboard = Keyboards.GetCityKeyboard(cities.ToList());
             }
         }
         else
@@ -85,23 +69,17 @@ public class SaveDefaultSettingsHandler: IHandler
             {
                 throw new NullReferenceException("По заданному идентификатору городов не обнаружено");
             }
-            
-            currentUser.CityId = cityId;
-            currentUser.State.StateNumber = StatesEnum.MainMenu;
-            
-            await _publisher.EditMessageAsync(
-                userData.ChatId,
-                currentUser.State.MessageId, 
-                Keyboards.GetEmptyKeyboard());
 
-            message = await _publisher.SendMessageAsync(
-                userData.ChatId,
-                currentUser.State.ToString(),
-                null,
-                Keyboards.GetMainMenuKeyboard());
+            CurrentUser.CityId = cityId;
+            CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+
+            ResponseMessageText = CurrentUser.State.ToString();
+            Keyboards.GetMainMenuKeyboard();
         }
+    }
 
-        currentUser.State.MessageId = message.MessageId;
-        _userService.UpdateUser(currentUser);
+    protected override InlineKeyboardMarkup GetKeyboard()
+    {
+        return _keyboard;
     }
 }

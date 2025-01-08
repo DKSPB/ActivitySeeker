@@ -8,7 +8,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.Result)]
-public class SearchResultHandler: AbstractHandler
+public class SearchResultHandler : AbstractHandler
 {
     private ActivityTelegramDto? CurrentActivity { get; set; }
 

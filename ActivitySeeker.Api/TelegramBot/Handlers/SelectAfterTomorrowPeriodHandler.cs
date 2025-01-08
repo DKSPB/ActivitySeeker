@@ -6,7 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.AfterTomorrowPeriod)]
-public class SelectAfterTomorrowPeriodHandler: AbstractHandler
+public class SelectAfterTomorrowPeriodHandler : AbstractHandler
 {
     public SelectAfterTomorrowPeriodHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
         : base(userService, activityService, activityPublisher)

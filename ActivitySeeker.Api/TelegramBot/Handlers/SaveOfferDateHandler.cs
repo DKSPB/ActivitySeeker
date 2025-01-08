@@ -2,25 +2,28 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SaveOfferDate)]
-public class SaveOfferDateHandler : IHandler
+public class SaveOfferDateHandler : AbstractHandler
 {
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
     private readonly ILogger<SaveOfferDateHandler> _logger;
 
-    public SaveOfferDateHandler(IUserService userService, ActivityPublisher activityPublisher, 
-        ILogger<SaveOfferDateHandler> logger)
+    private InlineKeyboardMarkup _keyboard = Keyboards.GetEmptyKeyboard();
+
+    public SaveOfferDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, 
+        ILogger<SaveOfferDateHandler> logger) : base(userService, activityService, activityPublisher)
     {
         _logger = logger;
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
 
-    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         var message = userData.Data;
 
@@ -37,12 +40,12 @@ public class SaveOfferDateHandler : IHandler
             _logger.LogError(errorMessage);
             throw new ArgumentNullException(errorMessage);
         }
-        
-        if (currentUser.Offer is null)
+
+        if (CurrentUser.Offer is null)
         {
             throw new ArgumentNullException($"Ошибка создания активности, объект offer is null");
         }
-        
+
         var startActivityDateText = message;
 
         var parsingDateResult = DateParser.ParseDateTime(startActivityDateText, out var startActivityDate);
@@ -51,38 +54,29 @@ public class SaveOfferDateHandler : IHandler
 
         if (result < 1)
         {
-            var msgText = $"Дата начала активности должна быть позднее текущей даты." +
+            ResponseMessageText = $"Дата начала активности должна быть позднее текущей даты." +
                           $"\nВведите дату повторно:";
-
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, msgText);
-                
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
         }
         else
         {
             if (parsingDateResult)
             {
-                currentUser.Offer.StartDate = startActivityDate;
+                CurrentUser.Offer.StartDate = startActivityDate;
 
-                var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, 
-                    GetFinishOfferMessage(currentUser.Offer), null, Keyboards.ConfirmOffer());
-                
-                currentUser.State.MessageId = feedbackMessage.MessageId;
-                _userService.UpdateUser(currentUser);
+                _keyboard = Keyboards.ConfirmOffer();
             }
             else
             {
-                var msgText = $"Введёная дата не соответствует формату:" +
+                ResponseMessageText = $"Введёная дата не соответствует формату:" +
                               $"\n(дд.мм.гггг чч:мм)" +
                               $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
-
-                var feedbackMessage = await _activityPublisher.SendMessageAsync(userData.ChatId, msgText);
-                
-                currentUser.State.MessageId = feedbackMessage.MessageId;
-                _userService.UpdateUser(currentUser);
             }
         }
+    }
+
+    protected override InlineKeyboardMarkup GetKeyboard()
+    {
+        return _keyboard;
     }
 
     private string GetFinishOfferMessage(ActivityDto offer)
@@ -91,8 +85,8 @@ public class SaveOfferDateHandler : IHandler
         {
             "Эта активность будет предложена для публикации.",
             "Убедись, что данные заполнены корректно:"
-            
         };
+
         return offer.GetActivityDescription(prefix).ToString();
     }
 }

@@ -1,46 +1,39 @@
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.Start)]
-public class StartHandler: IHandler
+public class StartHandler: AbstractHandler
 {
     private const string MessageText = $"Перед началом использования бота выберите Ваш Город." +
                                    $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название, как текст сообщения" +
                                    $"\nВы всегда сможете изменить Ваш город в разделе:" +
                                    $"\nМеню > Выбрать город";
 
+    private InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
+
     private readonly ICityService _cityService;
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
     
-    public StartHandler(ICityService cityService, IUserService userService, ActivityPublisher activityPublisher)
+    public StartHandler(ICityService cityService, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
+        :base(userService, activityService, activityPublisher)
     {
         _userService = userService;
         _cityService = cityService;
         _activityPublisher = activityPublisher;
     }
-    
-    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
+
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
-        Message message;
-
-        await _activityPublisher.EditMessageAsync(userData.ChatId, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
-
-        if (currentUser.CityId is not null)
+        if (CurrentUser.CityId is not null)
         {
-            message = await _activityPublisher.SendMessageAsync(
-                userData.ChatId,
-                currentUser.State.ToString(),
-                null,
-                Keyboards.GetMainMenuKeyboard());
+            ResponseMessageText = CurrentUser.State.ToString();
 
-            currentUser.State.StateNumber = StatesEnum.MainMenu;
+            CurrentUser.State.StateNumber = StatesEnum.MainMenu;
         }
         else
         {
@@ -48,16 +41,15 @@ public class StartHandler: IHandler
 
             var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
-            message = await _activityPublisher.SendMessageAsync(
-                userData.ChatId,
-                MessageText,
-                null,
-                Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
-            
-            currentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
-        }
+            ResponseMessageText = MessageText;
 
-        currentUser.State.MessageId = message.MessageId;
-        _userService.UpdateUser(currentUser);
+            _keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
+
+            CurrentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
+        }
+    }
+    protected override InlineKeyboardMarkup GetKeyboard()
+    {
+        return _keyboard;
     }
 }

@@ -1,57 +1,51 @@
 using System.Text;
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SetDefaultSettings)]
-public class SetDefaultSettingsHandler: IHandler
+public class SetDefaultSettingsHandler: AbstractHandler
 {
     private readonly ICityService _cityService;
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
 
-    public SetDefaultSettingsHandler(ICityService cityService, IUserService userService, ActivityPublisher activityPublisher)
+    private InlineKeyboardMarkup _keyboard = Keyboards.GetEmptyKeyboard();
+
+    public SetDefaultSettingsHandler(ICityService cityService, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
+        :base(userService, activityService, activityPublisher)
     {
         _cityService = cityService;
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
-    
-    public async Task HandleAsync(UserDto currentUser, UserUpdate userData)
+
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
-
-        await _activityPublisher.EditMessageAsync(userData.ChatId, currentUser.State.MessageId, InlineKeyboardMarkup.Empty());
-
         var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 
         var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
         var currentCity = "не задан";
-        if (currentUser.CityId.HasValue)
+
+        if (CurrentUser.CityId.HasValue)
         {
-            var userCity = await _cityService.GetById(currentUser.CityId.Value);
+            var userCity = await _cityService.GetById(CurrentUser.CityId.Value);
 
             if (userCity is not null)
             {
                 currentCity = userCity.Name;
             }
         }
-        
-        var message = await _activityPublisher.SendMessageAsync(
-            userData.ChatId,
-            CreateResponseMessage(currentCity), 
-            null, 
-            Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false));
-         
-        currentUser.State.MessageId = message.MessageId;
-        
-        currentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
-        
-        _userService.UpdateUser(currentUser);
+
+        ResponseMessageText = CreateResponseMessage(currentCity);
+
+        _keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
+
+        CurrentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
     }
 
     private string CreateResponseMessage(string currentCity)
@@ -61,5 +55,10 @@ public class SetDefaultSettingsHandler: IHandler
         stringBuilder.AppendLine("Если Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения.");
         stringBuilder.AppendLine($"Текущий город: {currentCity}.");
         return stringBuilder.ToString();
+    }
+
+    protected override InlineKeyboardMarkup GetKeyboard()
+    {
+        return _keyboard;
     }
 }

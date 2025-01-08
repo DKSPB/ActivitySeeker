@@ -1,52 +1,45 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.PeriodFromDate)]
-public class UserSetFromDateHandler: IHandler
+public class UserSetFromDateHandler : AbstractHandler
 {
     private readonly IUserService _userService;
     private readonly ActivityPublisher _activityPublisher;
 
-    public UserSetFromDateHandler(IUserService userService, ActivityPublisher activityPublisher)
+    public UserSetFromDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
+        :base(userService, activityService, activityPublisher)
     {
         _userService = userService;
         _activityPublisher = activityPublisher;
     }
-    public async Task HandleAsync(UserDto currentUser, UserUpdate userUpdate)
-    {
-        var fromDateText = userUpdate.Data;
 
-        var result = DateParser.ParseDate(fromDateText, out var fromDate) || 
+    protected override Task ActionsAsync(UserUpdate userData)
+    {
+        var fromDateText = userData.Data;
+
+        var result = DateParser.ParseDate(fromDateText, out var fromDate) ||
                      DateParser.ParseDateTime(fromDateText, out fromDate);
-        
+
         if (result)
         {
-            var msgText = $"Введите дату, по которую хотите искать активности в форматах:" +
+            ResponseMessageText = $"Введите дату, по которую хотите искать активности в форматах:" +
                       $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
                       $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
-            currentUser.State.SearchFrom = fromDate;
-
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, msgText);
-            
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            currentUser.State.StateNumber = StatesEnum.PeriodToDate;
-            _userService.UpdateUser(currentUser);
+            CurrentUser.State.SearchFrom = fromDate;
+            CurrentUser.State.StateNumber = StatesEnum.PeriodToDate;
         }
         else
         {
-            var msgText = $"Введёная дата не соответствует форматам:" +
+            ResponseMessageText = $"Введёная дата не соответствует форматам:" +
               $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
               $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
-
-            var feedbackMessage = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, msgText);
-            
-            currentUser.State.MessageId = feedbackMessage.MessageId;
-            _userService.UpdateUser(currentUser);
         }
+
+        return Task.CompletedTask;
     }
 }

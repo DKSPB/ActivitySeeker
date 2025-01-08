@@ -8,7 +8,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
     [HandlerState(StatesEnum.SaveActivityFormat)]
     public class SaveActivityFormatHandler : AbstractHandler
     {
-        private InlineKeyboardMarkup _keyboard;
+        private InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
         public SaveActivityFormatHandler(IUserService userService, 
             IActivityService activityService, ActivityPublisher activityPublisher) 
             : base(userService, activityService, activityPublisher)
@@ -21,14 +21,12 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                CurrentUser.State.ActivityFormat = true;
                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                ResponseMessageText = CurrentUser.State.ToString();
-               _keyboard = Keyboards.GetMainMenuKeyboard();
            }
            else if (userData.Data.Equals("offline"))
            {
                CurrentUser.State.ActivityFormat = false;
                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                ResponseMessageText = CurrentUser.State.ToString();
-               _keyboard = Keyboards.GetMainMenuKeyboard();
            }
 
            else if (userData.Data.Equals("any"))
@@ -36,7 +34,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                CurrentUser.State.ActivityFormat = null; 
                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                ResponseMessageText = CurrentUser.State.ToString();
-               _keyboard = Keyboards.GetMainMenuKeyboard();
            }
            else
            {

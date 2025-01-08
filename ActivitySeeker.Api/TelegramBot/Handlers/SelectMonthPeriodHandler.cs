@@ -6,7 +6,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.MonthPeriod)]
-public class SelectMonthPeriodHandler: AbstractHandler
+public class SelectMonthPeriodHandler : AbstractHandler
 {
     public SelectMonthPeriodHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
         : base(userService, activityService, activityPublisher)
