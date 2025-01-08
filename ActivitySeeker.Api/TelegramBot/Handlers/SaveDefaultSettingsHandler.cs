@@ -35,7 +35,7 @@ public class SaveDefaultSettingsHandler : AbstractHandler
             if (!cities.Any())
             {
                 msgText = $"Поиск не дал результатов." +
-                          $"\nУточните название и попробуйте ещё раз                                                                                                             ";
+                          $"\nУточните название и попробуйте ещё раз";
 
                 var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
 

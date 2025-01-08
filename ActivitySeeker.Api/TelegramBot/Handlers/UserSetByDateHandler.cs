@@ -29,11 +29,20 @@ public class UserSetByDateHandler: AbstractHandler
 
         if (result)
         {
-            CurrentUser.State.SearchTo = byDate;
+            var compareResult = DateTime.Compare(byDate, CurrentUser.State.SearchFrom.GetValueOrDefault());
 
-            ResponseMessageText = CurrentUser.State.ToString();
+            if (compareResult <= 0) 
+            {
+                ResponseMessageText = $"Дата окончания поиска должа быть позднее, чем дата начала поиска";
+            }
+            else
+            {
+                CurrentUser.State.SearchTo = byDate;
 
-            _keyboardMarkup = Keyboards.GetMainMenuKeyboard();
+                ResponseMessageText = CurrentUser.State.ToString();
+
+                _keyboardMarkup = Keyboards.GetMainMenuKeyboard();
+            }
         }
         else
         {
