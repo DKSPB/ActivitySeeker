@@ -1,7 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -17,13 +16,10 @@ public class SelectWeekPeriodHandler: AbstractHandler
     {
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(7).Date;
+        
         ResponseMessageText = CurrentUser.State.ToString();
-
+        Keyboard = Keyboards.GetMainMenuKeyboard();
+        
         return Task.CompletedTask;
-    }
-
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return Keyboards.GetMainMenuKeyboard();
     }
 }

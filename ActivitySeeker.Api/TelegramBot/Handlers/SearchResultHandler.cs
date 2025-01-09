@@ -3,7 +3,6 @@ using Telegram.Bot.Types;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -42,16 +41,9 @@ public class SearchResultHandler : AbstractHandler
     {
         if (CurrentActivity is null)
         {
-            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
+            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboards.GetToMainMenuKeyboard());
         }
 
-        return await _activityPublisher.SendMessageAsync(chatId, CurrentActivity.GetActivityDescription().ToString(), CurrentActivity.Image, GetKeyboard());
-    }
-    
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return CurrentActivity is null ? 
-            Keyboards.GetToMainMenuKeyboard() : 
-            Keyboards.GetActivityPaginationKeyboard();
+        return await _activityPublisher.SendMessageAsync(chatId, CurrentActivity.GetActivityDescription().ToString(), CurrentActivity.Image, Keyboards.GetActivityPaginationKeyboard());
     }
 }

@@ -3,17 +3,15 @@ using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.OpenApi.Extensions;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.ListOfActivities)]
 public class ListOfActivitiesHandler: AbstractHandler
 {
-    protected readonly IActivityTypeService _activityTypeService;
-    protected List<ActivityTypeDto> _childrenTypes;
-
-    protected InlineKeyboardMarkup _keyboard = Keyboards.GetMainMenuKeyboard();
+    private readonly IActivityTypeService _activityTypeService;
+    private List<ActivityTypeDto> _childrenTypes;
+    
 
     public ListOfActivitiesHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService,
@@ -33,7 +31,7 @@ public class ListOfActivitiesHandler: AbstractHandler
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
             activityTypes.Insert(0, new ActivityTypeDto{ Id = Guid.Empty, TypeName = "Все виды активностей" });
             ResponseMessageText = "Выбери тип активности:";
-            _keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
+            Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
         }
         else
         {
@@ -42,6 +40,8 @@ public class ListOfActivitiesHandler: AbstractHandler
                 CurrentUser.State.ActivityType = new();
                 
                 ResponseMessageText = CurrentUser.State.ToString();
+                Keyboard = Keyboards.GetMainMenuKeyboard();
+                
                 CurrentUser.State.StateNumber = StatesEnum.MainMenu;
             }
             else
@@ -57,6 +57,8 @@ public class ListOfActivitiesHandler: AbstractHandler
                     CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
                 
                     ResponseMessageText = CurrentUser.State.ToString();
+                    Keyboard = Keyboards.GetMainMenuKeyboard();
+                    
                     CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                 }
                 else
@@ -64,6 +66,8 @@ public class ListOfActivitiesHandler: AbstractHandler
                     if(CurrentUser.State.ActivityType.Id == selectedActivityType.Id && CurrentUser.State.StateNumber == StatesEnum.ListOfChildrenActivities)
                     {
                         ResponseMessageText = CurrentUser.State.ToString();
+                        Keyboard = Keyboards.GetMainMenuKeyboard();
+                        
                         CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                     }
                     else
@@ -73,7 +77,7 @@ public class ListOfActivitiesHandler: AbstractHandler
 
                         var backButtonValue = selectedActivityType.ParentId is null ? StatesEnum.ListOfActivities.GetDisplayName() : selectedActivityType.ParentId.ToString();
 
-                        _keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList(), backButtonValue);
+                        Keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList(), backButtonValue);
 
                         CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
                         CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
@@ -83,10 +87,5 @@ public class ListOfActivitiesHandler: AbstractHandler
                 }
             }
         }
-    }
-
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return _keyboard;
     }
 }

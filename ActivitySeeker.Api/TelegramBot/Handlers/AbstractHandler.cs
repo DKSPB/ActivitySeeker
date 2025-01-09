@@ -11,6 +11,8 @@ public abstract class AbstractHandler: IHandler
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
     protected string ResponseMessageText { get; set; } = default!;
+
+    protected InlineKeyboardMarkup Keyboard { get; set; } = default!;
     protected UserDto CurrentUser { get; private set; } = default!;
 
     private readonly ActivityPublisher _activityPublisher;
@@ -47,10 +49,10 @@ public abstract class AbstractHandler: IHandler
 
     protected abstract Task ActionsAsync(UserUpdate userData);
 
-    protected virtual IReplyMarkup GetKeyboard()
+    /*protected virtual IReplyMarkup GetKeyboard()
     {
         return Keyboards.GetEmptyKeyboard();
-    }
+    }*/
 
     protected virtual async Task EditPreviousMessage(ChatId chatId)
     {
@@ -62,6 +64,6 @@ public abstract class AbstractHandler: IHandler
 
     protected virtual async Task<Message> SendMessageAsync(long chatId)
     {     
-        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
+        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboard/*GetKeyboard()*/);
     }
 }

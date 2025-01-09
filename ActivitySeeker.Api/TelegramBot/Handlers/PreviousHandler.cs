@@ -55,18 +55,13 @@ public class PreviousHandler: AbstractHandler
     {
         if (PreviousNode is null)
         {
-            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
+            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboards.GetActivityPaginationKeyboard());
         }
 
-        return await _activityPublisher.SendMessageAsync(chatId, PreviousNode.GetActivityDescription().ToString(), PreviousNode.Image, GetKeyboard());
+        return await _activityPublisher.SendMessageAsync(chatId, PreviousNode.GetActivityDescription().ToString(), PreviousNode.Image, Keyboards.GetActivityPaginationKeyboard());
 
     }
     
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return Keyboards.GetActivityPaginationKeyboard();
-    }
-
     protected override async Task EditPreviousMessage(ChatId chatId)
     {
         await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);

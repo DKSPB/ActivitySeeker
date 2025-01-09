@@ -23,7 +23,6 @@ public enum StatesEnum
     PeriodToDate,
     Result,
     Offer,
-    AddOfferDescription,
     SaveOfferDescription,
     SaveOfferDate,
     ConfirmOffer,

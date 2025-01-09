@@ -2,7 +2,6 @@ using System.Text;
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -10,17 +9,11 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class SetDefaultSettingsHandler: AbstractHandler
 {
     private readonly ICityService _cityService;
-    private readonly IUserService _userService;
-    private readonly ActivityPublisher _activityPublisher;
-
-    private InlineKeyboardMarkup _keyboard = Keyboards.GetEmptyKeyboard();
 
     public SetDefaultSettingsHandler(ICityService cityService, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
         :base(userService, activityService, activityPublisher)
     {
         _cityService = cityService;
-        _userService = userService;
-        _activityPublisher = activityPublisher;
     }
 
     protected override async Task ActionsAsync(UserUpdate userData)
@@ -43,7 +36,7 @@ public class SetDefaultSettingsHandler: AbstractHandler
 
         ResponseMessageText = CreateResponseMessage(currentCity);
 
-        _keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
+        Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
 
         CurrentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
     }
@@ -55,10 +48,5 @@ public class SetDefaultSettingsHandler: AbstractHandler
         stringBuilder.AppendLine("Если Ваш город не Москва и Санкт-Петербург, введите его название как текст сообщения.");
         stringBuilder.AppendLine($"Текущий город: {currentCity}.");
         return stringBuilder.ToString();
-    }
-
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return _keyboard;
     }
 }

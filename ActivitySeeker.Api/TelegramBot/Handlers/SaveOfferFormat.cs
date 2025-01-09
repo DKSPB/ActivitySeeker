@@ -1,7 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -15,8 +14,6 @@ public class SaveOfferFormat: AbstractHandler
     private bool _withSkipButton;
     private string _userData = string.Empty;
 
-    private InlineKeyboardMarkup _keyboard;
-    
     public SaveOfferFormat(ILogger<SaveOfferFormat> logger, IUserService userService, 
         IActivityService activityService, ActivityPublisher activityPublisher, ICityService cityService) 
         : base(userService, activityService, activityPublisher)
@@ -40,7 +37,7 @@ public class SaveOfferFormat: AbstractHandler
             CurrentUser.Offer.IsOnline = true;
             CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
             ResponseMessageText = $"Заполни описание события";
-            _keyboard = Keyboards.GetEmptyKeyboard();
+            Keyboard = Keyboards.GetEmptyKeyboard();
         }
         
         else if(_userData.Equals("offline"))
@@ -66,17 +63,12 @@ public class SaveOfferFormat: AbstractHandler
                 ResponseMessageText = $"Выберите город проведения активности" +
                                       $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название как текст сообщения";
             }
-            _keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, _withSkipButton);
+            Keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, _withSkipButton);
         }
         else
         {
             ResponseMessageText = "Выберите формат проведения активности:";
-            _keyboard = Keyboards.GetActivityFormatsKeyboard(false);
+            Keyboard = Keyboards.GetActivityFormatsKeyboard(false);
         }
-    }
-
-    protected override IReplyMarkup GetKeyboard()
-    {
-        return _keyboard;
     }
 }

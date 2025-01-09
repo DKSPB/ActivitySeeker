@@ -96,7 +96,6 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<OfferHandler>();
                 builder.Services.AddScoped<SaveOfferDateHandler>();
                 builder.Services.AddScoped<ConfirmOfferHandler>();
-                builder.Services.AddScoped<AddOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();

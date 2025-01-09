@@ -1,7 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -18,11 +17,7 @@ public class MainMenuHandler: AbstractHandler
     protected override Task ActionsAsync(UserUpdate userUpdate)
     {
         ResponseMessageText = CurrentUser.State.ToString();
+        Keyboard = Keyboards.GetMainMenuKeyboard();
         return Task.CompletedTask;
-    }
-
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return Keyboards.GetMainMenuKeyboard();
     }
 }

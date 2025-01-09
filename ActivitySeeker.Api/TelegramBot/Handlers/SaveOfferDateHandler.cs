@@ -2,25 +2,18 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SaveOfferDate)]
 public class SaveOfferDateHandler : AbstractHandler
 {
-    private readonly IUserService _userService;
-    private readonly ActivityPublisher _activityPublisher;
     private readonly ILogger<SaveOfferDateHandler> _logger;
-
-    private InlineKeyboardMarkup _keyboard = Keyboards.GetEmptyKeyboard();
 
     public SaveOfferDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, 
         ILogger<SaveOfferDateHandler> logger) : base(userService, activityService, activityPublisher)
     {
         _logger = logger;
-        _userService = userService;
-        _activityPublisher = activityPublisher;
     }
 
     protected override Task ActionsAsync(UserUpdate userData)
@@ -58,12 +51,15 @@ public class SaveOfferDateHandler : AbstractHandler
             {
                 ResponseMessageText = $"Дата начала активности должна быть позднее текущей даты." +
                               $"\nВведите дату повторно:";
+                
+                Keyboard = Keyboards.GetEmptyKeyboard();
             }
             else
             {
                 CurrentUser.Offer.StartDate = startActivityDate;
-
-                _keyboard = Keyboards.ConfirmOffer();
+                
+                ResponseMessageText = GetFinishOfferMessage(CurrentUser.Offer);
+                Keyboard = Keyboards.ConfirmOffer();
             }
         }
         else
@@ -71,14 +67,11 @@ public class SaveOfferDateHandler : AbstractHandler
             ResponseMessageText = $"Введёная дата не соответствует формату:" +
                           $"\n(дд.мм.гггг чч:мм)" +
                           $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
+            
+            Keyboard = Keyboards.GetEmptyKeyboard();
         }
 
         return Task.CompletedTask;
-    }
-
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return _keyboard;
     }
 
     private string GetFinishOfferMessage(ActivityDto offer)

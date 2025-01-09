@@ -7,15 +7,9 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.PeriodFromDate)]
 public class UserSetFromDateHandler : AbstractHandler
 {
-    private readonly IUserService _userService;
-    private readonly ActivityPublisher _activityPublisher;
-
     public UserSetFromDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
         :base(userService, activityService, activityPublisher)
-    {
-        _userService = userService;
-        _activityPublisher = activityPublisher;
-    }
+    { }
 
     protected override Task ActionsAsync(UserUpdate userData)
     {

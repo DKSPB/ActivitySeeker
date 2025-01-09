@@ -38,12 +38,13 @@ public class ConfirmOfferHandler : AbstractHandler
             Keyboards.GetEmptyKeyboard());
             
         ResponseMessageText = $"{CurrentUser.State}";
+        Keyboard = Keyboards.GetMainMenuKeyboard();
 
         CurrentUser.Offer = null;
     }
 
-    protected override IReplyMarkup GetKeyboard()
+    /*protected override IReplyMarkup GetKeyboard()
     {
         return Keyboards.GetMainMenuKeyboard();
-    }
+    }*/
 }

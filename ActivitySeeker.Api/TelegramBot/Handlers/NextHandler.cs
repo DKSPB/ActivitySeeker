@@ -3,7 +3,6 @@ using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Domain.Entities;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -54,16 +53,10 @@ public class NextHandler: AbstractHandler
     {
         if (NextNode is null)
         {
-            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, GetKeyboard());
+            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboards.GetActivityPaginationKeyboard());
         }
 
-        return await _activityPublisher.SendMessageAsync(chatId, NextNode.GetActivityDescription().ToString(), NextNode.Image, GetKeyboard());
-
-    }
-    
-    protected override InlineKeyboardMarkup GetKeyboard()
-    {
-        return Keyboards.GetActivityPaginationKeyboard();
+        return await _activityPublisher.SendMessageAsync(chatId, NextNode.GetActivityDescription().ToString(), NextNode.Image, Keyboards.GetActivityPaginationKeyboard());
     }
 
     protected override async Task EditPreviousMessage(ChatId chatId)
