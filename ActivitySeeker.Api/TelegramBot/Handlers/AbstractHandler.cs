@@ -49,11 +49,6 @@ public abstract class AbstractHandler: IHandler
 
     protected abstract Task ActionsAsync(UserUpdate userData);
 
-    /*protected virtual IReplyMarkup GetKeyboard()
-    {
-        return Keyboards.GetEmptyKeyboard();
-    }*/
-
     protected virtual async Task EditPreviousMessage(ChatId chatId)
     {
         await _activityPublisher.EditMessageAsync(
@@ -64,6 +59,6 @@ public abstract class AbstractHandler: IHandler
 
     protected virtual async Task<Message> SendMessageAsync(long chatId)
     {     
-        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboard/*GetKeyboard()*/);
+        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboard);
     }
 }

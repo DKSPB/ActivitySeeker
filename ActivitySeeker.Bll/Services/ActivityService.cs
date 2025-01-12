@@ -40,7 +40,7 @@ namespace ActivitySeeker.Bll.Services
 
             var result = GetActivities(activityRequest)?
                 .OrderBy(x => x.StartDate)
-                .Include(x => x.ActivityType);
+                .Include(x => x.ActivityType).ToList();
 
             if (result == null || !result.Any())
             {
@@ -58,15 +58,7 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
         {
-            var result = _context.Activities
-                .Where(x => x.ActivityTypeId == requestParams.ActivityTypeId || requestParams.ActivityTypeId == null)
-                .Where(x => !requestParams.SearchFrom.HasValue ||
-                            x.StartDate.CompareTo(requestParams.SearchFrom.Value.Date) >= 0)
-                .Where(x => !requestParams.SearchTo.HasValue ||
-                            x.StartDate.CompareTo(requestParams.SearchTo.Value.AddDays(1).Date) < 0)
-                .Where(x => !requestParams.IsPublished.HasValue || x.IsPublished == requestParams.IsPublished)
-                .Where(x => !requestParams.IsOnline.HasValue || x.IsOnline == requestParams.IsOnline)
-                .Where(x => !requestParams.CityId.HasValue || x.CityId == requestParams.CityId);
+            var result = _context.Activities.FromSqlInterpolated($"select * from activity_seeker.get_activities({requestParams.IsOnline}, {requestParams.ActivityTypeId}, {requestParams.SearchFrom}, {requestParams.SearchTo}, {requestParams.IsPublished}, {requestParams.CityId})");
 
             return result;
         }
