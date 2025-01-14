@@ -37,11 +37,7 @@ migrationBuilder.Sql(@"
 	                )
                 select act.id from act;
             end;
-            $BODY$;
-
-            ALTER FUNCTION activity_seeker.get_children_activity_types(uuid)
-                OWNER TO postgres;
-            ");
+            $BODY$;");
 
             migrationBuilder.Sql(@"CREATE OR REPLACE FUNCTION activity_seeker.get_activities(
 	            online boolean,
@@ -89,10 +85,7 @@ migrationBuilder.Sql(@"
 	              end if;
                end;
    
-            $BODY$;
-
-            ALTER FUNCTION activity_seeker.get_activities(boolean, uuid, timestamp without time zone, timestamp without time zone, boolean, integer)
-            OWNER TO postgres;");
+            $BODY$;");
 	        }
 	        catch (Exception e)
 	        {
