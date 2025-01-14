@@ -9,9 +9,11 @@ namespace ActivitySeeker.Domain.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"
+	        try
+	        {
+migrationBuilder.Sql(@"
             CREATE OR REPLACE FUNCTION activity_seeker.get_children_activity_types(
-	            paret_type_id uuid)
+	            parent_type_id uuid)
                 RETURNS TABLE(id uuid) 
                 LANGUAGE 'plpgsql'
                 COST 100
@@ -26,7 +28,7 @@ namespace ActivitySeeker.Domain.Migrations
                 return query
                 with recursive act as (
 	                select act.id from activity_seeker.activity_type as act
-		                where act.id = paret_type_id
+		                where act.id = parent_type_id
 
 	                union all
 
@@ -56,7 +58,7 @@ namespace ActivitySeeker.Domain.Migrations
 
             AS $BODY$
                declare
-                  type_guid uuid;
+                  type_guid record;
                begin
    
                   if (type_id is NULL) then
@@ -77,7 +79,7 @@ namespace ActivitySeeker.Domain.Migrations
 			                  select ac.id, ac.link_description, NULL::bytea, ac.start_date, ac.activity_type_id, ac.is_published, ac.city_id, ac.is_online 
 				                  from activity_seeker.activity as ac 
 					              where 
-					              (ac.activity_type_id = type_guid) and
+					              (ac.activity_type_id = type_guid.id) and
 					              (search_from is NULL or ac.start_date >= search_from) and
 					              (search_to is NULL or ac.start_date <= search_to) and
 					              (published is NULL or ac.is_published = published) and
@@ -91,6 +93,13 @@ namespace ActivitySeeker.Domain.Migrations
 
             ALTER FUNCTION activity_seeker.get_activities(boolean, uuid, timestamp without time zone, timestamp without time zone, boolean, integer)
             OWNER TO postgres;");
+	        }
+	        catch (Exception e)
+	        {
+		        Console.WriteLine(e);
+		        throw;
+	        }
+            
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
