@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
+using ActivitySeeker.Infrastructure.Models.Settings;
 using Microsoft.AspNetCore.Localization;
 
 namespace ActivitySeeker.Api
@@ -37,6 +38,9 @@ namespace ActivitySeeker.Api
 
                 var botConfigurationSection = builder.Configuration.GetSection(BotConfiguration.Configuration);
                 builder.Services.Configure<BotConfiguration>(botConfigurationSection);
+                
+                var settingsSection = builder.Configuration.GetSection(nameof(Settings));
+                builder.Services.Configure<Settings>(settingsSection);
 
                 var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
                 var connection = builder.Configuration.GetConnectionString("ActivitySeekerConnection");
@@ -99,6 +103,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
+                builder.Services.AddScoped<ISettingsService, SettingsService>();
                 
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
@@ -209,26 +214,6 @@ namespace ActivitySeeker.Api
 
         public string TelegramChannel { get; set; } = default!;
     }
-
-    public class Settings
-    {
-        public TelegramBotSettings TelegramBotSettings { get; set; }
-        
-        public VkBotSettings VkBotSettings { get; set; }
-    }
-
-    public class BotSettings
-    {
-        public string MainMenuImageName { get; set; }
-        
-        public string OfferMenuImageName { get; set; }
-    }
-    
-    public class TelegramBotSettings : BotSettings
-    { }
-
-    public class VkBotSettings : BotSettings
-    { }
 }
 
 

@@ -8,12 +8,19 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ActivitySeeker.Domain\ActivitySeeker.Domain.csproj" />
+      <ProjectReference Include="..\ActivitySeeker.Infrastructure\ActivitySeeker.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.33" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="ActivitySeeker.Infrastructure">
+        <HintPath>..\ActivitySeeker.Api\bin\Debug\net6.0\ActivitySeeker.Infrastructure.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

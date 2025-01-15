@@ -205,5 +205,24 @@ namespace ActivitySeeker.Api.TelegramBot
 
             return countersButtons;
         }
+
+        public static InlineKeyboardMarkup GetOfferMenuKeyboard()
+        {
+            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
+            {
+                new []
+                {
+                    InlineKeyboardButton.WithCallbackData("Тип активности", "")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Время проведения", "")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Формат проведения", "")
+                }
+            });
+        }
     }
 }
