@@ -1,18 +1,30 @@
-using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Infrastructure.Models.Settings;
 using Microsoft.Extensions.Options;
-using System;
 
-namespace ActivitySeeker.Bll.Services;
+namespace ActivitySeeker.Infrastructure;
 
-public class SettingsService : ISettingsService
+public class FileProvider
 {
+    private readonly Settings _settings;
+    private readonly string _rootImageFolder;
+
+    public FileProvider(IOptions<Settings> optionSettings)
+    {
+        _settings = optionSettings.Value;
+        _rootImageFolder = _settings.RootImageFolder;
+    }
+    
     public async Task UploadImage(string filePath, Stream file)
     {
         await using var stream = new FileStream(filePath, FileMode.Create);
         await file.CopyToAsync(stream);
     }
 
+    public byte[] GetTgMainMenuImage()
+    {
+        var tgMainMenuImageName = _settings.TelegramBotSettings;
+    }
+    
     public async Task<byte[]> GetImage(string path)
     {
         var fileInfo = new FileInfo(path);

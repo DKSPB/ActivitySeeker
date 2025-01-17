@@ -221,6 +221,10 @@ namespace ActivitySeeker.Api.TelegramBot
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Формат проведения", "")
+                },
+                new[]
+                {
+                    InlineKeyboardButton.WithCallbackData("Главное меню", "")
                 }
             });
         }

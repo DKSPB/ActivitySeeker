@@ -11,7 +11,7 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/activity")]
 public class SettingsController : ControllerBase
 {
-    private const string Folder = "/Files/";
+    private const string Folder = "files";
     private readonly IWebHostEnvironment _hostEnvironment;
     private readonly Settings _settings;
     private readonly ISettingsService _settingsService;
@@ -26,19 +26,41 @@ public class SettingsController : ControllerBase
     [HttpPost("upload/tg/main_menu/img")]
     public async Task<IActionResult> UploadMainMenuImage([FromForm] FileUploader fileUploader)
     {
-        var filePath =Path.Combine(_hostEnvironment.WebRootPath, Folder);
-
-        await using var stream = new FileStream(filePath, FileMode.Create);
-        await fileUploader.File.CopyToAsync(stream);
+        if (string.IsNullOrEmpty(fileUploader.File.FileName))
+        {
+            return BadRequest();
+        }
         
+        var fileName = _settings.TelegramBotSettings.MainMenuImageName;
+        var filePath = Path.Combine(_hostEnvironment.WebRootPath, Folder, fileName);
+
+        await _settingsService.UploadImage(filePath, fileUploader.File.OpenReadStream());
+
         return Ok();
     }
 
-    /*[HttpPost]
-    public IActionResult UploadOfferMenuImage([FromForm] FileUploader fileUploader)
+    [HttpGet("get/tg/main_menu/img")]
+    public async Task<IActionResult> GetMainMenuImage()
     {
+        var path = Path.Combine(_hostEnvironment.WebRootPath, Folder, _settings.TelegramBotSettings.MainMenuImageName);
+        return Ok(await _settingsService.GetImage(path));
+    }
+
+    [HttpPost("upload/tg/offer_menu/img")]
+    public async Task<IActionResult> UploadOfferMenuImage([FromForm] FileUploader fileUploader)
+    {
+        if (string.IsNullOrEmpty(fileUploader.File.FileName))
+        {
+            return BadRequest();
+        }
+        
+        var fileName = _settings.TelegramBotSettings.OfferMenuImageName;
+        var filePath = Path.Combine(_hostEnvironment.WebRootPath, Folder, fileName);
+
+        await _settingsService.UploadImage(filePath, fileUploader.File.OpenReadStream());
+
         return Ok();
-    }*/
+    }
     
     public class FileUploader
     {

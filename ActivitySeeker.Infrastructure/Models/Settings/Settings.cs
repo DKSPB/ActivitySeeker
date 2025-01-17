@@ -2,6 +2,7 @@ namespace ActivitySeeker.Infrastructure.Models.Settings;
 
 public class Settings
 {
+    public string? RootImageFolder { get; set; }
     public TelegramBotSettings? TelegramBotSettings { get; set; }
         
     public VkBotSettings? VkBotSettings { get; set; }
