@@ -1,5 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace ActivitySeeker.Domain.Entities;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum StatesEnum
 {
     Start,

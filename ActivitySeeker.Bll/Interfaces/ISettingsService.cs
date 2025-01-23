@@ -6,5 +6,5 @@ public interface ISettingsService
 
     Task<byte[]> GetImage(string path);
 
-    string CombinePathToFile(string webRootPath, string fileName);
+    string CombinePathToFile(string webRootPath, string rootImageFolder, string fileName);
 }

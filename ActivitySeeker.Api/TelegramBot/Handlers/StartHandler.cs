@@ -1,7 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using ActivitySeeker.Infrastructure.Models.Settings;
 using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -9,7 +8,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.Start)]
 public class StartHandler : AbstractHandler
 {
-    private readonly Settings _settings;
+    private readonly BotConfiguration _botConfig;
     private readonly ISettingsService _settingsService;
     private readonly string _webRootPath;
 
@@ -25,14 +24,14 @@ public class StartHandler : AbstractHandler
         IUserService userService, 
         IActivityService activityService, 
         ISettingsService settingsService, 
-        IOptions<Settings> optionsSettings,
+        IOptions<BotConfiguration> botConfigOptions,
         ActivityPublisher activityPublisher, 
         IWebHostEnvironment webHostEnvironment )
         : base (userService, activityService, activityPublisher)
     {
         _cityService = cityService;
         _settingsService = settingsService;
-        _settings = optionsSettings.Value;
+        _botConfig = botConfigOptions.Value;
         _webRootPath = webHostEnvironment.WebRootPath;
     }
 
@@ -41,10 +40,12 @@ public class StartHandler : AbstractHandler
         if (CurrentUser.CityId is not null)
         {
             ResponseMessageText = CurrentUser.State.ToString();
-            ResponseImage = await GetImage();
-            Keyboard = Keyboards.GetMainMenuKeyboard();
             
-            CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+            Keyboard = Keyboards.GetMainMenuKeyboard();
+
+            var nextState = StatesEnum.MainMenu;
+            ResponseImage = await GetImage(nextState);
+            CurrentUser.State.StateNumber = nextState;
         }
         else
         {
@@ -58,10 +59,10 @@ public class StartHandler : AbstractHandler
         }
     }
 
-    private async Task<byte[]> GetImage()
+    private async Task<byte[]> GetImage(StatesEnum state)
     {
-        var fileName = _settings.TelegramBotSettings.MainMenuImageName;
-        var filePath = _settingsService.CombinePathToFile(_webRootPath, fileName);
+        var fileName = state;
+        var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName.ToString());
 
         return await _settingsService.GetImage(filePath);
     }

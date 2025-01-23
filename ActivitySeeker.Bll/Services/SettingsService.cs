@@ -1,17 +1,10 @@
 using ActivitySeeker.Bll.Interfaces;
 using Microsoft.Extensions.Options;
-using ActivitySeeker.Infrastructure.Models.Settings;
 
 namespace ActivitySeeker.Bll.Services;
 
 public class SettingsService : ISettingsService
 {
-    private readonly Settings _settings;
-    public SettingsService(IOptions<Settings> _settingsOtions)
-    {
-        _settings = _settingsOtions.Value;
-    }
-
     /// <summary>
     /// Загрузка файла по заданному пути
     /// </summary>
@@ -45,9 +38,8 @@ public class SettingsService : ISettingsService
     /// </summary>
     /// <param name="webRootPath">Переменная среды окружения, хронящая в себе путь к проекту</param>
     /// <returns></returns>
-    public string CombinePathToFile(string webRootPath, string fileName)
+    public string CombinePathToFile(string webRootPath, string rootImageFolder, string fileName)
     {
-        var filesFoler = _settings.RootImageFolder;
-        return Path.Combine(webRootPath, filesFoler, fileName);
+        return Path.Combine(webRootPath, rootImageFolder, fileName);
     }
 }

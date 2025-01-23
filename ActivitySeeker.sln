@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Api", "Activ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Bll", "ActivitySeeker.Bll\ActivitySeeker.Bll.csproj", "{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivitySeeker.Infrastructure", "ActivitySeeker.Infrastructure\ActivitySeeker.Infrastructure.csproj", "{C13D430D-A2F8-4703-9766-8C6D4F898D4C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C13D430D-A2F8-4703-9766-8C6D4F898D4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C13D430D-A2F8-4703-9766-8C6D4F898D4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C13D430D-A2F8-4703-9766-8C6D4F898D4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C13D430D-A2F8-4703-9766-8C6D4F898D4C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

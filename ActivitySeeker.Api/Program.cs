@@ -17,8 +17,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
-using ActivitySeeker.Infrastructure.Models.Settings;
 using Microsoft.AspNetCore.Localization;
+using Newtonsoft.Json.Converters;
 
 namespace ActivitySeeker.Api
 {
@@ -36,11 +36,8 @@ namespace ActivitySeeker.Api
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
 
-                var botConfigurationSection = builder.Configuration.GetSection(BotConfiguration.Configuration);
+                var botConfigurationSection = builder.Configuration.GetSection(nameof(BotConfiguration));
                 builder.Services.Configure<BotConfiguration>(botConfigurationSection);
-                
-                var settingsSection = builder.Configuration.GetSection(nameof(Settings));
-                builder.Services.Configure<Settings>(settingsSection);
 
                 var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
                 var connection = builder.Configuration.GetConnectionString("ActivitySeekerConnection");
@@ -117,7 +114,8 @@ namespace ActivitySeeker.Api
 
                 #region serialize settings
 
-                builder.Services.AddControllers().AddNewtonsoftJson();
+                builder.Services.AddControllers().AddNewtonsoftJson(options =>
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
                 #endregion
 
@@ -205,7 +203,6 @@ namespace ActivitySeeker.Api
     
     public class BotConfiguration
     {
-        public static readonly string Configuration = "BotConfiguration";
         public string BotToken { get; set; } = default!;
 
         public string WebhookUrl { get; set; } = default!;
@@ -213,6 +210,8 @@ namespace ActivitySeeker.Api
         public string? PathToCertificate { get; set; }
 
         public string TelegramChannel { get; set; } = default!;
+
+        public string RootImageFolder { get; set; } = default!;
     }
 }
 
