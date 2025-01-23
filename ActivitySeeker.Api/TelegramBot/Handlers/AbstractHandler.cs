@@ -6,12 +6,12 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-public abstract class AbstractHandler: IHandler
+public abstract class AbstractHandler : IHandler
 {
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
     protected string ResponseMessageText { get; set; } = default!;
-
+    protected byte[]? ResponseImage { get; set; }
     protected InlineKeyboardMarkup Keyboard { get; set; } = default!;
     protected UserDto CurrentUser { get; private set; } = default!;
 
@@ -59,6 +59,6 @@ public abstract class AbstractHandler: IHandler
 
     protected virtual async Task<Message> SendMessageAsync(long chatId)
     {     
-        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboard);
+        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, ResponseImage, Keyboard);
     }
 }

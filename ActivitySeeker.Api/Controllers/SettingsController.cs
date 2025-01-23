@@ -11,59 +11,67 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/activity")]
 public class SettingsController : ControllerBase
 {
-    private const string Folder = "files";
-    private readonly IWebHostEnvironment _hostEnvironment;
+    private readonly string _webRootPath;
     private readonly Settings _settings;
     private readonly ISettingsService _settingsService;
    
     public SettingsController(IWebHostEnvironment hostEnvironment, IOptions<Settings> settingsOption, ISettingsService settingsService)
     {
-        _hostEnvironment = hostEnvironment;
+        _webRootPath = hostEnvironment.WebRootPath;
         _settingsService = settingsService;
         _settings = settingsOption.Value;
     }
 
     [HttpPost("upload/tg/main_menu/img")]
-    public async Task<IActionResult> UploadMainMenuImage([FromForm] FileUploader fileUploader)
+    public async Task<IActionResult> UploadTgMainMenuImage([FromForm] FileUploader fileUploader)
     {
         if (string.IsNullOrEmpty(fileUploader.File.FileName))
         {
             return BadRequest();
         }
-        
-        var fileName = _settings.TelegramBotSettings.MainMenuImageName;
-        var filePath = Path.Combine(_hostEnvironment.WebRootPath, Folder, fileName);
 
-        await _settingsService.UploadImage(filePath, fileUploader.File.OpenReadStream());
+        var fileName = _settings.TelegramBotSettings.MainMenuImageName;
+        var path = _settingsService.CombinePathToFile(_webRootPath, fileName);
+        await _settingsService.UploadImage(path, fileUploader.File.OpenReadStream());
 
         return Ok();
     }
 
     [HttpGet("get/tg/main_menu/img")]
-    public async Task<IActionResult> GetMainMenuImage()
+    public async Task<IActionResult> GetTgMainMenuImage()
     {
-        var path = Path.Combine(_hostEnvironment.WebRootPath, Folder, _settings.TelegramBotSettings.MainMenuImageName);
+        var fileName = _settings.TelegramBotSettings.MainMenuImageName;
+        var path = _settingsService.CombinePathToFile(_webRootPath, fileName);
+
         return Ok(await _settingsService.GetImage(path));
     }
 
     [HttpPost("upload/tg/offer_menu/img")]
-    public async Task<IActionResult> UploadOfferMenuImage([FromForm] FileUploader fileUploader)
+    public async Task<IActionResult> UploadTgOfferMenuImage([FromForm] FileUploader fileUploader)
     {
         if (string.IsNullOrEmpty(fileUploader.File.FileName))
         {
             return BadRequest();
         }
-        
-        var fileName = _settings.TelegramBotSettings.OfferMenuImageName;
-        var filePath = Path.Combine(_hostEnvironment.WebRootPath, Folder, fileName);
 
-        await _settingsService.UploadImage(filePath, fileUploader.File.OpenReadStream());
+        var fileName = _settings.TelegramBotSettings.OfferMenuImageName;
+        var path = _settingsService.CombinePathToFile(_webRootPath, fileName);
+        await _settingsService.UploadImage(path, fileUploader.File.OpenReadStream());
 
         return Ok();
     }
-    
+
+    [HttpGet("get/tg/offer_menu/img")]
+    public async Task<IActionResult> GetTgOfferMenuImage()
+    {
+        var fileName = _settings.TelegramBotSettings.OfferMenuImageName;
+        var path = _settingsService.CombinePathToFile(_webRootPath, fileName);
+
+        return Ok(await _settingsService.GetImage(path));
+    }
+
     public class FileUploader
     {
-        public IFormFile File { get; set; }
+        public IFormFile File { get; set; } = default!;
     }
 }
