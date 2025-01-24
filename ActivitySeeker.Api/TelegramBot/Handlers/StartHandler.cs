@@ -10,6 +10,7 @@ public class StartHandler : AbstractHandler
 {
     private readonly BotConfiguration _botConfig;
     private readonly ISettingsService _settingsService;
+    private readonly IWebHostEnvironment _hostEnvironment;
     private readonly string _webRootPath;
 
     private const string MessageText = $"Перед началом использования бота выберите Ваш Город." +
@@ -32,6 +33,7 @@ public class StartHandler : AbstractHandler
         _cityService = cityService;
         _settingsService = settingsService;
         _botConfig = botConfigOptions.Value;
+        _hostEnvironment = webHostEnvironment;
         _webRootPath = webHostEnvironment.WebRootPath;
     }
 

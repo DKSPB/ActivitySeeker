@@ -59,7 +59,6 @@ public class OfferHandler : AbstractHandler
                 }
                 
             }
-            
         }
     }
     private void CreateOfferIfNotExists(Guid activityTypeId)

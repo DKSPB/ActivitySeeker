@@ -1,7 +1,9 @@
 ﻿using ActivitySeeker.Bll.Models;
+using Newtonsoft.Json;
 
 namespace ActivitySeeker.Api.Models
 {
+    [JsonObject]
     public class NewActivityType
     {
         public Guid? Id { get; set; }

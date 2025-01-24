@@ -1,6 +1,4 @@
-﻿using ActivitySeeker.Bll.Models;
-
-namespace ActivitySeeker.Api.Models
+﻿namespace ActivitySeeker.Api.Models
 {
     public class UserUpdate
     {
@@ -15,6 +13,5 @@ namespace ActivitySeeker.Api.Models
         public string? TelegramUsername { get; init; }
 
         public string Data { get; init; } = string.Empty;
-        
     }
 }

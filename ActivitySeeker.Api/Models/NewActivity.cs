@@ -1,10 +1,11 @@
 using ActivitySeeker.Bll.Models;
 using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace ActivitySeeker.Api.Models;
 
+[JsonObject]
 public class NewActivity
 {
     [SwaggerSchema(ReadOnly = true)]

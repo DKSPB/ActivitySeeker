@@ -11,15 +11,15 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/activity")]
 public class SettingsController : ControllerBase
 {
-    private readonly string _webRootPath;
     private readonly BotConfiguration _botConfig;
     private readonly ISettingsService _settingsService;
+    private readonly string _webRootPath;
    
     public SettingsController(IWebHostEnvironment hostEnvironment, IOptions<BotConfiguration> botConfigOptions, ISettingsService settingsService)
     {
-        _webRootPath = hostEnvironment.WebRootPath;
         _settingsService = settingsService;
         _botConfig = botConfigOptions.Value;
+        _webRootPath = hostEnvironment.WebRootPath;
     }
 
     [HttpPost("upload/state/img")]
@@ -48,7 +48,7 @@ public class SettingsController : ControllerBase
 
     public class FileUploader
     {
-        public StatesEnum State { get; set; }
+        public string State { get; set; }
         public IFormFile File { get; set; } = default!;
     }
 }
