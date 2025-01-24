@@ -60,7 +60,7 @@ public class StartHandler : AbstractHandler
         }
     }
 
-    private async Task<byte[]> GetImage(StatesEnum state)
+    private async Task<byte[]?> GetImage(StatesEnum state)
     {
         var fileName = state;
         var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName.ToString());

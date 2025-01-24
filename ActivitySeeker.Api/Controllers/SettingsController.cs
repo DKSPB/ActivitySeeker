@@ -48,7 +48,7 @@ public class SettingsController : ControllerBase
 
     public class FileUploader
     {
-        public string State { get; set; }
+        public StatesEnum State { get; set; }
         public IFormFile File { get; set; } = default!;
     }
 }

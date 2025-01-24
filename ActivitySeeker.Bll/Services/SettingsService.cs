@@ -11,10 +11,15 @@ public class SettingsService : ISettingsService
         await file.CopyToAsync(stream);
     }
     
-    public async Task<byte[]> GetImage(string path)
+    public async Task<byte[]?> GetImage(string path)
     {
         var fileInfo = new FileInfo(path);
 
+        if (!fileInfo.Exists)
+        {
+            return null;
+        }
+        
         var data = new byte[fileInfo.Length];
 
         await using var fileStream = fileInfo.OpenRead();
