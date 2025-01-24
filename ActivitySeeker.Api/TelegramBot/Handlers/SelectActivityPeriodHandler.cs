@@ -15,8 +15,8 @@ public class SelectActivityPeriodHandler : AbstractHandler
     {
         CurrentUser.State.StateNumber = StatesEnum.ActivityPeriodChapter;
         
-        ResponseMessageText = "Выбери период проведения активности:";
-        Keyboard = Keyboards.GetPeriodActivityKeyboard();
+        Response.Text = "Выбери период проведения активности:";
+        Response.Keyboard = Keyboards.GetPeriodActivityKeyboard();
 
         return Task.CompletedTask;
     }

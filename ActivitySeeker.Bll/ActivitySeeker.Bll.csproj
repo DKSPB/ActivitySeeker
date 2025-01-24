@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ActivitySeeker.Domain\ActivitySeeker.Domain.csproj" />
-      <ProjectReference Include="..\ActivitySeeker.Infrastructure\ActivitySeeker.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

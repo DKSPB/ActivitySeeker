@@ -1,4 +1,5 @@
-﻿using Telegram.Bot.Types.ReplyMarkups;
+﻿using ActivitySeeker.Api.TelegramBot;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.Models
 {
@@ -8,6 +9,6 @@ namespace ActivitySeeker.Api.Models
 
         public byte[]? Image { get; set; }
 
-        public InlineKeyboardMarkup? KeyboardMarkup { get; set; }
+        public InlineKeyboardMarkup? Keyboard { get; set; } = Keyboards.GetEmptyKeyboard();
     }
 }

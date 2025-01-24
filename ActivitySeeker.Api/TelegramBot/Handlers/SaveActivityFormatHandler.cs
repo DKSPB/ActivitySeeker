@@ -19,16 +19,16 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                CurrentUser.State.ActivityFormat = true;
                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                
-               ResponseMessageText = CurrentUser.State.ToString();
-               Keyboard = Keyboards.GetMainMenuKeyboard();
+               Response.Text = CurrentUser.State.ToString();
+               Response.Keyboard = Keyboards.GetMainMenuKeyboard();
            }
            else if (userData.Data.Equals("offline"))
            {
                CurrentUser.State.ActivityFormat = false;
                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                
-               ResponseMessageText = CurrentUser.State.ToString();
-               Keyboard = Keyboards.GetMainMenuKeyboard();
+               Response.Text = CurrentUser.State.ToString();
+               Response.Keyboard = Keyboards.GetMainMenuKeyboard();
            }
 
            else if (userData.Data.Equals("any"))
@@ -36,13 +36,13 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                CurrentUser.State.ActivityFormat = null; 
                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
                
-               ResponseMessageText = CurrentUser.State.ToString();
-               Keyboard = Keyboards.GetMainMenuKeyboard();
+               Response.Text = CurrentUser.State.ToString();
+               Response.Keyboard = Keyboards.GetMainMenuKeyboard();
            }
            else
            {
-               ResponseMessageText = "Выберите формат проведения активности:";
-               Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
+               Response.Text = "Выберите формат проведения активности:";
+               Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
            }
            return Task.CompletedTask;
         }

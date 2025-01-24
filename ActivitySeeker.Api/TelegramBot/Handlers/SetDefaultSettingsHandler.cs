@@ -34,9 +34,8 @@ public class SetDefaultSettingsHandler: AbstractHandler
             }
         }
 
-        ResponseMessageText = CreateResponseMessage(currentCity);
-
-        Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
+        Response.Text = CreateResponseMessage(currentCity);
+        Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
 
         CurrentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
     }

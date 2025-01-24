@@ -26,8 +26,8 @@ public class SelectActivityTypeHandler : AbstractHandler
         var activityTypes = GetRootActivityTypes().Result;
         activityTypes.Insert(0, new ActivityTypeDto{Id = Guid.Empty, TypeName = "Все виды активностей"});
         
-        ResponseMessageText = "Выбери тип активности:";
-        Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
+        Response.Text = "Выбери тип активности:";
+        Response.Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
         
         return Task.CompletedTask;
     }

@@ -20,7 +20,7 @@ public class UserSetFromDateHandler : AbstractHandler
 
         if (result)
         {
-            ResponseMessageText = $"Введите дату, по которую хотите искать активности в форматах:" +
+            Response.Text = $"Введите дату, по которую хотите искать активности в форматах:" +
                       $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
                       $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
@@ -29,7 +29,7 @@ public class UserSetFromDateHandler : AbstractHandler
         }
         else
         {
-            ResponseMessageText = $"Введёная дата не соответствует форматам:" +
+            Response.Text = $"Введёная дата не соответствует форматам:" +
               $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
               $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
         }

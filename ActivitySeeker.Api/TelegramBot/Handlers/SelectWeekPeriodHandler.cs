@@ -17,8 +17,8 @@ public class SelectWeekPeriodHandler: AbstractHandler
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(7).Date;
         
-        ResponseMessageText = CurrentUser.State.ToString();
-        Keyboard = Keyboards.GetMainMenuKeyboard();
+        Response.Text = CurrentUser.State.ToString();
+        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
         
         return Task.CompletedTask;
     }

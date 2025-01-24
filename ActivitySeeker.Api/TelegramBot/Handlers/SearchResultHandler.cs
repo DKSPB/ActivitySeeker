@@ -11,13 +11,9 @@ public class SearchResultHandler : AbstractHandler
 {
     private ActivityTelegramDto? CurrentActivity { get; set; }
 
-    private readonly ActivityPublisher _activityPublisher;
-
     public SearchResultHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
         : base(userService, activityService, activityPublisher)
-    {
-        _activityPublisher = activityPublisher;
-    }
+    { }
 
     protected override async Task ActionsAsync(UserUpdate userData)
     {
@@ -25,25 +21,18 @@ public class SearchResultHandler : AbstractHandler
 
         if (activities.Count > 0)
         {
-            ResponseMessageText = $"Найдено активностей: {activities.Count}";
             CurrentActivity = activities.First();
             CurrentActivity.Image = await ActivityService.GetImage(CurrentActivity.Id);
             CurrentActivity.Selected = true;
             CurrentUser.ActivityResult = activities;
+
+            Response.Text = CurrentActivity.GetActivityDescription().ToString();
+            Response.Keyboard = Keyboards.GetToMainMenuKeyboard();
         }
         else
         {
-            ResponseMessageText = "По вашему запросу активностей не найдено";
+            Response.Text = "По вашему запросу активностей не найдено";
+            Response.Keyboard = Keyboards.GetToMainMenuKeyboard();
         }
-    }
-
-    protected override async Task<Message> SendMessageAsync(long chatId)
-    {
-        if (CurrentActivity is null)
-        {
-            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboards.GetToMainMenuKeyboard());
-        }
-
-        return await _activityPublisher.SendMessageAsync(chatId, CurrentActivity.GetActivityDescription().ToString(), CurrentActivity.Image, Keyboards.GetActivityPaginationKeyboard());
     }
 }

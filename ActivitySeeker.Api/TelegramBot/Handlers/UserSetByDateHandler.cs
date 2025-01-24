@@ -24,26 +24,24 @@ public class UserSetByDateHandler: AbstractHandler
 
             if (compareResult <= 0)
             {
-                ResponseMessageText = $"Дата окончания поиска должа быть позднее, чем дата начала поиска";
-
-                Keyboard = Keyboards.GetEmptyKeyboard();
+                Response.Text = $"Дата окончания поиска должа быть позднее, чем дата начала поиска";
+                Response.Keyboard = Keyboards.GetEmptyKeyboard();
             }
             else
             {
                 CurrentUser.State.SearchTo = byDate;
 
-                ResponseMessageText = CurrentUser.State.ToString();
-
-                Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Text = CurrentUser.State.ToString();
+                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
             }
         }
         else
         {
-            ResponseMessageText = $"Введёная дата не соответствует форматам:" +
+            Response.Text = $"Введёная дата не соответствует форматам:" +
                           $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
                           $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
-            Keyboard = Keyboards.GetEmptyKeyboard();
+            Response.Keyboard = Keyboards.GetEmptyKeyboard();
         }
 
         return Task.CompletedTask;

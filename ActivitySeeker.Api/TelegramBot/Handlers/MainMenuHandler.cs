@@ -9,7 +9,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class MainMenuHandler: AbstractHandler
 {
     private readonly string _webRootPath;
-    private readonly ActivityPublisher _activityPublisher;
     private readonly BotConfiguration _botConfig;
     private readonly ISettingsService _settingsService;
     public MainMenuHandler (
@@ -23,14 +22,13 @@ public class MainMenuHandler: AbstractHandler
     {
         _webRootPath = webHostEnvironment.WebRootPath;
         _settingsService = settingsService;
-        _activityPublisher = activityPublisher;
         _botConfig = botConfigOptions.Value;
     }
     protected override async Task ActionsAsync(UserUpdate userUpdate)
     {
-        ResponseMessageText = CurrentUser.State.ToString();
-        ResponseImage = await GetImage(CurrentUser.State.StateNumber);
-        Keyboard = Keyboards.GetMainMenuKeyboard();
+        Response.Text = CurrentUser.State.ToString();
+        Response.Image = await GetImage(CurrentUser.State.StateNumber);
+        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
     }
 
     private async Task<byte[]> GetImage(StatesEnum state)

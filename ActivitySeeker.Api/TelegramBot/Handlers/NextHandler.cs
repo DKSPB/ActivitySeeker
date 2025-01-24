@@ -9,8 +9,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 [HandlerState(StatesEnum.NextActivity)]
 public class NextHandler: AbstractHandler
 {
-    private const string MessageText = "Найденные активности:";
-    
     private ActivityTelegramDto? NextNode { get; set; }
 
     private readonly ActivityPublisher _activityPublisher;
@@ -19,7 +17,6 @@ public class NextHandler: AbstractHandler
         base(userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
-        ResponseMessageText = MessageText;
     }
 
     protected override async Task ActionsAsync(UserUpdate userData)
@@ -35,28 +32,24 @@ public class NextHandler: AbstractHandler
                 currentActivity.Selected = false;
                 NextNode.Image = await ActivityService.GetImage(NextNode.Id);
                 NextNode.Selected = true;
+
+                Response.Text = NextNode.GetActivityDescription().ToString();
+                Response.Image = NextNode.Image;
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
             }
             else
             {
                 NextNode = currentActivity;
                 NextNode.Image = await ActivityService.GetImage(NextNode.Id);
+                
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
             }
         }
         else
         {
             const string activitiesNotFoundMessage = "По вашему запросу активностей не найдено";
-            ResponseMessageText = string.Concat(ResponseMessageText, $"\n {activitiesNotFoundMessage}");
+            Response.Text = activitiesNotFoundMessage;
         }
-    }
-
-    protected override async Task<Message> SendMessageAsync(long chatId)
-    {
-        if (NextNode is null)
-        {
-            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboards.GetActivityPaginationKeyboard());
-        }
-
-        return await _activityPublisher.SendMessageAsync(chatId, NextNode.GetActivityDescription().ToString(), NextNode.Image, Keyboards.GetActivityPaginationKeyboard());
     }
 
     protected override async Task EditPreviousMessage(ChatId chatId)

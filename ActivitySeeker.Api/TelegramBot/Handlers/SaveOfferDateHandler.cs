@@ -49,26 +49,26 @@ public class SaveOfferDateHandler : AbstractHandler
 
             if (result < 1)
             {
-                ResponseMessageText = $"Дата начала активности должна быть позднее текущей даты." +
+                Response.Text = $"Дата начала активности должна быть позднее текущей даты." +
                               $"\nВведите дату повторно:";
                 
-                Keyboard = Keyboards.GetEmptyKeyboard();
+                Response.Keyboard = Keyboards.GetEmptyKeyboard();
             }
             else
             {
                 CurrentUser.Offer.StartDate = startActivityDate;
                 
-                ResponseMessageText = GetFinishOfferMessage(CurrentUser.Offer);
-                Keyboard = Keyboards.ConfirmOffer();
+                Response.Text = GetFinishOfferMessage(CurrentUser.Offer);
+                Response.Keyboard = Keyboards.ConfirmOffer();
             }
         }
         else
         {
-            ResponseMessageText = $"Введёная дата не соответствует формату:" +
+            Response.Text = $"Введёная дата не соответствует формату:" +
                           $"\n(дд.мм.гггг чч:мм)" +
                           $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
             
-            Keyboard = Keyboards.GetEmptyKeyboard();
+            Response.Keyboard = Keyboards.GetEmptyKeyboard();
         }
 
         return Task.CompletedTask;

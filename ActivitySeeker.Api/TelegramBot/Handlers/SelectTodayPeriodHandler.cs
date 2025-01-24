@@ -1,7 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -17,8 +16,8 @@ public class SelectTodayPeriodHandler: AbstractHandler
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(1).Date;
         
-        ResponseMessageText = CurrentUser.State.ToString();
-        Keyboard = Keyboards.GetMainMenuKeyboard();
+        Response.Text = CurrentUser.State.ToString();
+        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
 
         return Task.CompletedTask;
     }

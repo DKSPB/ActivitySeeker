@@ -39,12 +39,11 @@ public class StartHandler : AbstractHandler
     {
         if (CurrentUser.CityId is not null)
         {
-            ResponseMessageText = CurrentUser.State.ToString();
-            
-            Keyboard = Keyboards.GetMainMenuKeyboard();
+            Response.Text = CurrentUser.State.ToString();
+            Response.Keyboard = Keyboards.GetMainMenuKeyboard();
 
             var nextState = StatesEnum.MainMenu;
-            ResponseImage = await GetImage(nextState);
+            Response.Image = await GetImage(nextState);
             CurrentUser.State.StateNumber = nextState;
         }
         else
@@ -52,8 +51,8 @@ public class StartHandler : AbstractHandler
             var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
             var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
-            ResponseMessageText = MessageText;
-            Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
+            Response.Text = MessageText;
+            Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
 
             CurrentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
         }

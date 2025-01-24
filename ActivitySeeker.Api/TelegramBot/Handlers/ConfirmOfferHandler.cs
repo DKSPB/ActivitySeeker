@@ -13,7 +13,8 @@ public class ConfirmOfferHandler : AbstractHandler
 {
     private readonly NotificationAdminHub _adminHub;
     private readonly ActivityPublisher _activityPublisher;
-    public ConfirmOfferHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, NotificationAdminHub adminHub)
+    public ConfirmOfferHandler(IUserService userService, IActivityService activityService, 
+        ActivityPublisher activityPublisher, NotificationAdminHub adminHub)
         : base(userService, activityService, activityPublisher)
     {
         _adminHub = adminHub;
@@ -31,20 +32,17 @@ public class ConfirmOfferHandler : AbstractHandler
 
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
 
-        await _activityPublisher.SendMessageAsync(
-            userData.ChatId,
-            "Поздравляю! Твоя активность создана. Она будет опубликована после проверки", 
-            null, 
-            Keyboards.GetEmptyKeyboard());
+        var offerConfirmResponse = new ResponseMessage
+        {
+            Text = "Поздравляю! Твоя активность создана. Она будет опубликована после проверки",
+            Keyboard = Keyboards.GetEmptyKeyboard()
+        };
+        
+        await _activityPublisher.SendMessageAsync(userData.ChatId, offerConfirmResponse);
             
-        ResponseMessageText = $"{CurrentUser.State}";
-        Keyboard = Keyboards.GetMainMenuKeyboard();
+        Response.Text = $"{CurrentUser.State}";
+        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
 
         CurrentUser.Offer = null;
     }
-
-    /*protected override IReplyMarkup GetKeyboard()
-    {
-        return Keyboards.GetMainMenuKeyboard();
-    }*/
 }

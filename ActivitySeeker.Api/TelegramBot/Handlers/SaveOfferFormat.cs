@@ -36,8 +36,8 @@ public class SaveOfferFormat: AbstractHandler
         {
             CurrentUser.Offer.IsOnline = true;
             CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
-            ResponseMessageText = $"Заполни описание события";
-            Keyboard = Keyboards.GetEmptyKeyboard();
+            Response.Text = $"Заполни описание события";
+            Response.Keyboard = Keyboards.GetEmptyKeyboard();
         }
         
         else if(_userData.Equals("offline"))
@@ -51,7 +51,7 @@ public class SaveOfferFormat: AbstractHandler
             if (CurrentUser.CityId is not null)
             {
                 _withSkipButton = true;
-                ResponseMessageText = $"Выберите город проведения активности" +
+                Response.Text = $"Выберите город проведения активности" +
                                       $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название как текст сообщения" +
                                       $"\nНажмите кнопку \"Пропустить\", что бы оставить стандартные настройки города" +
                                       $"\nВаш город: {(await _cityService.GetById(CurrentUser.CityId.Value))?.Name}";
@@ -60,15 +60,15 @@ public class SaveOfferFormat: AbstractHandler
             {
                 _withSkipButton = false;
 
-                ResponseMessageText = $"Выберите город проведения активности" +
+                Response.Text = $"Выберите город проведения активности" +
                                       $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название как текст сообщения";
             }
-            Keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, _withSkipButton);
+            Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, _withSkipButton);
         }
         else
         {
-            ResponseMessageText = "Выберите формат проведения активности:";
-            Keyboard = Keyboards.GetActivityFormatsKeyboard(false);
+            Response.Text = "Выберите формат проведения активности:";
+            Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(false);
         }
     }
 }

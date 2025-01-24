@@ -10,9 +10,7 @@ public abstract class AbstractHandler : IHandler
 {
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
-    protected string ResponseMessageText { get; set; } = default!;
-    protected byte[]? ResponseImage { get; set; }
-    protected InlineKeyboardMarkup Keyboard { get; set; } = default!;
+    protected ResponseMessage Response { get; set; } = new();
     protected UserDto CurrentUser { get; private set; } = default!;
 
     private readonly ActivityPublisher _activityPublisher;
@@ -59,6 +57,6 @@ public abstract class AbstractHandler : IHandler
 
     protected virtual async Task<Message> SendMessageAsync(long chatId)
     {     
-        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, ResponseImage, Keyboard);
+        return await _activityPublisher.SendMessageAsync(chatId, Response);
     }
 }

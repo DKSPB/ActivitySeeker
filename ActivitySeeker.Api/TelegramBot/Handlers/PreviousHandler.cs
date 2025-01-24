@@ -3,16 +3,12 @@ using Telegram.Bot.Types;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types.ReplyMarkups;
-
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.PreviousActivity)]
 public class PreviousHandler: AbstractHandler
 {
-    private const string MessageText = "Найденные активности:";
-    
     private ActivityTelegramDto? PreviousNode { get; set; }
 
     private readonly ActivityPublisher _activityPublisher;
@@ -21,7 +17,6 @@ public class PreviousHandler: AbstractHandler
         base(userService, activityService, activityPublisher)
     {
         _activityPublisher = activityPublisher;
-        ResponseMessageText = MessageText;
     }
 
     protected override async Task ActionsAsync(UserUpdate userData)
@@ -37,21 +32,29 @@ public class PreviousHandler: AbstractHandler
                 currentActivity.Selected = false;
                 PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
                 PreviousNode.Selected = true;
+
+                Response.Text = PreviousNode.GetActivityDescription().ToString();
+                Response.Image = PreviousNode.Image;
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
             }
             else
             {
                 PreviousNode = currentActivity;
                 PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
+                
+                const string messageText = "Найденные активности:";
+                Response.Text = messageText;
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
             }
         }
         else
         {
             const string activitiesNotFoundMessage = "По вашему запросу активностей не найдено";
-            ResponseMessageText = string.Concat(ResponseMessageText, $"\n {activitiesNotFoundMessage}");
+            Response.Text = activitiesNotFoundMessage;
         }
     }
 
-    protected override async Task<Message> SendMessageAsync(long chatId)
+    /*protected override async Task<Message> SendMessageAsync(long chatId)
     {
         if (PreviousNode is null)
         {
@@ -60,7 +63,7 @@ public class PreviousHandler: AbstractHandler
 
         return await _activityPublisher.SendMessageAsync(chatId, PreviousNode.GetActivityDescription().ToString(), PreviousNode.Image, Keyboards.GetActivityPaginationKeyboard());
 
-    }
+    }*/
     
     protected override async Task EditPreviousMessage(ChatId chatId)
     {

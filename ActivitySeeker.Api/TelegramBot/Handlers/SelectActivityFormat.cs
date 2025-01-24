@@ -12,8 +12,8 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override Task ActionsAsync(UserUpdate userData)
         {
-            ResponseMessageText = "Выбери формат проведения активности:";
-            Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
+            Response.Text = "Выбери формат проведения активности:";
+            Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
             
             CurrentUser.State.StateNumber = StatesEnum.SaveActivityFormat;
 
