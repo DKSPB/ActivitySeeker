@@ -1,8 +1,9 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -13,6 +14,8 @@ public class ActivityTypeController : ControllerBase
 {
     private readonly ILogger<ActivityController> _logger;
     private readonly IActivityTypeService _activityTypeService;
+
+    private readonly string _webRootPath;
     
     public ActivityTypeController(ILogger<ActivityController> logger, IActivityTypeService activityTypeService)
     {
@@ -59,5 +62,32 @@ public class ActivityTypeController : ControllerBase
     {
         await _activityTypeService.Delete(activityTypeIds);
         return Ok();
+    }
+
+    [HttpPost("upload/image")]
+    public async Task<IActionResult> UploadActivityTypeImage(
+        [FromServices]IWebHostEnvironment webHostEnvironment, 
+        [FromServices]IOptions<BotConfiguration> botConfigOptions, 
+        [FromForm] ActivityTypeImage activityTypeImage)
+    {
+        var maxFileSize = botConfigOptions.Value.MaxFileSize;
+        var fileSize = activityTypeImage.File.Length;
+
+        if (FileProvider.ValidateFileSize(fileSize, maxFileSize))
+        {
+            var webRootPath = webHostEnvironment.WebRootPath;
+            var rootImageFolder = botConfigOptions.Value.RootImageFolder;
+            var newFilename = Path.GetRandomFileName();
+
+            var fullPath = FileProvider.CombinePathToFile(webRootPath, rootImageFolder, newFilename);
+
+            await using (Stream imageStream = activityTypeImage.File.OpenReadStream())
+                await _activityTypeService.UploadImage(activityTypeImage.ActivityTypeId, fullPath, imageStream);
+
+            return Ok();
+        }
+
+        return BadRequest($"Размер загружаемого файла превышает {maxFileSize / (1024 * 1024)} Мб");
+        
     }
 }

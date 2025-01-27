@@ -212,6 +212,8 @@ namespace ActivitySeeker.Api
         public string TelegramChannel { get; set; } = default!;
 
         public string RootImageFolder { get; set; } = default!;
+
+        public long MaxFileSize { get; set; }
     }
 }
 

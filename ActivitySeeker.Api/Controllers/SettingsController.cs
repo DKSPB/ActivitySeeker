@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,25 +24,31 @@ public class SettingsController : ControllerBase
     }
 
     [HttpPost("upload/state/img")]
-    public async Task<IActionResult> UploadTgMainMenuImage([FromForm] FileUploader fileUploader)
+    public async Task<IActionResult> UploadStateImage([FromForm] FileUploader fileUploader)
     {
-        if (string.IsNullOrEmpty(fileUploader.File.FileName))
+        if (!FileProvider.ValidateFileSize(fileUploader.File.Length, _botConfig.MaxFileSize) || 
+            !FileProvider.ValidateFileNameIsNotNull(fileUploader.File.FileName))
         {
             return BadRequest();
         }
 
-        var fileName = fileUploader.State.ToString();
-        var path = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
-        await _settingsService.UploadImage(path, fileUploader.File.OpenReadStream());
+        var selectedState = fileUploader.State;
+
+        var stateName = fileUploader.State.ToString();
+
+        var path = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, stateName);
+
+        await using (var stream = fileUploader.File.OpenReadStream())
+            await FileProvider.UploadImage(path, stream);
 
         return Ok();
     }
 
     [HttpGet("get/state/img")]
-    public async Task<IActionResult> GetTgMainMenuImage([FromQuery]StatesEnum state)
+    public async Task<IActionResult> GetStateImage([FromQuery]StatesEnum state)
     {
         var fileName = state.ToString();
-        var path = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+        var path = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
         return Ok(await _settingsService.GetImage(path));
     }

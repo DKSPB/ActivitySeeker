@@ -38,7 +38,7 @@ public abstract class AbstractHandler : IHandler
                 throw new ArgumentNullException(nameof(userUpdate.Data));
             }
 
-            var message = await SendMessageAsync(userUpdate.ChatId);
+            var message = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, Response);
 
             CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
@@ -53,10 +53,5 @@ public abstract class AbstractHandler : IHandler
             chatId: chatId,
             messageId: CurrentUser.State.MessageId,
             replyMarkup: InlineKeyboardMarkup.Empty());
-    }
-
-    protected virtual async Task<Message> SendMessageAsync(long chatId)
-    {     
-        return await _activityPublisher.SendMessageAsync(chatId, Response);
     }
 }

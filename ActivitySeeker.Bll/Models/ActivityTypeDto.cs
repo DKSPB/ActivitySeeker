@@ -19,6 +19,7 @@ public class ActivityTypeDto
         Id = activityType.Id;
         TypeName = activityType.TypeName;
         ParentId = activityType.ParentId;
+        ImagePath = activityType.ImagePath;
     }
 
     public ActivityType ToActivityType()
@@ -34,6 +35,8 @@ public class ActivityTypeDto
     public string TypeName { get; set; } = "Все виды активности";
     
     public Guid? ParentId { get; set; }
+
+    public string? ImagePath { get; set; }
     
     public ActivityTypeDto? Parent { get;  set; }
     

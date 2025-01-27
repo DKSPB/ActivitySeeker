@@ -1,23 +1,47 @@
 ﻿using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
     [HandlerState(StatesEnum.SelectActivityFormat)]
     public class SelectActivityFormat : AbstractHandler
     {
-        public SelectActivityFormat(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
-            : base(userService, activityService, activityPublisher) {}
+        private readonly string _webRootPath;
+        private readonly BotConfiguration _botConfig;
+        private readonly ISettingsService _settingsService;
 
-        protected override Task ActionsAsync(UserUpdate userData)
+        public SelectActivityFormat(
+            IUserService userService,
+            IActivityService activityService,
+            ActivityPublisher activityPublisher,
+            ISettingsService settingsService,
+            IWebHostEnvironment webHostEnvironment,
+            IOptions<BotConfiguration> botConfigOptions) 
+            : base ( userService,
+                  activityService,
+                  activityPublisher) 
+        {
+            _webRootPath = webHostEnvironment.WebRootPath;
+            _settingsService = settingsService;
+            _botConfig = botConfigOptions.Value;
+        }
+
+        protected override async Task ActionsAsync(UserUpdate userData)
         {
             Response.Text = "Выбери формат проведения активности:";
             Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
-            
-            CurrentUser.State.StateNumber = StatesEnum.SaveActivityFormat;
+            Response.Image = await GetImage(StatesEnum.SelectActivityFormat.ToString());
 
-            return Task.CompletedTask;
+            CurrentUser.State.StateNumber = StatesEnum.SaveActivityFormat;
+        }
+
+        private async Task<byte[]?> GetImage(string fileName)
+        {
+            var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+            return await _settingsService.GetImage(filePath);
         }
     }
 }

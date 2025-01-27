@@ -26,12 +26,15 @@ public class MainMenuHandler: AbstractHandler
     }
     protected override async Task ActionsAsync(UserUpdate userUpdate)
     {
+        var nextState = StatesEnum.MainMenu;
+        CurrentUser.State.StateNumber = nextState;
+
         Response.Text = CurrentUser.State.ToString();
-        Response.Image = await GetImage(CurrentUser.State.StateNumber);
+        Response.Image = await GetImage(nextState);
         Response.Keyboard = Keyboards.GetMainMenuKeyboard();
     }
 
-    private async Task<byte[]> GetImage(StatesEnum state)
+    private async Task<byte[]?> GetImage(StatesEnum state)
     {
         var fileName = state.ToString();
         var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);

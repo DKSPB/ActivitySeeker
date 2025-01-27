@@ -18,7 +18,7 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Тип активности", StatesEnum.ActivityTypeChapter.GetDisplayName())
+                    InlineKeyboardButton.WithCallbackData("Тип активности", StatesEnum.ListOfActivities.GetDisplayName())
                 },
                 new[]
                 {
