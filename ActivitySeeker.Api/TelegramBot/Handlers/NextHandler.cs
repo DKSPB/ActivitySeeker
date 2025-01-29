@@ -40,9 +40,8 @@ public class NextHandler: AbstractHandler
             else
             {
                 NextNode = currentActivity;
-                NextNode.Image = await ActivityService.GetImage(NextNode.Id);
-                
                 Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
+                NextNode.Image = await ActivityService.GetImage(NextNode.Id);
             }
         }
         else
@@ -52,8 +51,8 @@ public class NextHandler: AbstractHandler
         }
     }
 
-    protected override async Task EditPreviousMessage(ChatId chatId)
+    /*protected override async Task EditPreviousMessage(ChatId chatId)
     {
         await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);
-    }
+    }*/
 }

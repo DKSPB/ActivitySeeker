@@ -12,14 +12,12 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
             IActivityService activityService,
             IActivityTypeService activityTypeService,
             ActivityPublisher activityPublisher,
-            ISettingsService settingsService,
             IWebHostEnvironment webHostEnvironment,
             IOptions<BotConfiguration> botConfigOptions)
             : base( userService,
                   activityService,
                   activityTypeService,
                   activityPublisher,
-                  settingsService,
                   webHostEnvironment,
                   botConfigOptions)
         {}

@@ -65,8 +65,8 @@ public class PreviousHandler: AbstractHandler
 
     }*/
     
-    protected override async Task EditPreviousMessage(ChatId chatId)
+    /*protected override async Task EditPreviousMessage(ChatId chatId)
     {
         await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);
-    }
+    }*/
 }

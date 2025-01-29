@@ -1,21 +1,34 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.PeriodToDate)]
-public class UserSetByDateHandler: AbstractHandler
+public class UserSetByDateHandler : AbstractHandler
 {
-    public UserSetByDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
-        :base(userService, activityService, activityPublisher)
-    { }
+    private readonly string _webRootPath;
+    private readonly string _rootImageFolder;
 
-    protected override Task ActionsAsync(UserUpdate userData)
+    public UserSetByDateHandler(
+        IUserService userService,
+        IActivityService activityService,
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions)
+        : base(userService, activityService, activityPublisher)
+    {
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _rootImageFolder = botConfigOptions.Value.RootImageFolder;
+    }
+
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         var byDateText = userData.Data;
 
-        var result = DateParser.ParseDate(byDateText, out var byDate) ||
+        var result = DateParser.ParseDate(byDateText, out var byDate) || 
                      DateParser.ParseDateTime(byDateText, out byDate);
 
         if (result)
@@ -29,10 +42,14 @@ public class UserSetByDateHandler: AbstractHandler
             }
             else
             {
+                var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.StateNumber = nextState;
+                
                 CurrentUser.State.SearchTo = byDate;
 
                 Response.Text = CurrentUser.State.ToString();
                 Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Image = await GetImage(nextState.ToString());
             }
         }
         else
@@ -43,7 +60,12 @@ public class UserSetByDateHandler: AbstractHandler
 
             Response.Keyboard = Keyboards.GetEmptyKeyboard();
         }
+    }
+    
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _rootImageFolder, fileName);
 
-        return Task.CompletedTask;
+        return await FileProvider.GetImage(filePath);
     }
 }

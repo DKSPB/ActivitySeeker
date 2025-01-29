@@ -7,7 +7,6 @@ public enum StatesEnum
 {
     Start,
     MainMenu,
-    ActivityTypeChapter,
     SelectActivityFormat,
     SaveOfferFormat,
     SaveActivityFormat,

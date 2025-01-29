@@ -1,5 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.Extensions.Options;
 
@@ -10,18 +11,15 @@ public class MainMenuHandler: AbstractHandler
 {
     private readonly string _webRootPath;
     private readonly BotConfiguration _botConfig;
-    private readonly ISettingsService _settingsService;
     public MainMenuHandler (
         IUserService userService, 
         IActivityService activityService, 
-        ActivityPublisher activityPublisher, 
-        ISettingsService settingsService, 
+        ActivityPublisher activityPublisher,
         IWebHostEnvironment webHostEnvironment,
         IOptions<BotConfiguration> botConfigOptions) :
         base (userService, activityService, activityPublisher)
     {
         _webRootPath = webHostEnvironment.WebRootPath;
-        _settingsService = settingsService;
         _botConfig = botConfigOptions.Value;
     }
     protected override async Task ActionsAsync(UserUpdate userUpdate)
@@ -30,15 +28,14 @@ public class MainMenuHandler: AbstractHandler
         CurrentUser.State.StateNumber = nextState;
 
         Response.Text = CurrentUser.State.ToString();
-        Response.Image = await GetImage(nextState);
+        Response.Image = await GetImage(nextState.ToString());
         Response.Keyboard = Keyboards.GetMainMenuKeyboard();
     }
 
-    private async Task<byte[]?> GetImage(StatesEnum state)
+    private async Task<byte[]?> GetImage(string fileName)
     {
-        var fileName = state.ToString();
-        var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
-        return await _settingsService.GetImage(filePath);
+        return await FileProvider.GetImage(filePath);
     }
 }

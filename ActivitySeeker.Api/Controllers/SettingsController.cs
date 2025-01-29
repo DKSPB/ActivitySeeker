@@ -1,4 +1,3 @@
-using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -13,12 +12,10 @@ namespace ActivitySeeker.Api.Controllers;
 public class SettingsController : ControllerBase
 {
     private readonly BotConfiguration _botConfig;
-    private readonly ISettingsService _settingsService;
     private readonly string _webRootPath;
    
-    public SettingsController(IWebHostEnvironment hostEnvironment, IOptions<BotConfiguration> botConfigOptions, ISettingsService settingsService)
+    public SettingsController(IWebHostEnvironment hostEnvironment, IOptions<BotConfiguration> botConfigOptions)
     {
-        _settingsService = settingsService;
         _botConfig = botConfigOptions.Value;
         _webRootPath = hostEnvironment.WebRootPath;
     }
@@ -31,9 +28,7 @@ public class SettingsController : ControllerBase
         {
             return BadRequest();
         }
-
-        var selectedState = fileUploader.State;
-
+        
         var stateName = fileUploader.State.ToString();
 
         var path = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, stateName);
@@ -50,7 +45,7 @@ public class SettingsController : ControllerBase
         var fileName = state.ToString();
         var path = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
-        return Ok(await _settingsService.GetImage(path));
+        return Ok(await FileProvider.GetImage(path));
     }
 
     public class FileUploader

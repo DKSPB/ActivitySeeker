@@ -16,18 +16,15 @@ public class ListOfActivitiesHandler: AbstractHandler
 
     private readonly string _webRootPath;
     private readonly BotConfiguration _botConfig;
-    private readonly ISettingsService _settingsService;
 
     public ListOfActivitiesHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService,
         ActivityPublisher activityPublisher,
-        ISettingsService settingsService,
         IWebHostEnvironment webHostEnvironment,
         IOptions<BotConfiguration> botConfigOptions) :
         base(userService, activityService, activityPublisher)
     {
         _webRootPath = webHostEnvironment.WebRootPath;
-        _settingsService = settingsService;
         _botConfig = botConfigOptions.Value;
 
         _childrenTypes = new List<ActivityTypeDto>();
@@ -115,8 +112,8 @@ public class ListOfActivitiesHandler: AbstractHandler
 
     private async Task<byte[]?> GetImage(string fileName)
     {
-        var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
-        return await _settingsService.GetImage(filePath);
+        return await FileProvider.GetImage(filePath);
     }
 }

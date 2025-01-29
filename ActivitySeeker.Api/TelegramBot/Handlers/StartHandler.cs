@@ -1,5 +1,6 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.Extensions.Options;
 
@@ -9,8 +10,6 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers;
 public class StartHandler : AbstractHandler
 {
     private readonly BotConfiguration _botConfig;
-    private readonly ISettingsService _settingsService;
-    private readonly IWebHostEnvironment _hostEnvironment;
     private readonly string _webRootPath;
 
     private const string MessageText = $"Перед началом использования бота выберите Ваш Город." +
@@ -23,17 +22,14 @@ public class StartHandler : AbstractHandler
     public StartHandler (
         ICityService cityService, 
         IUserService userService, 
-        IActivityService activityService, 
-        ISettingsService settingsService, 
+        IActivityService activityService,
         IOptions<BotConfiguration> botConfigOptions,
         ActivityPublisher activityPublisher, 
         IWebHostEnvironment webHostEnvironment )
         : base (userService, activityService, activityPublisher)
     {
         _cityService = cityService;
-        _settingsService = settingsService;
         _botConfig = botConfigOptions.Value;
-        _hostEnvironment = webHostEnvironment;
         _webRootPath = webHostEnvironment.WebRootPath;
     }
 
@@ -41,30 +37,31 @@ public class StartHandler : AbstractHandler
     {
         if (CurrentUser.CityId is not null)
         {
+            var nextState = StatesEnum.MainMenu;
+            CurrentUser.State.StateNumber = nextState;
+            
             Response.Text = CurrentUser.State.ToString();
             Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-
-            var nextState = StatesEnum.MainMenu;
-            Response.Image = await GetImage(nextState);
-            CurrentUser.State.StateNumber = nextState;
+            Response.Image = await GetImage(nextState.ToString());
         }
         else
         {
+            var nextState = StatesEnum.SaveDefaultSettings;
+            CurrentUser.State.StateNumber = nextState;
+            
             var mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
             var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
             Response.Text = MessageText;
             Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
-
-            CurrentUser.State.StateNumber = StatesEnum.SaveDefaultSettings;
+            Response.Image = await GetImage(nextState.ToString());
         }
     }
 
-    private async Task<byte[]?> GetImage(StatesEnum state)
+    private async Task<byte[]?> GetImage(string fileName)
     {
-        var fileName = state;
-        var filePath = _settingsService.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName.ToString());
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
-        return await _settingsService.GetImage(filePath);
+        return await FileProvider.GetImage(filePath);
     }
 }

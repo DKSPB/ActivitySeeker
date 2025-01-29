@@ -77,7 +77,6 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<MainMenuHandler>();
                 builder.Services.AddScoped<ListOfActivitiesHandler>();
                 builder.Services.AddScoped<ListOfChildrenActivitiesHandler>();
-                builder.Services.AddScoped<SelectActivityTypeHandler>();
                 builder.Services.AddScoped<SaveActivityFormatHandler>();
                 builder.Services.AddScoped<SelectActivityFormat>();
                 builder.Services.AddScoped<SaveOfferFormat>();
@@ -99,9 +98,8 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<ConfirmOfferHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
+                builder.Services.AddScoped<OfferMenuHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
-                builder.Services.AddScoped<ISettingsService, SettingsService>();
-                
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
                 {

@@ -12,14 +12,10 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/activityType")]
 public class ActivityTypeController : ControllerBase
 {
-    private readonly ILogger<ActivityController> _logger;
     private readonly IActivityTypeService _activityTypeService;
-
-    private readonly string _webRootPath;
     
-    public ActivityTypeController(ILogger<ActivityController> logger, IActivityTypeService activityTypeService)
+    public ActivityTypeController(IActivityTypeService activityTypeService)
     {
-        _logger = logger;
         _activityTypeService = activityTypeService;
     }
     
@@ -87,7 +83,7 @@ public class ActivityTypeController : ControllerBase
             return Ok();
         }
 
-        return BadRequest($"Размер загружаемого файла превышает {maxFileSize / (1024 * 1024)} Мб");
+        return BadRequest($"пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ {maxFileSize / (1024 * 1024)} пїЅпїЅ");
         
     }
 }
