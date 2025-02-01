@@ -8,7 +8,7 @@ namespace ActivitySeeker.Api.Controllers;
 
 [ApiController]
 [AllowAnonymous]
-[Route("api/activity")]
+[Route("api/settings")]
 public class SettingsController : ControllerBase
 {
     private readonly BotConfiguration _botConfig;
@@ -20,7 +20,13 @@ public class SettingsController : ControllerBase
         _webRootPath = hostEnvironment.WebRootPath;
     }
 
-    [HttpPost("upload/state/img")]
+    [HttpGet("states")]
+    public IActionResult GetStates()
+    {
+        return Ok((StatesEnum[])Enum.GetValues(typeof(StatesEnum)));
+    }
+
+    [HttpPost("states/upload/img")]
     public async Task<IActionResult> UploadStateImage([FromForm] FileUploader fileUploader)
     {
         if (!FileProvider.ValidateFileSize(fileUploader.File.Length, _botConfig.MaxFileSize) || 
@@ -39,7 +45,7 @@ public class SettingsController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("get/state/img")]
+    [HttpGet("states/get/img")]
     public async Task<IActionResult> GetStateImage([FromQuery]StatesEnum state)
     {
         var fileName = state.ToString();

@@ -30,6 +30,7 @@ public class ConfirmOfferHandler : AbstractHandler
             throw new NullReferenceException("Предложенная активность не может быть null");
         }
 
+        CurrentUser.Offer.OfferState = false;
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
 
         var offerConfirmResponse = new ResponseMessage
