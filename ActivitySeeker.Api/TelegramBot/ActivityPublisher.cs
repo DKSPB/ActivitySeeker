@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using ActivitySeeker.Api.Models;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -15,23 +16,23 @@ namespace ActivitySeeker.Api.TelegramBot
             _botClient = botClient;
         }
 
-        public async Task<Message> SendMessageAsync(ChatId chatId, string postText, byte[]? postImage = null, IReplyMarkup? replyMarkup = null)
+        public async Task<Message> SendMessageAsync(ChatId chatId, ResponseMessage response)
         {
-            if (postImage is null)
+            if (response.Image is null)
             {
                 return await _botClient.SendTextMessageAsync(
                     chatId: chatId,
-                    text: postText, 
+                    text: response.Text, 
                     disableNotification: true,
-                    replyMarkup: replyMarkup);
+                    replyMarkup: response.Keyboard);
             }
 
             return await _botClient.SendPhotoAsync(
                 chatId: chatId,
-                photo: new InputFileStream(new MemoryStream(postImage)),
-                caption: postText,
+                photo: new InputFileStream(new MemoryStream(response.Image)),
+                caption: response.Text,
                 disableNotification: true,
-                replyMarkup: replyMarkup);
+                replyMarkup: response.Keyboard);
         }
 
         public async Task EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)

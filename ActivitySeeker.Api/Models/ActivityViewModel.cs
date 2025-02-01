@@ -1,18 +1,20 @@
 ﻿using ActivitySeeker.Domain.Entities;
+using Newtonsoft.Json;
 
 namespace ActivitySeeker.Api.Models
 {
+    [JsonObject]
     public class ActivityViewModel
     {
         public Guid Id { get; set; }
 
-        public string LinkOrDescription { get; set; } = null!;
+        public string LinkOrDescription { get; set; }
 
         public DateTime StartDate { get; set; }
 
         public Guid ActivityTypeId { get; set; }
 
-        public string TypeName { get; set; } = null!;
+        public string TypeName { get; set; }
 
         public bool IsPublished { get; set; }
 

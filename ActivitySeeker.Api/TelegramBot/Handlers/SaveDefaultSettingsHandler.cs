@@ -29,16 +29,16 @@ public class SaveDefaultSettingsHandler : AbstractHandler
 
                 var spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
 
-                ResponseMessageText = $"Поиск не дал результатов." +
+                Response.Text = $"Поиск не дал результатов." +
                                       $"\nУточните название и попробуйте ещё раз";
                 
-                Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
+                Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
 
             }
             else
             {
-                ResponseMessageText = $"Найденные города:";
-                Keyboard = Keyboards.GetCityKeyboard(cities.ToList());
+                Response.Text = $"Найденные города:";
+                Response.Keyboard = Keyboards.GetCityKeyboard(cities.ToList());
             }
         }
         else
@@ -62,8 +62,8 @@ public class SaveDefaultSettingsHandler : AbstractHandler
             CurrentUser.CityId = cityId;
             CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
-            ResponseMessageText = CurrentUser.State.ToString();
-            Keyboard = Keyboards.GetMainMenuKeyboard();
+            Response.Text = CurrentUser.State.ToString();
+            Response.Keyboard = Keyboards.GetMainMenuKeyboard();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
         {
             CurrentUser.State.StateNumber = StatesEnum.PeriodFromDate;
             
-            ResponseMessageText = $"Введите дату, с которой хотите искать активности в форматах:" +
+            Response.Text = $"Введите дату, с которой хотите искать активности в форматах:" +
                                   $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
                                   $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
             

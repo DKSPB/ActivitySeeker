@@ -1,5 +1,8 @@
+using Newtonsoft.Json;
+
 namespace ActivitySeeker.Api.Models;
 
+[JsonObject]
 public class RegisterAdmin
 {
     public string Username { get; set; } = string.Empty;

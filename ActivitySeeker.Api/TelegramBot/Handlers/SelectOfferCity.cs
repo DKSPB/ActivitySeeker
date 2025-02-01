@@ -28,17 +28,17 @@ public class SelectOfferCity : AbstractHandler
 
             if (!_cities.Any())
             {
-                ResponseMessageText = $"Поиск не дал результата." +
+                Response.Text = $"Поиск не дал результата." +
                                       $"\nУточните название и попробуйте ещё раз.";
                 
-                Keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, false);
+                Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, false);
 
                 _mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
                 _spbId = (await _cityService.GetCitiesByName("Санкт-Петербург")).First().Id;
             }
             else
             {
-                ResponseMessageText = $"Найденные города:";
+                Response.Text = $"Найденные города:";
                 Keyboards.GetCityKeyboard(_cities);
             }
         }
@@ -69,8 +69,8 @@ public class SelectOfferCity : AbstractHandler
                 CurrentUser.Offer.CityId = cityId;
             }
 
-            ResponseMessageText = "Заполни описание активности:";
-            Keyboard = Keyboards.GetEmptyKeyboard();
+            Response.Text = "Заполни описание активности:";
+            Response.Keyboard = Keyboards.GetEmptyKeyboard();
             
             CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
         }

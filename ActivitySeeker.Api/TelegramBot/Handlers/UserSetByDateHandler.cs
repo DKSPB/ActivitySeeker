@@ -1,21 +1,34 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.PeriodToDate)]
-public class UserSetByDateHandler: AbstractHandler
+public class UserSetByDateHandler : AbstractHandler
 {
-    public UserSetByDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)
-        :base(userService, activityService, activityPublisher)
-    { }
+    private readonly string _webRootPath;
+    private readonly string _rootImageFolder;
 
-    protected override Task ActionsAsync(UserUpdate userData)
+    public UserSetByDateHandler(
+        IUserService userService,
+        IActivityService activityService,
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions)
+        : base(userService, activityService, activityPublisher)
+    {
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _rootImageFolder = botConfigOptions.Value.RootImageFolder;
+    }
+
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         var byDateText = userData.Data;
 
-        var result = DateParser.ParseDate(byDateText, out var byDate) ||
+        var result = DateParser.ParseDate(byDateText, out var byDate) || 
                      DateParser.ParseDateTime(byDateText, out byDate);
 
         if (result)
@@ -24,28 +37,35 @@ public class UserSetByDateHandler: AbstractHandler
 
             if (compareResult <= 0)
             {
-                ResponseMessageText = $"Дата окончания поиска должа быть позднее, чем дата начала поиска";
-
-                Keyboard = Keyboards.GetEmptyKeyboard();
+                Response.Text = $"Дата окончания поиска должа быть позднее, чем дата начала поиска";
+                Response.Keyboard = Keyboards.GetEmptyKeyboard();
             }
             else
             {
+                var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.StateNumber = nextState;
+                
                 CurrentUser.State.SearchTo = byDate;
 
-                ResponseMessageText = CurrentUser.State.ToString();
-
-                Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Text = CurrentUser.State.ToString();
+                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Image = await GetImage(nextState.ToString());
             }
         }
         else
         {
-            ResponseMessageText = $"Введёная дата не соответствует форматам:" +
+            Response.Text = $"Введёная дата не соответствует форматам:" +
                           $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
                           $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
-            Keyboard = Keyboards.GetEmptyKeyboard();
+            Response.Keyboard = Keyboards.GetEmptyKeyboard();
         }
+    }
+    
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _rootImageFolder, fileName);
 
-        return Task.CompletedTask;
+        return await FileProvider.GetImage(filePath);
     }
 }

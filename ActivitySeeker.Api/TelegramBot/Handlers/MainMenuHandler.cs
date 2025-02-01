@@ -1,23 +1,41 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.MainMenu)]
 public class MainMenuHandler: AbstractHandler
 {
-    private const string MessageText = "Выбери тип активности и время проведения:";
-
-    public MainMenuHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) :
-        base(userService, activityService, activityPublisher)
+    private readonly string _webRootPath;
+    private readonly BotConfiguration _botConfig;
+    public MainMenuHandler (
+        IUserService userService, 
+        IActivityService activityService, 
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions) :
+        base (userService, activityService, activityPublisher)
     {
-        ResponseMessageText = MessageText;
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _botConfig = botConfigOptions.Value;
     }
-    protected override Task ActionsAsync(UserUpdate userUpdate)
+    protected override async Task ActionsAsync(UserUpdate userUpdate)
     {
-        ResponseMessageText = CurrentUser.State.ToString();
-        Keyboard = Keyboards.GetMainMenuKeyboard();
-        return Task.CompletedTask;
+        var nextState = StatesEnum.MainMenu;
+        CurrentUser.State.StateNumber = nextState;
+
+        Response.Text = CurrentUser.State.ToString();
+        Response.Image = await GetImage(nextState.ToString());
+        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+    }
+
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+        return await FileProvider.GetImage(filePath);
     }
 }

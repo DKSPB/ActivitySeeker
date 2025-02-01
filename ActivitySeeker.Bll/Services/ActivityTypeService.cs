@@ -1,5 +1,6 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -73,6 +74,18 @@ public class ActivityTypeService: IActivityTypeService
         var activityEntities = _context.ActivityTypes.Where(x => activityTypeIds.Contains(x.Id));
 
         _context.ActivityTypes.RemoveRange(activityEntities);
+
+        await _context.SaveChangesAsync();
+    }
+
+    /// <inheritdoc />
+    public async Task UploadImage(Guid activityTypeId, string path, Stream image)
+    {
+        var activityType = await _context.ActivityTypes.FirstAsync(x => x.Id == activityTypeId);
+
+        activityType.ImagePath = path;
+
+        await FileProvider.UploadImage(path, image);
 
         await _context.SaveChangesAsync();
     }

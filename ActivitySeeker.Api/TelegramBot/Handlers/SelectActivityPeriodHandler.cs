@@ -1,23 +1,43 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.ActivityPeriodChapter)]
 public class SelectActivityPeriodHandler : AbstractHandler
 {
-    public SelectActivityPeriodHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher): 
-        base(userService, activityService, activityPublisher)
-    { }
+    private readonly string _webRootPath;
+    private readonly BotConfiguration _botConfig;
 
-    protected override Task ActionsAsync(UserUpdate userData)
+    public SelectActivityPeriodHandler(
+        IUserService userService,
+        IActivityService activityService,
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions) : 
+        base ( userService, activityService, activityPublisher)
     {
-        CurrentUser.State.StateNumber = StatesEnum.ActivityPeriodChapter;
-        
-        ResponseMessageText = "Выбери период проведения активности:";
-        Keyboard = Keyboards.GetPeriodActivityKeyboard();
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _botConfig = botConfigOptions.Value;
+    }
 
-        return Task.CompletedTask;
+    protected override async Task ActionsAsync(UserUpdate userData)
+    {
+        var nextState = StatesEnum.ActivityPeriodChapter;
+        CurrentUser.State.StateNumber = nextState;
+
+        Response.Text = "Выбери период проведения активности:";
+        Response.Keyboard = Keyboards.GetPeriodActivityKeyboard();
+        Response.Image = await GetImage(nextState.ToString());
+    }
+
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+        return await FileProvider.GetImage(filePath);
     }
 }

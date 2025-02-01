@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Newtonsoft.Json.Converters;
 
 namespace ActivitySeeker.Api
 {
@@ -35,7 +36,7 @@ namespace ActivitySeeker.Api
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
 
-                var botConfigurationSection = builder.Configuration.GetSection(BotConfiguration.Configuration);
+                var botConfigurationSection = builder.Configuration.GetSection(nameof(BotConfiguration));
                 builder.Services.Configure<BotConfiguration>(botConfigurationSection);
 
                 var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
@@ -76,7 +77,6 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<MainMenuHandler>();
                 builder.Services.AddScoped<ListOfActivitiesHandler>();
                 builder.Services.AddScoped<ListOfChildrenActivitiesHandler>();
-                builder.Services.AddScoped<SelectActivityTypeHandler>();
                 builder.Services.AddScoped<SaveActivityFormatHandler>();
                 builder.Services.AddScoped<SelectActivityFormat>();
                 builder.Services.AddScoped<SaveOfferFormat>();
@@ -99,7 +99,6 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
-                
 
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
                 {
@@ -112,7 +111,8 @@ namespace ActivitySeeker.Api
 
                 #region serialize settings
 
-                builder.Services.AddControllers().AddNewtonsoftJson();
+                builder.Services.AddControllers().AddNewtonsoftJson(options =>
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
                 #endregion
 
@@ -200,7 +200,6 @@ namespace ActivitySeeker.Api
     
     public class BotConfiguration
     {
-        public static readonly string Configuration = "BotConfiguration";
         public string BotToken { get; set; } = default!;
 
         public string WebhookUrl { get; set; } = default!;
@@ -208,27 +207,11 @@ namespace ActivitySeeker.Api
         public string? PathToCertificate { get; set; }
 
         public string TelegramChannel { get; set; } = default!;
-    }
 
-    public class Settings
-    {
-        public TelegramBotSettings TelegramBotSettings { get; set; }
-        
-        public VkBotSettings VkBotSettings { get; set; }
-    }
+        public string RootImageFolder { get; set; } = default!;
 
-    public class BotSettings
-    {
-        public string MainMenuImageName { get; set; }
-        
-        public string OfferMenuImageName { get; set; }
+        public long MaxFileSize { get; set; }
     }
-    
-    public class TelegramBotSettings : BotSettings
-    { }
-
-    public class VkBotSettings : BotSettings
-    { }
 }
 
 

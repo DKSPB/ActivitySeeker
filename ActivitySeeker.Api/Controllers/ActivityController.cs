@@ -132,19 +132,21 @@ public class ActivityController : ControllerBase
     /// <param name="activityIds">Идентификаторы активностей</param>
     /// <returns></returns>
     [HttpPut("publish")]
-    public async Task<IActionResult> PublishActivities([FromBody] List<Guid>activityIds)
+    public async Task<IActionResult> PublishActivities([FromBody] List<Guid> activityIds)
     {
         var publishedActivities = await _activityService.PublishActivities(activityIds);
 
-        publishedActivities?.ToList().ForEach(async x => 
+        publishedActivities?.ToList().ForEach(async x =>
         {
-            await _activityPublisher.SendMessageAsync(
-                _botConfig.TelegramChannel, 
-                x.GetActivityDescription().ToString(), 
-                x.Image, InlineKeyboardMarkup.Empty());
+            var responseMessage = new ResponseMessage
+            {
+                Text = x.GetActivityDescription().ToString(),
+                Image = x.Image,
+                Keyboard = InlineKeyboardMarkup.Empty()
+            };
+            await _activityPublisher.SendMessageAsync(_botConfig.TelegramChannel, responseMessage);
         });
 
         return Ok();
     }
-    
 }

@@ -1,7 +1,9 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Extensions;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
@@ -11,13 +13,20 @@ public class ListOfActivitiesHandler: AbstractHandler
 {
     private readonly IActivityTypeService _activityTypeService;
     private List<ActivityTypeDto> _childrenTypes;
-    
+
+    private readonly string _webRootPath;
+    private readonly BotConfiguration _botConfig;
 
     public ListOfActivitiesHandler(IUserService userService,
         IActivityService activityService, IActivityTypeService activityTypeService,
-        ActivityPublisher activityPublisher) :
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions) :
         base(userService, activityService, activityPublisher)
     {
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _botConfig = botConfigOptions.Value;
+
         _childrenTypes = new List<ActivityTypeDto>();
         _activityTypeService = activityTypeService;
     }
@@ -28,21 +37,28 @@ public class ListOfActivitiesHandler: AbstractHandler
 
         if (!activityTypeIdParseResult)
         {
+            var nextState = StatesEnum.ListOfActivities;
+            CurrentUser.State.StateNumber = nextState;
+
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
-            activityTypes.Insert(0, new ActivityTypeDto{ Id = Guid.Empty, TypeName = "Все виды активностей" });
-            ResponseMessageText = "Выбери тип активности:";
-            Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
+            activityTypes.Insert(0, new ActivityTypeDto { Id = Guid.Empty, TypeName = "Все виды активностей" });
+            Response.Text = "Выбери тип активности:";
+            Response.Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
+            Response.Image = await GetImage(nextState.ToString());
         }
         else
         {
             if (selectedActivityId == Guid.Empty)
             {
                 CurrentUser.State.ActivityType = new();
+
+                var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.StateNumber = nextState;
+
+                Response.Text = CurrentUser.State.ToString();
+                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Image = await GetImage(nextState.ToString());
                 
-                ResponseMessageText = CurrentUser.State.ToString();
-                Keyboard = Keyboards.GetMainMenuKeyboard();
-                
-                CurrentUser.State.StateNumber = StatesEnum.MainMenu;
             }
             else
             {
@@ -53,39 +69,51 @@ public class ListOfActivitiesHandler: AbstractHandler
 
                 if (!_childrenTypes.Any())
                 {
+                    var nextState = StatesEnum.MainMenu;
+                    CurrentUser.State.StateNumber = nextState;
+
                     CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
                     CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
                 
-                    ResponseMessageText = CurrentUser.State.ToString();
-                    Keyboard = Keyboards.GetMainMenuKeyboard();
-                    
-                    CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+                    Response.Text = CurrentUser.State.ToString();
+                    Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                    Response.Image = await GetImage(nextState.ToString());
                 }
                 else
                 {
-                    if(CurrentUser.State.ActivityType.Id == selectedActivityType.Id && CurrentUser.State.StateNumber == StatesEnum.ListOfChildrenActivities)
+                    if (CurrentUser.State.ActivityType.Id == selectedActivityType.Id && CurrentUser.State.StateNumber == StatesEnum.ListOfChildrenActivities)
                     {
-                        ResponseMessageText = CurrentUser.State.ToString();
-                        Keyboard = Keyboards.GetMainMenuKeyboard();
-                        
-                        CurrentUser.State.StateNumber = StatesEnum.MainMenu;
+                        var nextState = StatesEnum.MainMenu;
+                        CurrentUser.State.StateNumber = nextState;
+
+                        Response.Text = CurrentUser.State.ToString();
+                        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                        Response.Image = selectedActivityType.ImagePath is null ? null : await GetImage(nextState.ToString());
                     }
                     else
                     {
-                        ResponseMessageText = "Выбери тип активности:";
+                        CurrentUser.State.StateNumber = StatesEnum.ListOfChildrenActivities;
+
                         _childrenTypes.Add(new ActivityTypeDto { Id = selectedActivityType.Id, TypeName = $"Выбрать все {selectedActivityType.TypeName}" });
 
                         var backButtonValue = selectedActivityType.ParentId is null ? StatesEnum.ListOfActivities.GetDisplayName() : selectedActivityType.ParentId.ToString();
 
-                        Keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList(), backButtonValue);
+                        Response.Text = "Выбери тип активности:";
+                        Response.Keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList(), backButtonValue);
+                        Response.Image = selectedActivityType.ImagePath is null ? null : await GetImage(selectedActivityType.ImagePath);
 
                         CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
                         CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
                     }
-
-                    CurrentUser.State.StateNumber = StatesEnum.ListOfChildrenActivities;
                 }
             }
         }
+    }
+
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+        return await FileProvider.GetImage(filePath);
     }
 }

@@ -11,7 +11,7 @@ public class OfferHandler : AbstractHandler
 {
     private readonly IActivityTypeService _activityTypeService;
 
-    private IEnumerable<ActivityTypeDto> _children;
+    private IEnumerable<ActivityTypeDto>? _children;
 
     public OfferHandler(IUserService userService, IActivityService activityService, IActivityTypeService activityTypeService,
         ActivityPublisher activityPublisher): base(userService, activityService, activityPublisher)
@@ -27,8 +27,8 @@ public class OfferHandler : AbstractHandler
         if (!activityTypeIdParseResult)
         {
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
-            ResponseMessageText = "Выбери тип активности:";
-            Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName(), "Меню");
+            Response.Text = "Выбери тип активности:";
+            Response.Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName(), "Меню");
         }
         else
         {
@@ -39,27 +39,26 @@ public class OfferHandler : AbstractHandler
 
             if (!_children.Any())
             {
-                ResponseMessageText = "Выбери формат проведения:";
+                Response.Text = "Выбери формат проведения:";
                 CurrentUser.State.StateNumber = StatesEnum.SaveOfferFormat;
-                Keyboard = Keyboards.GetActivityFormatsKeyboard(false);
+                Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(false);
 
                 CreateOfferIfNotExists((Guid)activityType.Id);
             }
             else
             {
-                ResponseMessageText = "Выбери тип активности";
+                Response.Text = "Выбери тип активности";
 
                 if (activityType.ParentId is null)
                 {
-                    Keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList(), StatesEnum.Offer.GetDisplayName());
+                    Response.Keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList(), StatesEnum.Offer.GetDisplayName());
                 }
                 else 
                 {
-                    Keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList(), activityType.ParentId.ToString());
+                    Response.Keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList(), activityType.ParentId.ToString());
                 }
                 
             }
-            
         }
     }
     private void CreateOfferIfNotExists(Guid activityTypeId)

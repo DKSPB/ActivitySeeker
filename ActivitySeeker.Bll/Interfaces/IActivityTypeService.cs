@@ -37,4 +37,13 @@ public interface IActivityTypeService
     /// <param name="activityTypeIds">Список идентификаторов типов активностей</param>
     /// <returns></returns>
     Task Delete(List<Guid> activityTypeIds);
+
+    /// <summary>
+    /// Загрузка изображения для выбранного типа активности
+    /// </summary>
+    /// <param name="activityTypeId">Идентификатор активности</param>
+    /// <param name="path">Полный путь к файлу</param>
+    /// <param name="image">Контент</param>
+    /// <returns></returns>
+    Task UploadImage(Guid activityTypeId, string path, Stream image);
 }

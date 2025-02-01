@@ -16,6 +16,9 @@ public class ActivityType
     [Column("type_name")]
     public string TypeName { get; set; } = default!;
 
+    [Column("image_path")]
+    public string? ImagePath { get; set; }
+
     #region Navigation properties
 
     public IEnumerable<Activity>? Activities { get; set; }

@@ -1,8 +1,9 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -11,12 +12,10 @@ namespace ActivitySeeker.Api.Controllers;
 [Route("api/activityType")]
 public class ActivityTypeController : ControllerBase
 {
-    private readonly ILogger<ActivityController> _logger;
     private readonly IActivityTypeService _activityTypeService;
     
-    public ActivityTypeController(ILogger<ActivityController> logger, IActivityTypeService activityTypeService)
+    public ActivityTypeController(IActivityTypeService activityTypeService)
     {
-        _logger = logger;
         _activityTypeService = activityTypeService;
     }
     
@@ -59,5 +58,32 @@ public class ActivityTypeController : ControllerBase
     {
         await _activityTypeService.Delete(activityTypeIds);
         return Ok();
+    }
+
+    [HttpPost("upload/image")]
+    public async Task<IActionResult> UploadActivityTypeImage(
+        [FromServices]IWebHostEnvironment webHostEnvironment, 
+        [FromServices]IOptions<BotConfiguration> botConfigOptions, 
+        [FromForm] ActivityTypeImage activityTypeImage)
+    {
+        var maxFileSize = botConfigOptions.Value.MaxFileSize;
+        var fileSize = activityTypeImage.File.Length;
+
+        if (FileProvider.ValidateFileSize(fileSize, maxFileSize))
+        {
+            var webRootPath = webHostEnvironment.WebRootPath;
+            var rootImageFolder = botConfigOptions.Value.RootImageFolder;
+            var newFilename = Path.GetRandomFileName();
+
+            var fullPath = FileProvider.CombinePathToFile(webRootPath, rootImageFolder, newFilename);
+
+            await using (Stream imageStream = activityTypeImage.File.OpenReadStream())
+                await _activityTypeService.UploadImage(activityTypeImage.ActivityTypeId, fullPath, imageStream);
+
+            return Ok();
+        }
+
+        return BadRequest($"������ ������������ ����� ��������� {maxFileSize / (1024 * 1024)} ��");
+        
     }
 }

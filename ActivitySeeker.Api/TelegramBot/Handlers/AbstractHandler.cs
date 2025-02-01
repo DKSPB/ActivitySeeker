@@ -6,13 +6,11 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-public abstract class AbstractHandler: IHandler
+public abstract class AbstractHandler : IHandler
 {
     private IUserService UserService { get; set; }
     protected IActivityService ActivityService { get; set; }
-    protected string ResponseMessageText { get; set; } = default!;
-
-    protected InlineKeyboardMarkup Keyboard { get; set; } = default!;
+    protected ResponseMessage Response { get; set; } = new();
     protected UserDto CurrentUser { get; private set; } = default!;
 
     private readonly ActivityPublisher _activityPublisher;
@@ -29,7 +27,7 @@ public abstract class AbstractHandler: IHandler
 
         try
         {
-            await EditPreviousMessage(userUpdate.ChatId);
+            await _activityPublisher.DeleteMessage(userUpdate.ChatId, CurrentUser.State.MessageId);
         }
         finally
         {
@@ -40,7 +38,7 @@ public abstract class AbstractHandler: IHandler
                 throw new ArgumentNullException(nameof(userUpdate.Data));
             }
 
-            var message = await SendMessageAsync(userUpdate.ChatId);
+            var message = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, Response);
 
             CurrentUser.State.MessageId = message.MessageId;
             UserService.UpdateUser(CurrentUser);
@@ -49,16 +47,4 @@ public abstract class AbstractHandler: IHandler
 
     protected abstract Task ActionsAsync(UserUpdate userData);
 
-    protected virtual async Task EditPreviousMessage(ChatId chatId)
-    {
-        await _activityPublisher.EditMessageAsync(
-            chatId: chatId,
-            messageId: CurrentUser.State.MessageId,
-            replyMarkup: InlineKeyboardMarkup.Empty());
-    }
-
-    protected virtual async Task<Message> SendMessageAsync(long chatId)
-    {     
-        return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboard);
-    }
 }

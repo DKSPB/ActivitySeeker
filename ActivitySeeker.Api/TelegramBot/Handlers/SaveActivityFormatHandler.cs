@@ -1,50 +1,78 @@
 ﻿using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
     [HandlerState(StatesEnum.SaveActivityFormat)]
     public class SaveActivityFormatHandler : AbstractHandler
     {
-        public SaveActivityFormatHandler(IUserService userService, 
-            IActivityService activityService, ActivityPublisher activityPublisher) 
-            : base(userService, activityService, activityPublisher)
-        {}
+        private readonly string _webRootPath;
+        private readonly BotConfiguration _botConfig;
 
-        protected override Task ActionsAsync(UserUpdate userData)
+        public SaveActivityFormatHandler (
+            IUserService userService,
+            IActivityService activityService,
+            ActivityPublisher activityPublisher,
+            IWebHostEnvironment webHostEnvironment,
+            IOptions<BotConfiguration> botConfigOptions)
+            : base (userService, activityService, activityPublisher)
         {
-           if (userData.Data.Equals("online"))
-           {
-               CurrentUser.State.ActivityFormat = true;
-               CurrentUser.State.StateNumber = StatesEnum.MainMenu;
-               
-               ResponseMessageText = CurrentUser.State.ToString();
-               Keyboard = Keyboards.GetMainMenuKeyboard();
-           }
-           else if (userData.Data.Equals("offline"))
-           {
-               CurrentUser.State.ActivityFormat = false;
-               CurrentUser.State.StateNumber = StatesEnum.MainMenu;
-               
-               ResponseMessageText = CurrentUser.State.ToString();
-               Keyboard = Keyboards.GetMainMenuKeyboard();
-           }
+            _webRootPath = webHostEnvironment.WebRootPath;
+            _botConfig = botConfigOptions.Value;
+        }
 
-           else if (userData.Data.Equals("any"))
-           {
-               CurrentUser.State.ActivityFormat = null; 
-               CurrentUser.State.StateNumber = StatesEnum.MainMenu;
-               
-               ResponseMessageText = CurrentUser.State.ToString();
-               Keyboard = Keyboards.GetMainMenuKeyboard();
-           }
-           else
-           {
-               ResponseMessageText = "Выберите формат проведения активности:";
-               Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
-           }
-           return Task.CompletedTask;
+        protected override async Task ActionsAsync(UserUpdate userData)
+        {
+            if (userData.Data.Equals("online"))
+            {
+                var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.ActivityFormat = true;
+                CurrentUser.State.StateNumber = nextState;
+
+                Response.Text = CurrentUser.State.ToString();
+                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Image = await GetImage(nextState.ToString());
+            }
+            else if (userData.Data.Equals("offline"))
+            {
+                var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.ActivityFormat = false;
+                CurrentUser.State.StateNumber = nextState;
+
+                Response.Text = CurrentUser.State.ToString();
+                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Image = await GetImage(nextState.ToString());
+            }
+
+            else if (userData.Data.Equals("any"))
+            {
+                var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.ActivityFormat = null;
+                CurrentUser.State.StateNumber = nextState;
+
+                Response.Text = CurrentUser.State.ToString();
+                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+                Response.Image = await GetImage(nextState.ToString());
+            }
+            else
+            {
+                var nextState = StatesEnum.SelectActivityFormat;
+                CurrentUser.State.StateNumber = nextState;
+
+                Response.Text = "Выберите формат проведения активности:";
+                Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
+                Response.Image = await GetImage(nextState.ToString());
+            }
+        }
+
+        private async Task<byte[]?> GetImage(string fileName)
+        {
+            var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+            return await FileProvider.GetImage(filePath);
         }
     }
 }
