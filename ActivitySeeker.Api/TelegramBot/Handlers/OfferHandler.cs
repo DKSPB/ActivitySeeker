@@ -3,19 +3,30 @@ using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.OpenApi.Extensions;
+using ActivitySeeker.Bll.Utils;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.Offer)]
 public class OfferHandler : AbstractHandler
 {
+    private readonly string _webRootPath;
+    private readonly BotConfiguration _botConfig;
     private readonly IActivityTypeService _activityTypeService;
-
     private IEnumerable<ActivityTypeDto>? _children;
 
-    public OfferHandler(IUserService userService, IActivityService activityService, IActivityTypeService activityTypeService,
-        ActivityPublisher activityPublisher): base(userService, activityService, activityPublisher)
+    public OfferHandler (
+        IUserService userService, 
+        IActivityService activityService, 
+        IActivityTypeService activityTypeService,
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions) 
+        : base(userService, activityService, activityPublisher)
     {
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _botConfig = botConfigOptions.Value;
         _activityTypeService = activityTypeService;
     }
 
@@ -60,6 +71,13 @@ public class OfferHandler : AbstractHandler
                 
             }
         }
+    }
+
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+        return await FileProvider.GetImage(filePath);
     }
     private void CreateOfferIfNotExists(Guid activityTypeId)
     {
