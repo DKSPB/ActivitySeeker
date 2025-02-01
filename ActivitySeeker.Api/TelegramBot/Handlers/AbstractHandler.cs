@@ -28,7 +28,6 @@ public abstract class AbstractHandler : IHandler
         try
         {
             await _activityPublisher.DeleteMessage(userUpdate.ChatId, CurrentUser.State.MessageId);
-            //await EditPreviousMessage(userUpdate.ChatId);
         }
         finally
         {
@@ -48,8 +47,4 @@ public abstract class AbstractHandler : IHandler
 
     protected abstract Task ActionsAsync(UserUpdate userData);
 
-    /*protected virtual async Task EditPreviousMessage(ChatId chatId)
-    {
-        await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);
-    }*/
 }

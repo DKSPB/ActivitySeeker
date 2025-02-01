@@ -1,8 +1,7 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
-using Telegram.Bot.Types;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -26,33 +25,35 @@ public class NextHandler: AbstractHandler
             var currentActivity = CurrentUser.ActivityResult.First(x => x.Selected);
 
             var nextListNode = CurrentUser.ActivityResult.Find(currentActivity)?.Next;
+           
             if (nextListNode is not null)
             {
+                bool nodeIsLast = nextListNode.List?.Last?.Equals(nextListNode) ?? true;
+
                 NextNode = nextListNode.Value;
                 currentActivity.Selected = false;
                 NextNode.Image = await ActivityService.GetImage(NextNode.Id);
                 NextNode.Selected = true;
 
                 Response.Text = NextNode.GetActivityDescription().ToString();
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard(true, !nodeIsLast);
                 Response.Image = NextNode.Image;
-                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
             }
             else
             {
                 NextNode = currentActivity;
-                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
                 NextNode.Image = await ActivityService.GetImage(NextNode.Id);
+
+                Response.Text = NextNode.GetActivityDescription().ToString();
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard(true, false);
+                Response.Image = NextNode.Image;
             }
         }
         else
         {
             const string activitiesNotFoundMessage = "По вашему запросу активностей не найдено";
             Response.Text = activitiesNotFoundMessage;
+            Response.Keyboard = Keyboards.GetToMainMenuKeyboard();
         }
     }
-
-    /*protected override async Task EditPreviousMessage(ChatId chatId)
-    {
-        await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);
-    }*/
 }

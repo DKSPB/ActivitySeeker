@@ -107,26 +107,17 @@ namespace ActivitySeeker.Api.TelegramBot
             {
                 new []
                 {
-                    InlineKeyboardButton.WithCallbackData("Сегодня", StatesEnum.TodayPeriod.GetDisplayName())
-                },
-                new[]
-                {
+                    InlineKeyboardButton.WithCallbackData("Сегодня", StatesEnum.TodayPeriod.GetDisplayName()),
                     InlineKeyboardButton.WithCallbackData("Завтра", StatesEnum.TomorrowPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("Послезавтра", StatesEnum.AfterTomorrowPeriod.GetDisplayName())
-                },
-                new[]
-                {
+                    InlineKeyboardButton.WithCallbackData("Послезавтра", StatesEnum.AfterTomorrowPeriod.GetDisplayName()),
                     InlineKeyboardButton.WithCallbackData("За неделю", StatesEnum.WeekPeriod.GetDisplayName())
                 },
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("За месяц", StatesEnum.MonthPeriod.GetDisplayName())
-                },
-                new[]
-                {
+                    InlineKeyboardButton.WithCallbackData("За месяц", StatesEnum.MonthPeriod.GetDisplayName()),
                     InlineKeyboardButton.WithCallbackData("Свой период", StatesEnum.UserPeriod.GetDisplayName())
                 },
                 new[]
@@ -136,15 +127,23 @@ namespace ActivitySeeker.Api.TelegramBot
             });
         }
 
-        public static InlineKeyboardMarkup GetActivityPaginationKeyboard()
+        public static InlineKeyboardMarkup GetActivityPaginationKeyboard(bool enableBackButton = true, bool enableNextButton = true)
         {
+            var firstButtonBlock = new List<InlineKeyboardButton>();
+
+            if (enableBackButton) 
+            {
+                firstButtonBlock.Add(InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.PreviousActivity.GetDisplayName()));
+            }
+
+            if ((enableNextButton))
+            {
+                firstButtonBlock.Add(InlineKeyboardButton.WithCallbackData("Вперёд", StatesEnum.NextActivity.GetDisplayName()));
+            }
+
             return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
             {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Назад", StatesEnum.PreviousActivity.GetDisplayName()),
-                    InlineKeyboardButton.WithCallbackData("Вперёд", StatesEnum.NextActivity.GetDisplayName())
-                },
+                firstButtonBlock.ToArray(),
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("Меню", StatesEnum.MainMenu.GetDisplayName())
@@ -204,29 +203,6 @@ namespace ActivitySeeker.Api.TelegramBot
 
 
             return countersButtons;
-        }
-
-        public static InlineKeyboardMarkup GetOfferMenuKeyboard()
-        {
-            return new InlineKeyboardMarkup(new List<InlineKeyboardButton[]>
-            {
-                new []
-                {
-                    InlineKeyboardButton.WithCallbackData("Тип активности", "")
-                },
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData("Время проведения", "")
-                },
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData("Формат проведения", "")
-                },
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData("Главное меню", "")
-                }
-            });
         }
     }
 }

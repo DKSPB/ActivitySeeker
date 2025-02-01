@@ -26,7 +26,8 @@ public class SearchResultHandler : AbstractHandler
             CurrentUser.ActivityResult = activities;
 
             Response.Text = CurrentActivity.GetActivityDescription().ToString();
-            Response.Keyboard = Keyboards.GetToMainMenuKeyboard();
+            Response.Keyboard = Keyboards.GetActivityPaginationKeyboard(false);
+            Response.Image = CurrentActivity.Image;
         }
         else
         {

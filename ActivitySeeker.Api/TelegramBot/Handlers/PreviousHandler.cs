@@ -1,5 +1,4 @@
 using ActivitySeeker.Api.Models;
-using Telegram.Bot.Types;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Domain.Entities;
@@ -26,47 +25,35 @@ public class PreviousHandler: AbstractHandler
             var currentActivity = CurrentUser.ActivityResult.First(x => x.Selected);
             
             var previousListNode = CurrentUser.ActivityResult.Find(currentActivity)?.Previous;
+
             if (previousListNode is not null)
             {
+                bool nodeIsFirst = previousListNode.List?.First?.Equals(previousListNode) ?? true;
+
                 PreviousNode = previousListNode.Value;
                 currentActivity.Selected = false;
                 PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
                 PreviousNode.Selected = true;
 
                 Response.Text = PreviousNode.GetActivityDescription().ToString();
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard(!nodeIsFirst);
                 Response.Image = PreviousNode.Image;
-                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
             }
             else
             {
                 PreviousNode = currentActivity;
                 PreviousNode.Image = await ActivityService.GetImage(PreviousNode.Id);
                 
-                const string messageText = "Найденные активности:";
-                Response.Text = messageText;
-                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard();
+                Response.Text = PreviousNode.GetActivityDescription().ToString();
+                Response.Keyboard = Keyboards.GetActivityPaginationKeyboard(false);
+                Response.Image = PreviousNode.Image;
             }
         }
         else
         {
             const string activitiesNotFoundMessage = "По вашему запросу активностей не найдено";
             Response.Text = activitiesNotFoundMessage;
+            Response.Keyboard = Keyboards.GetToMainMenuKeyboard();
         }
     }
-
-    /*protected override async Task<Message> SendMessageAsync(long chatId)
-    {
-        if (PreviousNode is null)
-        {
-            return await _activityPublisher.SendMessageAsync(chatId, ResponseMessageText, null, Keyboards.GetActivityPaginationKeyboard());
-        }
-
-        return await _activityPublisher.SendMessageAsync(chatId, PreviousNode.GetActivityDescription().ToString(), PreviousNode.Image, Keyboards.GetActivityPaginationKeyboard());
-
-    }*/
-    
-    /*protected override async Task EditPreviousMessage(ChatId chatId)
-    {
-        await _activityPublisher.DeleteMessage(chatId, CurrentUser.State.MessageId);
-    }*/
 }

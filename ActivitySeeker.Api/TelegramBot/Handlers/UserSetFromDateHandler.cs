@@ -20,12 +20,19 @@ public class UserSetFromDateHandler : AbstractHandler
 
         if (result)
         {
-            Response.Text = $"Введите дату, по которую хотите искать активности в форматах:" +
-                      $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
-                      $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
+            if(DateTime.Compare(fromDate, DateTime.Now) > 0)
+            {
+                Response.Text = $"Введите дату, по которую хотите искать активности в форматах:" +
+                  $"\n(дд.мм.гггг) или (дд.мм.гггг чч.мм)" +
+                  $"\nпример:{DateTime.Now:dd.MM.yyyy} или {DateTime.Now:dd.MM.yyyy HH:mm}";
 
-            CurrentUser.State.SearchFrom = fromDate;
-            CurrentUser.State.StateNumber = StatesEnum.PeriodToDate;
+                CurrentUser.State.SearchFrom = fromDate;
+                CurrentUser.State.StateNumber = StatesEnum.PeriodToDate;
+            }
+            else
+            {
+                Response.Text = $"Активность должна начинаться позже текущей даты.";
+            }
         }
         else
         {
