@@ -57,6 +57,7 @@ public class SaveOfferDateHandler : AbstractHandler
             else
             {
                 CurrentUser.Offer.StartDate = startActivityDate;
+                CurrentUser.Offer.OfferState = false;
                 
                 Response.Text = GetFinishOfferMessage(CurrentUser.Offer);
                 Response.Keyboard = Keyboards.ConfirmOffer();

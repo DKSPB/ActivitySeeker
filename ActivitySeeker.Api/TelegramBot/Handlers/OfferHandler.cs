@@ -69,7 +69,7 @@ public class OfferHandler : AbstractHandler
             {
                 ActivityTypeId = activityTypeId,
                 LinkOrDescription = string.Empty,
-                OfferState = false,
+                OfferState = null,
                 IsOnline = false
             };
         }

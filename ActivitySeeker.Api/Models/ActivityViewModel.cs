@@ -16,7 +16,7 @@ namespace ActivitySeeker.Api.Models
 
         public string TypeName { get; set; }
 
-        public bool IsPublished { get; set; }
+        public bool? IsPublished { get; set; }
 
         public bool IsOnline { get; set; }
 

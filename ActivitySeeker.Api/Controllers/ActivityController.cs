@@ -46,6 +46,7 @@ public class ActivityController : ControllerBase
         var total = activities.Count();
 
         var data = await activities
+            .Where(y => y.IsPublished != null)
             .Include(x => x.ActivityType)
             .Include(z => z.ActivityCity)
             .OrderByDescending(x => x.StartDate)

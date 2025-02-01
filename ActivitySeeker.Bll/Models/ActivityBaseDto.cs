@@ -15,7 +15,7 @@ public class ActivityBaseDto
     
     public Guid ActivityTypeId { get; set; }
 
-    public bool OfferState { get; set; }
+    public bool? OfferState { get; set; }
 
     public bool IsOnline { get; set; }
     

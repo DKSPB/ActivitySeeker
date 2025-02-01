@@ -29,7 +29,7 @@ public class Activity
     public Guid ActivityTypeId { get; set; }
 
     [Column("is_published")]
-    public bool IsPublished { get; set; }
+    public bool? IsPublished { get; set; }
 
     #region Навигационные свойства
 
