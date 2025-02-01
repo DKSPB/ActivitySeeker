@@ -74,7 +74,9 @@ jobs:
               "BotToken": "${{ secrets.BOT_TOKEN }}",
               "WebhookUrl": "${{ secrets.WEBHOOK_URL }}",
               "TelegramChannel": "${{ secrets.TELEGRAM_CHANNEL }}",
-              "PathToCertificate": "/etc/letsencrypt/live/v2575056.hosted-by-vdsina.ru/telegram_ssl_public.pem"
+              "PathToCertificate": "/etc/letsencrypt/live/v2575056.hosted-by-vdsina.ru/telegram_ssl_public.pem",
+              "RootImageFolder": "files",
+              "MaxFileSize": "2097152"
             },
             "ConnectionStrings": {
               "ActivitySeekerConnection": "${{ secrets.CONNECTION_STRING }}"
