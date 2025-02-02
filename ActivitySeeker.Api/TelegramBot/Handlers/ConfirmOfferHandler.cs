@@ -13,6 +13,7 @@ public class ConfirmOfferHandler : AbstractHandler
 {
     private readonly NotificationAdminHub _adminHub;
     private readonly ActivityPublisher _activityPublisher;
+    private readonly IUserService _userService;
 
     private readonly string _webRootPath;
     private readonly BotConfiguration _botConfig;
@@ -28,7 +29,7 @@ public class ConfirmOfferHandler : AbstractHandler
     {
         _webRootPath = webHostEnvironment.WebRootPath;
         _botConfig = botConfigOptions.Value;
-
+        _userService = userService;
         _adminHub = adminHub;
         _activityPublisher = activityPublisher;
     }
@@ -44,6 +45,7 @@ public class ConfirmOfferHandler : AbstractHandler
         }
 
         CurrentUser.Offer.OfferState = false;
+        _userService.UpdateUser(CurrentUser);
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
 
         var offerConfirmResponse = new ResponseMessage

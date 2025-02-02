@@ -24,6 +24,8 @@ namespace ActivitySeeker.Api.Models
 
         public string? CityName { get; set; }
 
+        public int? TgMessageId { get; set; }
+
         public ActivityViewModel(Activity activity)
         {
             Id = activity.Id;
@@ -35,6 +37,7 @@ namespace ActivitySeeker.Api.Models
             IsOnline = activity.IsOnline;
             CityId = activity.ActivityCity?.Id;
             CityName = activity.ActivityCity?.Name;
+            TgMessageId = activity.TgMessageId;
         }
     }
 }

@@ -31,7 +31,7 @@ public interface IActivityService
     /// </summary>
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns></returns>
-    Task<ActivityDto> GetActivityAsync(Guid activityId);
+    Task<ActivityDto?> GetActivityAsync(Guid activityId);
 
     /// <summary>
     /// Получение изображения от активности
@@ -58,9 +58,17 @@ public interface IActivityService
     Task DeleteActivity(List<Guid> activitiesForRemove);
 
     /// <summary>
-    /// Публикация активностей из списка
+    /// Публикация активности
     /// </summary>
-    /// <param name="activityIds">Список идентификаторов активностей</param>
+    /// <param name="activity">Публикуемая активность</param>
+    /// <param name="tgMessageId">Номер сообщения в канале</param>
     /// <returns></returns>
-    Task<IEnumerable<ActivityDto>?> PublishActivities(List<Guid> activityIds);
+    Task PublishActivity(ActivityDto activity, int tgMessageId);
+
+    /// <summary>
+    /// Снятие активности с публикации
+    /// </summary>
+    /// <param name="activity">Активность, которую нужно снять с публикации</param>
+    /// <returns></returns>
+    Task WithdrawFromPublication(ActivityDto activity);
 }

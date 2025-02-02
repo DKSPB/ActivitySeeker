@@ -116,6 +116,8 @@ namespace ActivitySeeker.Bll.Services
                 activityEntity.IsOnline = activity.IsOnline;
                 activityEntity.CityId = activity.CityId;
                 activityEntity.Image = activity.Image;
+                activityEntity.IsPublished = activity.OfferState;
+                activityEntity.TgMessageId = activity.TgMessageId;
             }
 
             await _context.SaveChangesAsync();
@@ -128,17 +130,19 @@ namespace ActivitySeeker.Bll.Services
         }
 
         /// <inheritdoc />
-        public async Task<IEnumerable<ActivityDto>?> PublishActivities(List<Guid> activityIds)
+        public async Task PublishActivity(ActivityDto activity, int tgMessageId)
         {
-            var activityEntities = await _context.Activities
-                .Include(x => x.ActivityType)
-                .Where(x => activityIds.Contains(x.Id)).ToListAsync();
+            activity.OfferState = true;
+            activity.TgMessageId = tgMessageId;
+            await UpdateActivity(activity);
+        }
 
-            activityEntities.ForEach(x => x.IsPublished = true);
-            _context.Activities.UpdateRange(activityEntities);
-            await _context.SaveChangesAsync();
-
-            return activityEntities?.Select(x => new ActivityDto(x)).ToList();
+        /// <inheritdoc />
+        public async Task WithdrawFromPublication(ActivityDto activity)
+        {
+            activity.OfferState = false;
+            activity.TgMessageId = null;
+            await UpdateActivity(activity);
         }
     }
 }

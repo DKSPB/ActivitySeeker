@@ -18,6 +18,8 @@ public class ActivityBaseDto
     public bool? OfferState { get; set; }
 
     public bool IsOnline { get; set; }
+
+    public int? TgMessageId { get; set; }
     
     public ActivityTypeDto? ActivityType { get; set; }
 
@@ -29,6 +31,7 @@ public class ActivityBaseDto
         StartDate = activity.StartDate;
         OfferState = activity.IsPublished;
         IsOnline = activity.IsOnline;
+        TgMessageId = activity.TgMessageId;
         ActivityType = new ActivityTypeDto(activity.ActivityType);
     }
     

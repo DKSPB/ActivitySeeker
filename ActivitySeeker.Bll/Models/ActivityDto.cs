@@ -22,6 +22,7 @@ public class ActivityDto: ActivityBaseDto
         Image = activity.Image;
         OfferState = activity.IsPublished;
         ActivityType = new ActivityTypeDto(activity.ActivityType);
+        TgMessageId = activity.TgMessageId;
         CityId = activity.CityId;
     }
 
@@ -36,7 +37,8 @@ public class ActivityDto: ActivityBaseDto
             IsOnline = IsOnline,
             CityId = CityId,
             Image = Image,
-            IsPublished = OfferState
+            IsPublished = OfferState,
+            TgMessageId = TgMessageId
         };
     }
 }

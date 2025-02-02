@@ -135,18 +135,46 @@ public class ActivityController : ControllerBase
     [HttpPut("publish")]
     public async Task<IActionResult> PublishActivities([FromBody] List<Guid> activityIds)
     {
-        var publishedActivities = await _activityService.PublishActivities(activityIds);
-
-        publishedActivities?.ToList().ForEach(async x =>
+        if (activityIds is not null && activityIds.Count > 0) 
         {
-            var responseMessage = new ResponseMessage
+            foreach (var id in activityIds)
             {
-                Text = x.GetActivityDescription().ToString(),
-                Image = x.Image,
-                Keyboard = InlineKeyboardMarkup.Empty()
-            };
-            await _activityPublisher.SendMessageAsync(_botConfig.TelegramChannel, responseMessage);
-        });
+                var activity = await _activityService.GetActivityAsync(id);
+
+                if (activity is not null)
+                {
+                    var responseMessage = new ResponseMessage
+                    {
+                        Text = activity.GetActivityDescription().ToString(),
+                        Image = activity.Image,
+                        Keyboard = InlineKeyboardMarkup.Empty()
+                    };
+                    var tgMessage = await _activityPublisher.SendMessageAsync(_botConfig.TelegramChannel, responseMessage);
+
+                    await _activityService.PublishActivity(activity, tgMessage.MessageId);
+                }
+            }
+        }
+
+        return Ok();
+    }
+
+    [HttpPut("withdraw")]
+    public async Task<IActionResult> WithdrawFromPublication([FromBody] List<Guid> activityIds)
+    {
+        if (activityIds is not null && activityIds.Count > 0)
+        {
+            foreach (var id in activityIds)
+            {
+                var activity = await _activityService.GetActivityAsync(id);
+
+                if (activity is not null && activity.TgMessageId.HasValue)
+                {
+                    await _activityPublisher.DeleteMessage(_botConfig.TelegramChannel, activity.TgMessageId.Value);
+                    await _activityService.WithdrawFromPublication(activity);
+                }
+            }
+        }
 
         return Ok();
     }

@@ -31,6 +31,9 @@ public class Activity
     [Column("is_published")]
     public bool? IsPublished { get; set; }
 
+    [Column("tg_message_id")]
+    public int? TgMessageId { get; set; }
+
     #region Навигационные свойства
 
     public ActivityType ActivityType { get; set; } = null!;
