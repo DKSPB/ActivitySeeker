@@ -25,24 +25,24 @@ public abstract class AbstractHandler : IHandler
     {
         CurrentUser = currentUser;
 
-        try
+        var messageId = CurrentUser.State.MessageId;
+
+        if(messageId > 0)
         {
             await _activityPublisher.DeleteMessage(userUpdate.ChatId, CurrentUser.State.MessageId);
         }
-        finally
+        
+        await ActionsAsync(userUpdate);
+
+        if (userUpdate.Data is null)
         {
-            await ActionsAsync(userUpdate);
-
-            if (userUpdate.Data is null)
-            {
-                throw new ArgumentNullException(nameof(userUpdate.Data));
-            }
-
-            var message = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, Response);
-
-            CurrentUser.State.MessageId = message.MessageId;
-            UserService.UpdateUser(CurrentUser);
+            throw new ArgumentNullException(nameof(userUpdate.Data));
         }
+
+        var message = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, Response);
+
+        CurrentUser.State.MessageId = message.MessageId;
+        UserService.UpdateUser(CurrentUser);
     }
 
     protected abstract Task ActionsAsync(UserUpdate userData);
