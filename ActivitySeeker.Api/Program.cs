@@ -107,6 +107,7 @@ namespace ActivitySeeker.Api
                 });
 
                 builder.Services.AddHttpClient();
+                builder.Services.AddCors();
                 builder.Services.AddHostedService<ConfigureWebhook>();
 
                 #region serialize settings
@@ -177,8 +178,10 @@ namespace ActivitySeeker.Api
                     app.UseSwaggerUI(options => { options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"); });
                 }
 
+                app.UseDefaultFiles();
                 app.UseStaticFiles();
                 app.UseRouting();
+                app.UseCors(builder => builder.AllowAnyOrigin());
                 app.UseAuthentication();
                 app.UseAuthorization();
                 app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
