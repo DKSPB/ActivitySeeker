@@ -144,5 +144,16 @@ namespace ActivitySeeker.Bll.Services
             activity.TgMessageId = null;
             await UpdateActivity(activity);
         }
+
+        public async Task RemoveOldActivities()
+        {
+            var request = new ActivityRequest();
+            var oldActivities = GetActivities(request)!
+                .Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0);
+            
+            _context.RemoveRange(oldActivities);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -71,4 +71,6 @@ public interface IActivityService
     /// <param name="activity">Активность, которую нужно снять с публикации</param>
     /// <returns></returns>
     Task WithdrawFromPublication(ActivityDto activity);
+
+    Task RemoveOldActivities();
 }

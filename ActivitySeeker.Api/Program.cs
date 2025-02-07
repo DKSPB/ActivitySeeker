@@ -17,8 +17,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
+using ActivitySeeker.Bll.QuartzJobs;
 using Microsoft.AspNetCore.Localization;
 using Newtonsoft.Json.Converters;
+using Quartz;
 
 namespace ActivitySeeker.Api
 {
@@ -100,6 +102,23 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
 
+                builder.Services.AddQuartz(quartz =>
+                {
+                    quartz.SchedulerId = "AUTO";
+
+                    var jobKey = new JobKey("WriteToConsole");
+                    quartz.AddJob<RemoveOldActivitiesJob>(opts => opts.WithIdentity(jobKey));
+                    quartz.AddTrigger(opts => opts.ForJob(jobKey)
+                        .WithIdentity(jobKey.Name + " trigger")
+                        .StartNow()
+                        .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(03, 00)));
+                });
+                builder.Services.AddQuartzHostedService(quartz =>
+                {
+                    quartz.AwaitApplicationStarted = true;
+                    quartz.WaitForJobsToComplete = true;
+                });
+                
                 builder.Services.AddHttpClient("telegram_bot_client").AddTypedClient<ITelegramBotClient>(httpClient =>
                 {
                     TelegramBotClientOptions options = new(botConfiguration.BotToken);
