@@ -16,4 +16,10 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Quartz">
+        <HintPath>..\..\..\.nuget\packages\quartz\3.7.0\lib\net6.0\Quartz.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
