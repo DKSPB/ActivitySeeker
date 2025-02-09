@@ -111,7 +111,7 @@ namespace ActivitySeeker.Api
                     quartz.AddTrigger(opts => opts.ForJob(jobKey)
                         .WithIdentity(jobKey.Name + " trigger")
                         .StartNow()
-                        .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(03, 00)));
+                        .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(00, 00)));
                 });
                 builder.Services.AddQuartzHostedService(quartz =>
                 {
