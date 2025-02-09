@@ -12,11 +12,6 @@ public class StartHandler : AbstractHandler
 {
     private readonly BotConfiguration _botConfig;
     private readonly string _webRootPath;
-
-    /*private const string MessageText = $"Перед началом использования бота выберите Ваш Город." +
-                                   $"\nЕсли Ваш город не Москва или Санкт-Петербург, введите название, как текст сообщения" +
-                                   $"\nВы всегда сможете изменить Ваш город в разделе:" +
-                                   $"\nМеню > Выбрать город";*/
     
     private readonly ICityService _cityService;
 
@@ -38,14 +33,10 @@ public class StartHandler : AbstractHandler
     {
         if (CurrentUser.CityId is not null)
         {
-            //var nextState = StatesEnum.MainMenu;
-            CurrentUser.State.StateNumber = StatesEnum.MainMenu;//nextState;
+            CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
             var mainMenuState = new MainMenu(_botConfig.RootImageFolder, _webRootPath);
             Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
-            //Response.Text = CurrentUser.State.ToString();
-            //Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-            //Response.Image = await GetImage(nextState.ToString());
         }
         else
         {
@@ -57,17 +48,6 @@ public class StartHandler : AbstractHandler
 
             var saveDefaultSettingsState = new SaveDefaultSetting(_botConfig.RootImageFolder, _webRootPath);
             Response = await saveDefaultSettingsState.GetResponseMessage(mskId, spbId, false);
-
-            /*Response.Text = MessageText;
-            Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(mskId, spbId, false);
-            Response.Image = await GetImage(nextState.ToString());*/
         }
     }
-
-    /*private async Task<byte[]?> GetImage(string fileName)
-    {
-        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
-
-        return await FileProvider.GetImage(filePath);
-    }*/
 }
