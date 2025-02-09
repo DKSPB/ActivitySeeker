@@ -28,6 +28,12 @@ public class ActivitySeekerContext: DbContext
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder
+            .Entity<Activity>()
+            .HasOne(p => p.ActivityType)
+            .WithMany(x => x.Activities)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder
             .Entity<User>()
             .HasOne(e => e.Offer)
             .WithOne()
