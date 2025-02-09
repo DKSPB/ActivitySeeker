@@ -1,4 +1,5 @@
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.Api.States;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Utils;
@@ -37,14 +38,17 @@ public class ListOfActivitiesHandler: AbstractHandler
 
         if (!activityTypeIdParseResult)
         {
-            var nextState = StatesEnum.ListOfActivities;
-            CurrentUser.State.StateNumber = nextState;
+            //var nextState = StatesEnum.ListOfActivities;
+            CurrentUser.State.StateNumber = StatesEnum.ListOfActivities;//nextState;
 
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
             activityTypes.Insert(0, new ActivityTypeDto { Id = Guid.Empty, TypeName = "Все виды активностей" });
-            Response.Text = "Выбери тип активности:";
+
+            var listOfActivitiesState = new ListOfActivities(_botConfig.RootImageFolder, _webRootPath);
+            Response = await listOfActivitiesState.GetResponseMessage(activityTypes, StatesEnum.MainMenu.ToString());
+            /*Response.Text = "Выбери тип активности:";
             Response.Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName());
-            Response.Image = await GetImage(nextState.ToString());
+            Response.Image = await GetImage(nextState.ToString());*/
         }
         else
         {
@@ -52,12 +56,14 @@ public class ListOfActivitiesHandler: AbstractHandler
             {
                 CurrentUser.State.ActivityType = new();
 
-                var nextState = StatesEnum.MainMenu;
-                CurrentUser.State.StateNumber = nextState;
+                //var nextState = StatesEnum.MainMenu;
+                CurrentUser.State.StateNumber = StatesEnum.MainMenu;//nextState;
 
-                Response.Text = CurrentUser.State.ToString();
+                var mainMenuState = new MainMenu(_botConfig.RootImageFolder, _webRootPath);
+                Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
+                /*Response.Text = CurrentUser.State.ToString();
                 Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-                Response.Image = await GetImage(nextState.ToString());
+                Response.Image = await GetImage(nextState.ToString());*/
                 
             }
             else
@@ -69,26 +75,30 @@ public class ListOfActivitiesHandler: AbstractHandler
 
                 if (!_childrenTypes.Any())
                 {
-                    var nextState = StatesEnum.MainMenu;
-                    CurrentUser.State.StateNumber = nextState;
+                    //var nextState = StatesEnum.MainMenu;
+                    CurrentUser.State.StateNumber = StatesEnum.MainMenu;//nextState;
 
                     CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
                     CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
-                
-                    Response.Text = CurrentUser.State.ToString();
+
+                    var mainMenuState = new MainMenu(_botConfig.RootImageFolder, _webRootPath);
+                    Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
+                    /*Response.Text = CurrentUser.State.ToString();
                     Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-                    Response.Image = await GetImage(nextState.ToString());
+                    Response.Image = await GetImage(nextState.ToString());*/
                 }
                 else
                 {
                     if (CurrentUser.State.ActivityType.Id == selectedActivityType.Id && CurrentUser.State.StateNumber == StatesEnum.ListOfChildrenActivities)
                     {
-                        var nextState = StatesEnum.MainMenu;
-                        CurrentUser.State.StateNumber = nextState;
+                        //var nextState = StatesEnum.MainMenu;
+                        CurrentUser.State.StateNumber = StatesEnum.MainMenu;//nextState;
 
-                        Response.Text = CurrentUser.State.ToString();
+                        var mainMenuState = new MainMenu(_botConfig.RootImageFolder, _webRootPath);
+                        Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
+                        /*Response.Text = CurrentUser.State.ToString();
                         Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-                        Response.Image = selectedActivityType.ImagePath is null ? null : await GetImage(nextState.ToString());
+                        Response.Image = selectedActivityType.ImagePath is null ? null : await GetImage(nextState.ToString());*/
                     }
                     else
                     {
@@ -97,10 +107,15 @@ public class ListOfActivitiesHandler: AbstractHandler
                         _childrenTypes.Add(new ActivityTypeDto { Id = selectedActivityType.Id, TypeName = $"Выбрать все {selectedActivityType.TypeName}" });
 
                         var backButtonValue = selectedActivityType.ParentId is null ? StatesEnum.ListOfActivities.GetDisplayName() : selectedActivityType.ParentId.ToString();
+                        
+                        var imageName = selectedActivityType.ImagePath is null ? null : selectedActivityType.ImagePath;
 
-                        Response.Text = "Выбери тип активности:";
+                        var listOfChildrenActivitiesState = new ListOfChildrenActivities(_botConfig.RootImageFolder, _webRootPath);
+                        Response = await listOfChildrenActivitiesState.GetResponseMessage(_childrenTypes.ToList(), backButtonValue, imageName);
+
+                        /*Response.Text = "Выбери тип активности:";
                         Response.Keyboard = Keyboards.GetActivityTypesKeyboard(_childrenTypes.ToList(), backButtonValue);
-                        Response.Image = selectedActivityType.ImagePath is null ? null : await GetImage(selectedActivityType.ImagePath);
+                        Response.Image = selectedActivityType.ImagePath is null ? null : await GetImage(selectedActivityType.ImagePath);*/
 
                         CurrentUser.State.ActivityType.Id = selectedActivityType.Id;
                         CurrentUser.State.ActivityType.TypeName = selectedActivityType.TypeName;
@@ -110,10 +125,10 @@ public class ListOfActivitiesHandler: AbstractHandler
         }
     }
 
-    private async Task<byte[]?> GetImage(string fileName)
+    /*private async Task<byte[]?> GetImage(string fileName)
     {
         var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
         return await FileProvider.GetImage(filePath);
-    }
+    }*/
 }

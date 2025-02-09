@@ -1,8 +1,9 @@
 ﻿using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Utils;
-using ActivitySeeker.Domain.Entities;
+using ActivitySeeker.Api.States;
 using Microsoft.Extensions.Options;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
+
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
@@ -26,15 +27,16 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override async Task ActionsAsync(UserUpdate userData)
         {
+            var mainMenuState = new MainMenu(_botConfig.RootImageFolder, _webRootPath);
+            var activityFormatChapterState = new ActivityFormatChapter(_botConfig.RootImageFolder, _webRootPath);
+
             if (userData.Data.Equals("online"))
             {
                 var nextState = StatesEnum.MainMenu;
                 CurrentUser.State.ActivityFormat = true;
                 CurrentUser.State.StateNumber = nextState;
 
-                Response.Text = CurrentUser.State.ToString();
-                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-                Response.Image = await GetImage(nextState.ToString());
+                Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
             }
             else if (userData.Data.Equals("offline"))
             {
@@ -42,9 +44,7 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                 CurrentUser.State.ActivityFormat = false;
                 CurrentUser.State.StateNumber = nextState;
 
-                Response.Text = CurrentUser.State.ToString();
-                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-                Response.Image = await GetImage(nextState.ToString());
+                Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
             }
 
             else if (userData.Data.Equals("any"))
@@ -53,26 +53,14 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
                 CurrentUser.State.ActivityFormat = null;
                 CurrentUser.State.StateNumber = nextState;
 
-                Response.Text = CurrentUser.State.ToString();
-                Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-                Response.Image = await GetImage(nextState.ToString());
+                Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
             }
             else
             {
-                var nextState = StatesEnum.SelectActivityFormat;
-                CurrentUser.State.StateNumber = nextState;
+                CurrentUser.State.StateNumber = StatesEnum.SelectActivityFormat;
 
-                Response.Text = "Выберите формат проведения активности:";
-                Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
-                Response.Image = await GetImage(nextState.ToString());
+                Response = await activityFormatChapterState.GetResponseMessage(true);
             }
-        }
-
-        private async Task<byte[]?> GetImage(string fileName)
-        {
-            var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
-
-            return await FileProvider.GetImage(filePath);
         }
     }
 }

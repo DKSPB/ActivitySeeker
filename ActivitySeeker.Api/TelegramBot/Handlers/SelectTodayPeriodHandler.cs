@@ -1,8 +1,8 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Utils;
-using ActivitySeeker.Domain.Entities;
+using ActivitySeeker.Api.States;
 using Microsoft.Extensions.Options;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -26,21 +26,12 @@ public class SelectTodayPeriodHandler: AbstractHandler
 
     protected override async Task ActionsAsync(UserUpdate userData)
     {
-        var nextState = StatesEnum.MainMenu;
-        CurrentUser.State.StateNumber = nextState;
+        CurrentUser.State.StateNumber = StatesEnum.MainMenu;
         
         CurrentUser.State.SearchFrom = DateTime.Now;
         CurrentUser.State.SearchTo = DateTime.Now.AddDays(1).Date;
-        
-        Response.Text = CurrentUser.State.ToString();
-        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
-        Response.Image = await GetImage(nextState.ToString());
-    }
-    
-    private async Task<byte[]?> GetImage(string fileName)
-    {
-        var filePath = FileProvider.CombinePathToFile(_webRootPath, _rootImageFolder, fileName);
 
-        return await FileProvider.GetImage(filePath);
+        var mainMenuState = new MainMenu(_rootImageFolder, _webRootPath);
+        Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
     }
 }

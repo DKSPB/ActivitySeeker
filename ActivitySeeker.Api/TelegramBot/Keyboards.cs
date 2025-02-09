@@ -118,7 +118,7 @@ namespace ActivitySeeker.Api.TelegramBot
                 new[]
                 {
                     InlineKeyboardButton.WithCallbackData("За месяц", StatesEnum.MonthPeriod.GetDisplayName()),
-                    InlineKeyboardButton.WithCallbackData("Свой период", StatesEnum.UserPeriod.GetDisplayName())
+                    InlineKeyboardButton.WithCallbackData("Свой период", StatesEnum.PeriodFromDate.GetDisplayName())
                 },
                 new[]
                 {

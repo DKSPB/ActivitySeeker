@@ -1,4 +1,5 @@
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.Api.States;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Notification;
 using ActivitySeeker.Bll.Utils;
@@ -16,7 +17,7 @@ public class ConfirmOfferHandler : AbstractHandler
     private readonly IUserService _userService;
 
     private readonly string _webRootPath;
-    private readonly BotConfiguration _botConfig;
+    private readonly string _rootImageFolder;
 
     public ConfirmOfferHandler(
         IUserService userService, 
@@ -28,7 +29,7 @@ public class ConfirmOfferHandler : AbstractHandler
         : base(userService, activityService, activityPublisher)
     {
         _webRootPath = webHostEnvironment.WebRootPath;
-        _botConfig = botConfigOptions.Value;
+        _rootImageFolder = botConfigOptions.Value.RootImageFolder;
         _userService = userService;
         _adminHub = adminHub;
         _activityPublisher = activityPublisher;
@@ -36,8 +37,7 @@ public class ConfirmOfferHandler : AbstractHandler
 
     protected override async Task ActionsAsync(UserUpdate userData)
     {
-        var nextState = StatesEnum.MainMenu;
-        CurrentUser.State.StateNumber = nextState;
+        CurrentUser.State.StateNumber = StatesEnum.MainMenu;
 
         if (CurrentUser.Offer is null)
         {
@@ -55,18 +55,10 @@ public class ConfirmOfferHandler : AbstractHandler
         };
         
         await _activityPublisher.SendMessageAsync(userData.ChatId, offerConfirmResponse);
-            
-        Response.Text = $"{CurrentUser.State}";
-        Response.Image = await GetImage(nextState.ToString());
-        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+
+        var mainMenuState = new MainMenu(_rootImageFolder, _webRootPath);
+        Response = await mainMenuState.GetResponseMessage(CurrentUser.State.ToString());
 
         CurrentUser.Offer = null;
-    }
-
-    private async Task<byte[]?> GetImage(string fileName)
-    {
-        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
-
-        return await FileProvider.GetImage(filePath);
     }
 }

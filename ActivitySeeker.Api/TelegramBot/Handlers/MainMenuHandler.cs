@@ -1,4 +1,5 @@
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.Api.States;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
@@ -27,15 +28,18 @@ public class MainMenuHandler: AbstractHandler
         var nextState = StatesEnum.MainMenu;
         CurrentUser.State.StateNumber = nextState;
 
-        Response.Text = CurrentUser.State.ToString();
+        var mainMenu = new MainMenu(_botConfig.RootImageFolder, _webRootPath);
+        Response = await mainMenu.GetResponseMessage(CurrentUser.State.ToString());
+
+        /*Response.Text = CurrentUser.State.ToString();
         Response.Image = await GetImage(nextState.ToString());
-        Response.Keyboard = Keyboards.GetMainMenuKeyboard();
+        Response.Keyboard = Keyboards.GetMainMenuKeyboard();*/
     }
 
-    private async Task<byte[]?> GetImage(string fileName)
+    /*private async Task<byte[]?> GetImage(string fileName)
     {
         var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
 
         return await FileProvider.GetImage(filePath);
-    }
+    }*/
 }

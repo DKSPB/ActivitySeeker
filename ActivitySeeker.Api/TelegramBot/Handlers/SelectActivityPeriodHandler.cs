@@ -1,4 +1,5 @@
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.Api.States;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
@@ -26,18 +27,9 @@ public class SelectActivityPeriodHandler : AbstractHandler
 
     protected override async Task ActionsAsync(UserUpdate userData)
     {
-        var nextState = StatesEnum.ActivityPeriodChapter;
-        CurrentUser.State.StateNumber = nextState;
+        CurrentUser.State.StateNumber = StatesEnum.ActivityPeriodChapter;
 
-        Response.Text = "Выбери период проведения активности:";
-        Response.Keyboard = Keyboards.GetPeriodActivityKeyboard();
-        Response.Image = await GetImage(nextState.ToString());
-    }
-
-    private async Task<byte[]?> GetImage(string fileName)
-    {
-        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
-
-        return await FileProvider.GetImage(filePath);
+        var activityPeriodChapterState = new ActivityPeriodChapter(_botConfig.RootImageFolder, _webRootPath);
+        Response = await activityPeriodChapterState.GetResponseMessage();
     }
 }

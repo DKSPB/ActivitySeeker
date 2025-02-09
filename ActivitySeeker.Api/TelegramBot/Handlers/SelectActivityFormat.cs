@@ -1,8 +1,8 @@
 ﻿using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Utils;
-using ActivitySeeker.Domain.Entities;
+using ActivitySeeker.Api.States;
 using Microsoft.Extensions.Options;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
@@ -28,18 +28,10 @@ namespace ActivitySeeker.Api.TelegramBot.Handlers
 
         protected override async Task ActionsAsync(UserUpdate userData)
         {
-            Response.Text = "Выбери формат проведения активности:";
-            Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(true);
-            Response.Image = await GetImage(StatesEnum.SelectActivityFormat.ToString());
+            var activityFormatChapterState = new ActivityFormatChapter(_botConfig.RootImageFolder, _webRootPath);
+            Response = await activityFormatChapterState.GetResponseMessage(true);
 
             CurrentUser.State.StateNumber = StatesEnum.SaveActivityFormat;
-        }
-
-        private async Task<byte[]?> GetImage(string fileName)
-        {
-            var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
-
-            return await FileProvider.GetImage(filePath);
         }
     }
 }
