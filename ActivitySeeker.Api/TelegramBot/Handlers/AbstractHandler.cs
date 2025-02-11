@@ -25,12 +25,11 @@ public abstract class AbstractHandler : IHandler
     {
         CurrentUser = currentUser;
 
-        var messageId = CurrentUser.State.MessageId;
-
-        if(messageId > 0)
+        try
         {
             await _activityPublisher.DeleteMessage(userUpdate.ChatId, CurrentUser.State.MessageId);
         }
+        catch(Exception){}
         
         await ActionsAsync(userUpdate);
 
