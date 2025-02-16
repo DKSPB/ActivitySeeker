@@ -35,20 +35,6 @@ namespace ActivitySeeker.Api.TelegramBot
                 replyMarkup: response.Keyboard);
         }
 
-        public async Task EditMessageAsync(ChatId chatId, int messageId, InlineKeyboardMarkup replyMarkup)
-        {
-            try
-            {
-                await _botClient.EditMessageReplyMarkupAsync(
-                    chatId: chatId,
-                    messageId: messageId,
-                    replyMarkup: replyMarkup);
-            }
-            catch (Exception)
-            {}
-
-        }
-
         public async Task DeleteMessage(ChatId chatId, int messageId)
         {
             await _botClient.DeleteMessageAsync(
