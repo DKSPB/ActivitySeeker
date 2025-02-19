@@ -181,7 +181,7 @@ namespace ActivitySeeker.Domain.Migrations
                 table: "transition",
                 column: "BotStateId",
                 principalSchema: "definition",
-                principalTable: "state",
+                principalTable: "stateEntity",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }

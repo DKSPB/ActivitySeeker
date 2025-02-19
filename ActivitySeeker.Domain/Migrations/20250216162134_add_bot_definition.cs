@@ -14,7 +14,7 @@ namespace ActivitySeeker.Domain.Migrations
                 name: "definition");
 
             migrationBuilder.CreateTable(
-                name: "state",
+                name: "stateEntity",
                 schema: "definition",
                 columns: table => new
                 {
@@ -45,20 +45,20 @@ namespace ActivitySeeker.Domain.Migrations
                         name: "FK_transition_state_BotStateId",
                         column: x => x.BotStateId,
                         principalSchema: "definition",
-                        principalTable: "state",
+                        principalTable: "stateEntity",
                         principalColumn: "id");
                     table.ForeignKey(
                         name: "FK_transition_state_FromStateId",
                         column: x => x.FromStateId,
                         principalSchema: "definition",
-                        principalTable: "state",
+                        principalTable: "stateEntity",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_transition_state_ToStateId",
                         column: x => x.ToStateId,
                         principalSchema: "definition",
-                        principalTable: "state",
+                        principalTable: "stateEntity",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -147,7 +147,7 @@ namespace ActivitySeeker.Domain.Migrations
                 schema: "definition");
 
             migrationBuilder.DropTable(
-                name: "state",
+                name: "stateEntity",
                 schema: "definition");
 
             migrationBuilder.UpdateData(

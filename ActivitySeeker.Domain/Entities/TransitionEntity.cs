@@ -9,20 +9,23 @@ using System.Threading.Tasks;
 namespace ActivitySeeker.Domain.Entities
 {
     [Table("transition", Schema = "definition")]
-    public class BotTransition
+    public class TransitionEntity
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Column("from_state_id")]
-        public int FromStateId { get; set; }
+        public int FromStateId { get; init; }
 
         [Column("to_state_id")]
-        public int ToStateId { get; set; }
+        public int ToStateId { get; init; }
 
-        public BotState FromState { get; set; } = default!;
+        [Column("name")]
+        public string Name { get; init; } = default!;
 
-        public BotState ToState { get; set; } = default!;
+        public StateEntity FromState { get; set; } = default!;
+
+        public StateEntity ToState { get; set; } = default!;
     }
 }

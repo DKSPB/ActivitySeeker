@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 namespace ActivitySeeker.Domain.Entities
 {
     [Table("state", Schema = "definition")]
-    public class BotState
+    public class StateEntity
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
 
         [Column("name")]
-        public string Name { get; set; } = default!;
+        public string Name { get; init; } = default!;
 
-        public ICollection<BotTransition>? Transitions { get; set; }
+        public ICollection<TransitionEntity> OutgoingTransitions { get; set; } = new List<TransitionEntity>();
+
+        public ICollection<TransitionEntity> IncomingTransitions { get; set; } = new List<TransitionEntity>();
     }
 }

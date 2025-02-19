@@ -105,7 +105,7 @@ namespace ActivitySeeker.Domain.Migrations
                 table: "transition",
                 column: "from_state_id",
                 principalSchema: "definition",
-                principalTable: "state",
+                principalTable: "stateEntity",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -115,7 +115,7 @@ namespace ActivitySeeker.Domain.Migrations
                 table: "transition",
                 column: "to_state_id",
                 principalSchema: "definition",
-                principalTable: "state",
+                principalTable: "stateEntity",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -218,7 +218,7 @@ namespace ActivitySeeker.Domain.Migrations
                 table: "transition",
                 column: "FromStateId",
                 principalSchema: "definition",
-                principalTable: "state",
+                principalTable: "stateEntity",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -228,7 +228,7 @@ namespace ActivitySeeker.Domain.Migrations
                 table: "transition",
                 column: "ToStateId",
                 principalSchema: "definition",
-                principalTable: "state",
+                principalTable: "stateEntity",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
         }

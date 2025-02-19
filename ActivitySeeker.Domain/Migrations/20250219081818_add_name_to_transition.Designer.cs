@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20250219081818_add_name_to_transition")]
+    partial class add_name_to_transition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,7 +80,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Тренеровки на открытом воздухе. Приглашаем всех присоединиться к тренировкам на открытом воздухе",
-                            StartDate = new DateTime(2025, 2, 27, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9724)
+                            StartDate = new DateTime(2025, 2, 27, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3680)
                         },
                         new
                         {
@@ -87,7 +89,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Игра в настолку Бункер. Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
-                            StartDate = new DateTime(2025, 2, 22, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9748)
+                            StartDate = new DateTime(2025, 2, 22, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3706)
                         },
                         new
                         {
@@ -96,7 +98,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Мастер-класс по изготовлению свечи. Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
-                            StartDate = new DateTime(2025, 2, 20, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9751)
+                            StartDate = new DateTime(2025, 2, 20, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3709)
                         },
                         new
                         {
@@ -105,7 +107,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Мастер-класс по изготовлению глиняной посуды. Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
-                            StartDate = new DateTime(2025, 3, 19, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9753)
+                            StartDate = new DateTime(2025, 3, 19, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3711)
                         },
                         new
                         {
@@ -114,7 +116,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Вархаммер 40000. Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
-                            StartDate = new DateTime(2025, 2, 19, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9756)
+                            StartDate = new DateTime(2025, 2, 19, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3714)
                         },
                         new
                         {
@@ -123,7 +125,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Футбол в Мурино. Все желающие, присоединяйтесь к нашей команде для игры в футбол",
-                            StartDate = new DateTime(2025, 2, 21, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9760)
+                            StartDate = new DateTime(2025, 2, 21, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3718)
                         },
                         new
                         {
@@ -132,7 +134,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Соревнования по настольному теннису. Fitness House Мурино проводит соревнования по настольному теннису!",
-                            StartDate = new DateTime(2025, 2, 24, 16, 33, 39, 124, DateTimeKind.Local).AddTicks(9780)
+                            StartDate = new DateTime(2025, 2, 24, 11, 18, 18, 206, DateTimeKind.Local).AddTicks(3721)
                         });
                 });
 
@@ -202,6 +204,56 @@ namespace ActivitySeeker.Domain.Migrations
                     b.ToTable("admin", "activity_seeker");
                 });
 
+            modelBuilder.Entity("ActivitySeeker.Domain.Entities.BotState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("state", "definition");
+                });
+
+            modelBuilder.Entity("ActivitySeeker.Domain.Entities.BotTransition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FromStateId")
+                        .HasColumnType("integer")
+                        .HasColumnName("from_state_id");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<int>("ToStateId")
+                        .HasColumnType("integer")
+                        .HasColumnName("to_state_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromStateId");
+
+                    b.HasIndex("ToStateId")
+                        .IsUnique();
+
+                    b.ToTable("transition", "definition");
+                });
+
             modelBuilder.Entity("ActivitySeeker.Domain.Entities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -219,56 +271,6 @@ namespace ActivitySeeker.Domain.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("city", "activity_seeker");
-                });
-
-            modelBuilder.Entity("ActivitySeeker.Domain.Entities.StateEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("stateEntity", "definition");
-                });
-
-            modelBuilder.Entity("ActivitySeeker.Domain.Entities.TransitionEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("FromStateId")
-                        .HasColumnType("integer")
-                        .HasColumnName("from_state_id");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<int>("ToStateId")
-                        .HasColumnType("integer")
-                        .HasColumnName("to_state_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FromStateId");
-
-                    b.HasIndex("ToStateId");
-
-                    b.ToTable("transition", "definition");
                 });
 
             modelBuilder.Entity("ActivitySeeker.Domain.Entities.User", b =>
@@ -322,7 +324,7 @@ namespace ActivitySeeker.Domain.Migrations
 
                     b.Property<int>("State")
                         .HasColumnType("integer")
-                        .HasColumnName("stateEntity");
+                        .HasColumnName("state");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -370,17 +372,17 @@ namespace ActivitySeeker.Domain.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("ActivitySeeker.Domain.Entities.TransitionEntity", b =>
+            modelBuilder.Entity("ActivitySeeker.Domain.Entities.BotTransition", b =>
                 {
-                    b.HasOne("ActivitySeeker.Domain.Entities.StateEntity", "FromState")
-                        .WithMany("OutgoingTransitions")
+                    b.HasOne("ActivitySeeker.Domain.Entities.BotState", "FromState")
+                        .WithMany("Transitions")
                         .HasForeignKey("FromStateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ActivitySeeker.Domain.Entities.StateEntity", "ToState")
-                        .WithMany("IncomingTransitions")
-                        .HasForeignKey("ToStateId")
+                    b.HasOne("ActivitySeeker.Domain.Entities.BotState", "ToState")
+                        .WithOne()
+                        .HasForeignKey("ActivitySeeker.Domain.Entities.BotTransition", "ToStateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -424,11 +426,9 @@ namespace ActivitySeeker.Domain.Migrations
                     b.Navigation("Children");
                 });
 
-            modelBuilder.Entity("ActivitySeeker.Domain.Entities.StateEntity", b =>
+            modelBuilder.Entity("ActivitySeeker.Domain.Entities.BotState", b =>
                 {
-                    b.Navigation("IncomingTransitions");
-
-                    b.Navigation("OutgoingTransitions");
+                    b.Navigation("Transitions");
                 });
 #pragma warning restore 612, 618
         }
