@@ -9,9 +9,10 @@ public class ActivitySeekerContext: DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Activity> Activities { get; set; } = null!;
     public DbSet<ActivityType> ActivityTypes { get; set; } = null!;
-
     public DbSet<City> Cities { get; set; } = null!;
     public DbSet<Admin> Admins { get; set; } = null!;
+    public DbSet<BotState> BotStates { get; set; } = null!;
+    public DbSet<BotTransition> Transitions { get; set; } = null!;
 
     public ActivitySeekerContext(DbContextOptions<ActivitySeekerContext> options) : base(options)
     {
@@ -38,6 +39,16 @@ public class ActivitySeekerContext: DbContext
             .HasOne(e => e.Offer)
             .WithOne()
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<BotTransition>()
+            .HasOne(x => x.FromState)
+            .WithMany(z => z.Transitions)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<BotTransition>()
+            .HasOne(x => x.ToState)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
         
         modelBuilder.ApplyConfiguration(new ConfigureActivityTypes());
         modelBuilder.ApplyConfiguration(new ConfigureActivity());

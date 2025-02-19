@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20250216164554_add_fk_between_state_and_transition")]
+    partial class add_fk_between_state_and_transition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -78,7 +80,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Тренеровки на открытом воздухе. Приглашаем всех присоединиться к тренировкам на открытом воздухе",
-                            StartDate = new DateTime(2025, 2, 26, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4868)
+                            StartDate = new DateTime(2025, 2, 24, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1344)
                         },
                         new
                         {
@@ -87,7 +89,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Игра в настолку Бункер. Магазин Слон в посудной лавке организует прекрасный вечер за игрой в Бункер! присоединяйся!",
-                            StartDate = new DateTime(2025, 2, 21, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4884)
+                            StartDate = new DateTime(2025, 2, 19, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1364)
                         },
                         new
                         {
@@ -96,7 +98,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Мастер-класс по изготовлению свечи. Магазин Слон в посудной лавке приглашает всех желающих посетить мастер-класс по изготовлению аромо-свечи своими руками",
-                            StartDate = new DateTime(2025, 2, 19, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4887)
+                            StartDate = new DateTime(2025, 2, 17, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1368)
                         },
                         new
                         {
@@ -105,7 +107,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Мастер-класс по изготовлению глиняной посуды. Приглашаем на наш мастер-класс по изготовлению глиняной посуды",
-                            StartDate = new DateTime(2025, 3, 18, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4890)
+                            StartDate = new DateTime(2025, 3, 16, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1371)
                         },
                         new
                         {
@@ -114,7 +116,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Вархаммер 40000. Магазин Hobby Games организует соревнование по игре в вархаммер! присоединяйтесь",
-                            StartDate = new DateTime(2025, 2, 18, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4892)
+                            StartDate = new DateTime(2025, 2, 16, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1374)
                         },
                         new
                         {
@@ -123,7 +125,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Футбол в Мурино. Все желающие, присоединяйтесь к нашей команде для игры в футбол",
-                            StartDate = new DateTime(2025, 2, 20, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4926)
+                            StartDate = new DateTime(2025, 2, 18, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1379)
                         },
                         new
                         {
@@ -132,7 +134,7 @@ namespace ActivitySeeker.Domain.Migrations
                             IsOnline = false,
                             IsPublished = true,
                             LinkOrDescription = "Соревнования по настольному теннису. Fitness House Мурино проводит соревнования по настольному теннису!",
-                            StartDate = new DateTime(2025, 2, 23, 13, 22, 44, 316, DateTimeKind.Local).AddTicks(4929)
+                            StartDate = new DateTime(2025, 2, 21, 19, 45, 54, 346, DateTimeKind.Local).AddTicks(1381)
                         });
                 });
 
@@ -230,6 +232,9 @@ namespace ActivitySeeker.Domain.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BotStateId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("FromStateId")
                         .HasColumnType("integer")
                         .HasColumnName("from_state_id");
@@ -240,7 +245,10 @@ namespace ActivitySeeker.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FromStateId");
+                    b.HasIndex("BotStateId");
+
+                    b.HasIndex("FromStateId")
+                        .IsUnique();
 
                     b.HasIndex("ToStateId")
                         .IsUnique();
@@ -368,9 +376,14 @@ namespace ActivitySeeker.Domain.Migrations
 
             modelBuilder.Entity("ActivitySeeker.Domain.Entities.BotTransition", b =>
                 {
-                    b.HasOne("ActivitySeeker.Domain.Entities.BotState", "FromState")
+                    b.HasOne("ActivitySeeker.Domain.Entities.BotState", null)
                         .WithMany("Transitions")
-                        .HasForeignKey("FromStateId")
+                        .HasForeignKey("BotStateId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("ActivitySeeker.Domain.Entities.BotState", "FromState")
+                        .WithOne()
+                        .HasForeignKey("ActivitySeeker.Domain.Entities.BotTransition", "FromStateId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

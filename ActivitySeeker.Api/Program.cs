@@ -74,6 +74,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
                 builder.Services.AddScoped<IAdminService, AdminService>();
                 builder.Services.AddScoped<ICityService, CityService>();
+                builder.Services.AddScoped<IDefinitionService, DefinitionService>();
                 builder.Services.AddScoped<SetDefaultSettingsHandler>();
                 builder.Services.AddScoped<StartHandler>();
                 builder.Services.AddScoped<MainMenuHandler>();
