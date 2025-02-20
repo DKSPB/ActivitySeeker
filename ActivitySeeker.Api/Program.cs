@@ -101,6 +101,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<ConfirmOfferHandler>();
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
+                builder.Services.AddScoped<StateManager>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
 
                 builder.Services.AddQuartz(quartz =>

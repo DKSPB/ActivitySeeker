@@ -17,13 +17,19 @@ namespace ActivitySeeker.Api.Controllers;
 public class TelegramBotController: ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IDefinitionService _definitionService;
     private readonly IServiceProvider _serviceProvider;
     private readonly ActivityPublisher _activityPublisher;
     private readonly ILogger<TelegramBotController> _logger;
 
-    public TelegramBotController(IServiceProvider serviceProvider, IUserService userService, 
-        ActivityPublisher activityPublisher, ILogger<TelegramBotController> logger)
+    public TelegramBotController (
+        IServiceProvider serviceProvider,
+        IDefinitionService definitionService,
+        IUserService userService, 
+        ActivityPublisher activityPublisher, 
+        ILogger<TelegramBotController> logger)
     {
+        _definitionService = definitionService;
         _activityPublisher = activityPublisher;
         _serviceProvider = serviceProvider;
         _userService = userService;
@@ -47,7 +53,7 @@ public class TelegramBotController: ControllerBase
             await _activityPublisher.AnswerOnPushButton(userUpdate.CallbackQueryId);
         }
 
-        var currentUser = CreateUserIfNotExists(userUpdate);
+        var currentUser = await CreateUserIfNotExists(userUpdate);
 
         IHandler handler;
 
@@ -86,9 +92,9 @@ public class TelegramBotController: ControllerBase
     /// Создание пользователя, если о нём нет записи в БД
     /// </summary>
     /// <param name="update">Сообщение от пользователя</param>
-    private UserDto CreateUserIfNotExists(UserUpdate update)
+    private async Task<UserDto> CreateUserIfNotExists(UserUpdate update)
     {
-        var user = _userService.GetUserById(update.TelegramUserId);
+        var user = await _userService.GetUserByIdAsync(update.TelegramUserId);
 
         if (user is not null)
         {
@@ -105,10 +111,10 @@ public class TelegramBotController: ControllerBase
                 StateNumber = StatesEnum.Start,
                 SearchFrom = DateTime.Now,
                 SearchTo = DateTime.Now.AddDays(1).Date,
-                MessageId = update.MessageId
+                MessageId = update.MessageId,
             }
         };
-        _userService.CreateUser(user);
+        await _userService.CreateUserAsync(user);
 
         return user;
     }

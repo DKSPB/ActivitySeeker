@@ -16,6 +16,8 @@ namespace ActivitySeeker.Bll.Models
         public int MessageId { get; set; }
         
         public StatesEnum StateNumber { get; set; }
+        
+        public int StateNumber_new { get; set; }
 
         public override string ToString()
         {

@@ -45,5 +45,10 @@ namespace ActivitySeeker.Bll.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<TransitionEntity> GetTransitionByName(string transitionName)
+        {
+            return _context.Transitions.SingleAsync(x => x.Name == transitionName);
+        }
     }
 }
