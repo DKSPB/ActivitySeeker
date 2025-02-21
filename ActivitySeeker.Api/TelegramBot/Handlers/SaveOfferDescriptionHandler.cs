@@ -4,7 +4,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SaveOfferDescription)]
+[HandlerState(/*StatesEnum.SaveOfferDescription*/"/save_offer_description")]
 public class SaveOfferDescriptionHandler : AbstractHandler
 {
     public SaveOfferDescriptionHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)

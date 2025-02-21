@@ -4,7 +4,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SaveDefaultSettings)]
+[HandlerState(/*StatesEnum.SaveDefaultSettings*/"/save_default_settings")]
 public class SaveDefaultSettingsHandler : AbstractHandler
 {
     private readonly ICityService _cityService;

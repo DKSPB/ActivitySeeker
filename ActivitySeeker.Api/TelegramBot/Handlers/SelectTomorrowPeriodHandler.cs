@@ -6,7 +6,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.TomorrowPeriod)]
+[HandlerState(/*StatesEnum.TomorrowPeriod*/"/tomorrow_period")]
 public class SelectTomorrowPeriodHandler: AbstractHandler
 {
     private readonly string _webRootPath;

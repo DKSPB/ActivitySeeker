@@ -5,7 +5,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.PreviousActivity)]
+[HandlerState(/*StatesEnum.PreviousActivity*/"/previous_activity")]
 public class PreviousHandler: AbstractHandler
 {
     private ActivityTelegramDto? PreviousNode { get; set; }

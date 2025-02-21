@@ -8,7 +8,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.Offer)]
+[HandlerState(/*StatesEnum.Offer*/"/offer")]
 public class OfferHandler : AbstractHandler
 {
     private readonly string _webRootPath;

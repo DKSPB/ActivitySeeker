@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.ConfirmOffer)]
+[HandlerState(/*StatesEnum.ConfirmOffer*/"/confirm_offer")]
 public class ConfirmOfferHandler : AbstractHandler
 {
     private readonly NotificationAdminHub _adminHub;

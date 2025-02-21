@@ -9,7 +9,7 @@ using Microsoft.OpenApi.Extensions;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.ListOfActivities)]
+[HandlerState(/*StatesEnum.ListOfActivities*/ "/list_of_activities")]
 public class ListOfActivitiesHandler: AbstractHandler
 {
     private readonly IActivityTypeService _activityTypeService;

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.PeriodToDate)]
+[HandlerState(/*StatesEnum.PeriodToDate*/"/set_by_date")]
 public class UserSetByDateHandler : AbstractHandler
 {
     private readonly string _webRootPath;

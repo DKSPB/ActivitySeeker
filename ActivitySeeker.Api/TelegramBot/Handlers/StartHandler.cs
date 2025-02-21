@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.Start)]
+[HandlerState(/*StatesEnum.Start*/"/start")]
 public class StartHandler : AbstractHandler
 {
     private readonly BotConfiguration _botConfig;

@@ -4,7 +4,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SelectOfferCity)]
+[HandlerState(/*StatesEnum.SelectOfferCity*/"/select_offer_city")]
 public class SelectOfferCity : AbstractHandler
 {
     private readonly ICityService _cityService;

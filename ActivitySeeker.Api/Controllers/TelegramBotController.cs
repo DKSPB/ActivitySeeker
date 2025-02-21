@@ -55,9 +55,9 @@ public class TelegramBotController: ControllerBase
 
         var currentUser = await CreateUserIfNotExists(userUpdate);
 
-        IHandler handler;
+        //IHandler handler;
 
-        switch (userUpdate.Data)
+        /*switch (userUpdate.Data)
         {
             case "/start":
                 handler = _serviceProvider.GetRequiredService<StartHandler>();
@@ -71,17 +71,17 @@ public class TelegramBotController: ControllerBase
                 handler = _serviceProvider.GetRequiredService<SetDefaultSettingsHandler>();
                 await handler.HandleAsync(currentUser, userUpdate);
                 return Ok();
-        }
+        }*/
 
-        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data) ??
-                          HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
+        var handlerType = HandlerProvider.FindHandlersTypeByCallbackData(handlerTypes, userUpdate.Data);// ??
+                          //.HandlerProvider.FindHandlersTypeByState(handlerTypes, currentUser.State.StateNumber);
 
         if(handlerType is null)
         {
             return Ok();
         }
               
-        handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
+        var handler = HandlerProvider.CreateHandler(_serviceProvider, _logger, handlerType);
         await handler.HandleAsync(currentUser, userUpdate);
         return Ok();
     }
@@ -100,6 +100,8 @@ public class TelegramBotController: ControllerBase
         {
             return user;
         }
+
+        var startStateId = (await _definitionService.GetStateByName("start")).Id;
         
         user = new UserDto
         {
@@ -112,6 +114,7 @@ public class TelegramBotController: ControllerBase
                 SearchFrom = DateTime.Now,
                 SearchTo = DateTime.Now.AddDays(1).Date,
                 MessageId = update.MessageId,
+                StateNumber_new = startStateId
             }
         };
         await _userService.CreateUserAsync(user);

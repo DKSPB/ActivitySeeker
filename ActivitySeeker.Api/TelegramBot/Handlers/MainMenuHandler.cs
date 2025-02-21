@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.MainMenu)]
+[HandlerState(/*StatesEnum.MainMenu*/"/main_menu")]
 public class MainMenuHandler: AbstractHandler
 {
     private readonly string _webRootPath;

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SetDefaultSettings)]
+[HandlerState(/*StatesEnum.SetDefaultSettings*/"/city")]
 public class SetDefaultSettingsHandler: AbstractHandler
 {
     private readonly ICityService _cityService;

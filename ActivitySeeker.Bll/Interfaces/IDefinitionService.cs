@@ -11,5 +11,8 @@ namespace ActivitySeeker.Bll.Interfaces
         Task UpdateState(StateEntity toEntity);
         Task UpdateTransition(TransitionEntity toEntity);
         Task<TransitionEntity> GetTransitionByName(string transitionName);
+
+        Task<StateEntity> GetStateByName(string stateName);
+        Task<StateEntity> GetStateById(int stateId);
     }
 }

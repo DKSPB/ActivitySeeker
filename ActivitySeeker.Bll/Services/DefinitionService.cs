@@ -26,6 +26,16 @@ namespace ActivitySeeker.Bll.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<StateEntity> GetStateByName(string stateName)
+        {
+            return (await GetStates()).First(x => x.Name == stateName);
+        }
+
+        public async Task<StateEntity> GetStateById(int stateId)
+        {
+            return (await GetStates()).First(x => x.Id == stateId);
+        }
+
         public async Task<IEnumerable<StateEntity>> GetStates()
         {
             return await _context.States.ToListAsync();

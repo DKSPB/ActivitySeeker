@@ -5,7 +5,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.Result)]
+[HandlerState(/*StatesEnum.Result*/"/search_result")]
 public class SearchResultHandler : AbstractHandler
 {
     private ActivityTelegramDto? CurrentActivity { get; set; }

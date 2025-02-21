@@ -31,7 +31,7 @@ namespace ActivitySeeker.Api.TelegramBot
         /// <param name="handlerTypes"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static Type? FindHandlersTypeByState(IEnumerable<Type> handlerTypes, StatesEnum state)
+        public static Type? FindHandlersTypeByState(IEnumerable<Type> handlerTypes, /*StatesEnum*/string state)
         {
             return handlerTypes.FirstOrDefault(x =>
                 x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState == state);
@@ -40,7 +40,7 @@ namespace ActivitySeeker.Api.TelegramBot
         public static Type? FindHandlersTypeByCallbackData(IEnumerable<Type> handlerTypes, string callbackData)
         {
             return handlerTypes.FirstOrDefault(x =>
-                x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState.GetDisplayName() == callbackData);
+                x.GetCustomAttribute<HandlerStateAttribute>()?.HandlerState/*.GetDisplayName()*/ == callbackData);
         }
 
         /// <summary>

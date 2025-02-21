@@ -5,7 +5,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.SaveOfferDate)]
+[HandlerState(/*StatesEnum.SaveOfferDate*/"/save_offer_date")]
 public class SaveOfferDateHandler : AbstractHandler
 {
     private readonly ILogger<SaveOfferDateHandler> _logger;

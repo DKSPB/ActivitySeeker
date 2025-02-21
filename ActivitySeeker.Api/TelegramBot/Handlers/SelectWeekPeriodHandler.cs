@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.WeekPeriod)]
+[HandlerState(/*StatesEnum.WeekPeriod*/"/week_period")]
 public class SelectWeekPeriodHandler: AbstractHandler
 {
     private readonly string _webRootPath;

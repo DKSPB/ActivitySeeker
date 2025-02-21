@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
-    [HandlerState(StatesEnum.ListOfChildrenActivities)]
+    [HandlerState(/*StatesEnum.ListOfChildrenActivities*/"/list_of_children_activities")]
     public class ListOfChildrenActivitiesHandler : ListOfActivitiesHandler
     {
         public ListOfChildrenActivitiesHandler(

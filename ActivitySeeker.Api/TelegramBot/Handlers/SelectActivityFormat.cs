@@ -6,7 +6,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
-    [HandlerState(StatesEnum.SelectActivityFormat)]
+    [HandlerState(/*StatesEnum.SelectActivityFormat*/"/select_activity_format")]
     public class SelectActivityFormat : AbstractHandler
     {
         private readonly string _webRootPath;

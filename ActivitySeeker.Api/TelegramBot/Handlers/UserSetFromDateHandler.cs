@@ -4,7 +4,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
-[HandlerState(StatesEnum.PeriodFromDate)]
+[HandlerState(/*StatesEnum.PeriodFromDate*/"/set_from_date")]
 public class UserSetFromDateHandler : AbstractHandler
 {
     public UserSetFromDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher)

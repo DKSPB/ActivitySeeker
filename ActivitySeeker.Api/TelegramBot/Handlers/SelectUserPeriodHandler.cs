@@ -4,7 +4,7 @@ using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers
 {
-    [HandlerState(StatesEnum.UserPeriod)]
+    [HandlerState(/*StatesEnum.UserPeriod*/"/user_period")]
     public class SelectUserPeriodHandler: AbstractHandler
     {
         public SelectUserPeriodHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
