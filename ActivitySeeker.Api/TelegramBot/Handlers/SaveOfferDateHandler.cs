@@ -1,22 +1,34 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SaveOfferDate)]
 public class SaveOfferDateHandler : AbstractHandler
 {
+    private readonly BotConfiguration _botConfig;
+    private readonly string _webRootPath;
     private readonly ILogger<SaveOfferDateHandler> _logger;
 
-    public SaveOfferDateHandler(IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher, 
-        ILogger<SaveOfferDateHandler> logger) : base(userService, activityService, activityPublisher)
+    public SaveOfferDateHandler(
+        IUserService userService, 
+        IActivityService activityService, 
+        ActivityPublisher activityPublisher, 
+        ILogger<SaveOfferDateHandler> logger,
+        IOptions<BotConfiguration> botConfigOptions,
+        IWebHostEnvironment webHostEnvironment) 
+        : base(userService, activityService, activityPublisher)
     {
         _logger = logger;
+        _botConfig = botConfigOptions.Value;
+        _webRootPath = webHostEnvironment.WebRootPath; 
     }
 
-    protected override Task ActionsAsync(UserUpdate userData)
+    protected override async Task ActionsAsync(UserUpdate userData)
     {
         var message = userData.Data;
 
@@ -51,7 +63,7 @@ public class SaveOfferDateHandler : AbstractHandler
             {
                 Response.Text = $"Дата начала активности должна быть позднее текущей даты." +
                               $"\nВведите дату повторно:";
-                
+                Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
                 Response.Keyboard = Keyboards.GetEmptyKeyboard();
             }
             else
@@ -59,6 +71,7 @@ public class SaveOfferDateHandler : AbstractHandler
                 CurrentUser.Offer.StartDate = startActivityDate;
                 
                 Response.Text = GetFinishOfferMessage(CurrentUser.Offer);
+                //Response.Image = await GetImage(CurrentUser.
                 Response.Keyboard = Keyboards.ConfirmOffer();
             }
         }
@@ -67,11 +80,17 @@ public class SaveOfferDateHandler : AbstractHandler
             Response.Text = $"Введёная дата не соответствует формату:" +
                           $"\n(дд.мм.гггг чч:мм)" +
                           $"\nПример: {DateTime.Now:dd.MM.yyyy HH:mm}";
-            
+
+            Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
             Response.Keyboard = Keyboards.GetEmptyKeyboard();
         }
+    }
 
-        return Task.CompletedTask;
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+        return await FileProvider.GetImage(filePath);
     }
 
     private string GetFinishOfferMessage(ActivityDto offer)

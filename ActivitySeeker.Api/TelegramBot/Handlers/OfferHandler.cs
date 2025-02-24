@@ -39,6 +39,7 @@ public class OfferHandler : AbstractHandler
         {
             var activityTypes = (await _activityTypeService.GetAll()).Where(x => x.ParentId is null).ToList();
             Response.Text = "Выбери тип активности:";
+            Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
             Response.Keyboard = Keyboards.GetActivityTypesKeyboard(activityTypes, StatesEnum.MainMenu.GetDisplayName(), "Меню");
         }
         else
@@ -52,20 +53,23 @@ public class OfferHandler : AbstractHandler
             {
                 Response.Text = "Выбери формат проведения:";
                 CurrentUser.State.StateNumber = StatesEnum.SaveOfferFormat;
+                Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
                 Response.Keyboard = Keyboards.GetActivityFormatsKeyboard(false);
 
                 CreateOfferIfNotExists((Guid)activityType.Id);
             }
             else
             {
-                Response.Text = "Выбери тип активности";
+                Response.Text = "Выбери тип активности: ";
 
                 if (activityType.ParentId is null)
                 {
+                    Response.Image = activityType.ImagePath is null ? null : await GetImage(activityType.ImagePath);
                     Response.Keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList(), StatesEnum.Offer.GetDisplayName());
                 }
                 else 
                 {
+                    Response.Image = activityType.ImagePath is null ? null : await GetImage(activityType.ImagePath);
                     Response.Keyboard = Keyboards.GetActivityTypesKeyboard(_children.ToList(), activityType.ParentId.ToString());
                 }
                 

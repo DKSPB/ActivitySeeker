@@ -1,20 +1,32 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
 [HandlerState(StatesEnum.SelectOfferCity)]
 public class SelectOfferCity : AbstractHandler
 {
+    private readonly string _webRootPath;
+    private readonly BotConfiguration _botConfig;
     private readonly ICityService _cityService;
     private int _mskId = -1;
     private int _spbId = -1;
     private List<City> _cities = new ();
 
-    public SelectOfferCity(ICityService cityService, IUserService userService, IActivityService activityService, ActivityPublisher activityPublisher) 
+    public SelectOfferCity(
+        ICityService cityService, 
+        IUserService userService, 
+        IActivityService activityService, 
+        ActivityPublisher activityPublisher,
+        IWebHostEnvironment webHostEnvironment,
+        IOptions<BotConfiguration> botConfigOptions) 
         : base(userService, activityService, activityPublisher)
     {
+        _webRootPath = webHostEnvironment.WebRootPath;
+        _botConfig = botConfigOptions.Value;
         _cityService = cityService;
     }
 
@@ -30,7 +42,8 @@ public class SelectOfferCity : AbstractHandler
             {
                 Response.Text = $"Поиск не дал результата." +
                                       $"\nУточните название и попробуйте ещё раз.";
-                
+
+                Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
                 Response.Keyboard = Keyboards.GetDefaultSettingsKeyboard(_mskId, _spbId, false);
 
                 _mskId = (await _cityService.GetCitiesByName("Москва")).First().Id;
@@ -39,6 +52,7 @@ public class SelectOfferCity : AbstractHandler
             else
             {
                 Response.Text = $"Найденные города:";
+                Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
                 Response.Keyboard = Keyboards.GetCityKeyboard(_cities);
             }
         }
@@ -66,13 +80,21 @@ public class SelectOfferCity : AbstractHandler
             }
             else if (cityId != -1)
             {
+                CurrentUser.CityId = cityId;
                 CurrentUser.Offer.CityId = cityId;
             }
 
-            Response.Text = "Заполни описание активности:";
-            Response.Keyboard = Keyboards.GetEmptyKeyboard();
-            
             CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
+            Response.Text = "Заполни описание активности:";
+            Response.Image = await GetImage(CurrentUser.State.StateNumber.ToString());
+            Response.Keyboard = Keyboards.GetEmptyKeyboard(); 
         }
+    }
+
+    private async Task<byte[]?> GetImage(string fileName)
+    {
+        var filePath = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+
+        return await FileProvider.GetImage(filePath);
     }
 }

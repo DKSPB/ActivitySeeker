@@ -87,6 +87,8 @@ public class ActivityTypeService: IActivityTypeService
 
         await FileProvider.UploadImage(path, image);
 
+        _context.ActivityTypes.Update(activityType);
+
         await _context.SaveChangesAsync();
     }
 }
