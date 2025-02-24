@@ -45,7 +45,7 @@ public class ConfirmOfferHandler : AbstractHandler
         }
 
         CurrentUser.Offer.OfferState = false;
-        _userService.UpdateUser(CurrentUser);
+        await _userService.UpdateUser(CurrentUser);
         await _adminHub.Send(JsonConvert.SerializeObject(CurrentUser.Offer));
 
         var offerConfirmResponse = new ResponseMessage

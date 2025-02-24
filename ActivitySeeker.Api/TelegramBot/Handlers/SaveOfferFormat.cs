@@ -35,6 +35,7 @@ public class SaveOfferFormat: AbstractHandler
         if (_userData.Equals("online"))
         {
             CurrentUser.Offer.IsOnline = true;
+            CurrentUser.Offer.CityId = null;
             CurrentUser.State.StateNumber = StatesEnum.SaveOfferDescription;
             Response.Text = $"Заполни описание события";
             Response.Keyboard = Keyboards.GetEmptyKeyboard();

@@ -16,9 +16,9 @@ public class UserService: IUserService
     }
     
     /// <inheritdoc />
-    public void UpdateUser(UserDto user)
+    public async Task UpdateUser(UserDto user)
     {
-        var userExists = _context.Users.First(x => x.Id == user.Id);
+        var userExists = await _context.Users.FirstAsync(x => x.Id == user.Id);
         
         userExists.MessageId = user.State.MessageId;
         userExists.CityId = user.CityId;
@@ -44,6 +44,7 @@ public class UserService: IUserService
             userExists.Offer.Id = user.Offer.Id;
             userExists.Offer.LinkOrDescription = user.Offer.LinkOrDescription;
             userExists.Offer.ActivityTypeId = user.Offer.ActivityTypeId;
+            userExists.Offer.IsOnline = user.Offer.IsOnline;
             userExists.Offer.IsPublished = user.Offer.OfferState;
             userExists.Offer.StartDate = user.Offer.StartDate;
             userExists.Offer.Image = user.Offer.Image;
@@ -51,26 +52,26 @@ public class UserService: IUserService
         }
 
         _context.Users.Update(userExists);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
     }
     
     /// <inheritdoc />
-    public void CreateUser(UserDto user)
+    public async Task CreateUser(UserDto user)
     {
         var userEntity = UserDto.ToUser(user);
-        _context.Users.Add(userEntity);
-        _context.SaveChanges();
+        await _context.Users.AddAsync(userEntity);
+        await _context.SaveChangesAsync();
     }
     
     /// <inheritdoc />
-    public UserDto? GetUserById(long id)
+    public async Task<UserDto?> GetUserById(long id)
     {
-        var user = _context.Users
+        var user = await _context.Users
                 .Include(x => x.ActivityType)
                 .Include(z => z.Offer)
                 .ThenInclude(y => y!.ActivityType)
-                .FirstOrDefault(x=>x.Id == id);
+                .FirstOrDefaultAsync(x=>x.Id == id);
         
         return user is null ? null : new UserDto(user);
     }

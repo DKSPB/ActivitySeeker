@@ -47,7 +47,7 @@ public class TelegramBotController: ControllerBase
             await _activityPublisher.AnswerOnPushButton(userUpdate.CallbackQueryId);
         }
 
-        var currentUser = CreateUserIfNotExists(userUpdate);
+        var currentUser = await CreateUserIfNotExists(userUpdate);
 
         IHandler handler;
 
@@ -86,9 +86,9 @@ public class TelegramBotController: ControllerBase
     /// Создание пользователя, если о нём нет записи в БД
     /// </summary>
     /// <param name="update">Сообщение от пользователя</param>
-    private UserDto CreateUserIfNotExists(UserUpdate update)
+    private async Task<UserDto> CreateUserIfNotExists(UserUpdate update)
     {
-        var user = _userService.GetUserById(update.TelegramUserId);
+        var user = await _userService.GetUserById(update.TelegramUserId);
 
         if (user is not null)
         {
@@ -108,7 +108,7 @@ public class TelegramBotController: ControllerBase
                 MessageId = update.MessageId
             }
         };
-        _userService.CreateUser(user);
+        await _userService.CreateUser(user);
 
         return user;
     }

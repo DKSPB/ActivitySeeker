@@ -39,7 +39,7 @@ public class SelectOfferCity : AbstractHandler
             else
             {
                 Response.Text = $"Найденные города:";
-                Keyboards.GetCityKeyboard(_cities);
+                Response.Keyboard = Keyboards.GetCityKeyboard(_cities);
             }
         }
         else

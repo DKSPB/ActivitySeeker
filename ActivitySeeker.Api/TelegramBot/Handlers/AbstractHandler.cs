@@ -41,7 +41,7 @@ public abstract class AbstractHandler : IHandler
         var message = await _activityPublisher.SendMessageAsync(userUpdate.ChatId, Response);
 
         CurrentUser.State.MessageId = message.MessageId;
-        UserService.UpdateUser(CurrentUser);
+        await UserService.UpdateUser(CurrentUser);
     }
 
     protected abstract Task ActionsAsync(UserUpdate userData);
