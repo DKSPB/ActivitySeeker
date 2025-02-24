@@ -21,26 +21,9 @@ public class ActivitySeekerContext: DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .Entity<ActivityType>()
-            .HasOne(e => e.Parent)
-            .WithMany(x => x.Children)
-            .OnDelete(DeleteBehavior.SetNull);
-
-        modelBuilder
-            .Entity<Activity>()
-            .HasOne(p => p.ActivityType)
-            .WithMany(x => x.Activities)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        modelBuilder
-            .Entity<User>()
-            .HasOne(e => e.Offer)
-            .WithOne()
-            .OnDelete(DeleteBehavior.SetNull);
-        
         modelBuilder.ApplyConfiguration(new ConfigureActivityTypes());
         modelBuilder.ApplyConfiguration(new ConfigureActivity());
+        modelBuilder.ApplyConfiguration(new ConfigureUser());
     }
 }
     

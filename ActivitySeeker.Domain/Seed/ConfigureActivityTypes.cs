@@ -8,6 +8,11 @@ namespace ActivitySeeker.Domain.Seed
     {
         public void Configure(EntityTypeBuilder<ActivityType> builder)
         {
+            builder
+                .HasOne(e => e.Parent)
+                .WithMany(x => x.Children)
+                .OnDelete(DeleteBehavior.SetNull);
+
             List<ActivityType> activityTypes = new()
             {
                 new ActivityType
