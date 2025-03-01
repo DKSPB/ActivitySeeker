@@ -5,6 +5,8 @@ using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Diagnostics;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 
@@ -14,6 +16,7 @@ public class ConfirmOfferHandler : AbstractHandler
     private readonly NotificationAdminHub _adminHub;
     private readonly ActivityPublisher _activityPublisher;
     private readonly IUserService _userService;
+    private readonly IActivityService _activityService;
 
     private readonly string _webRootPath;
     private readonly BotConfiguration _botConfig;
@@ -32,6 +35,7 @@ public class ConfirmOfferHandler : AbstractHandler
         _userService = userService;
         _adminHub = adminHub;
         _activityPublisher = activityPublisher;
+        _activityService = activityService;
     }
 
     protected override async Task ActionsAsync(UserUpdate userData)
@@ -55,6 +59,17 @@ public class ConfirmOfferHandler : AbstractHandler
         };
         
         await _activityPublisher.SendMessageAsync(userData.ChatId, offerConfirmResponse);
+
+        var newActivityResponse = new ResponseMessage
+        {
+            Text = CurrentUser.Offer.GetActivityDescription().ToString(),
+            Image = CurrentUser.Offer.Image,
+            Keyboard = InlineKeyboardMarkup.Empty()
+        };
+
+        var tgMessage = await _activityPublisher.SendMessageAsync(_botConfig.TelegramChannel, newActivityResponse);
+
+        await _activityService.PublishActivity(CurrentUser.Offer, tgMessage.MessageId);
             
         Response.Text = $"{CurrentUser.State}";
         Response.Image = await GetImage(nextState.ToString());
