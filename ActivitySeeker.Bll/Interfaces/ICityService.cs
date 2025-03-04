@@ -26,4 +26,13 @@ public interface ICityService
     /// <param name="id">Идентификатор города</param>
     /// <returns></returns>
     Task<City?> GetById(int id);
+
+    /// <summary>
+    /// Загрузка изображения города по его названию
+    /// </summary>
+    /// <param name="cityId">Номер города</param>
+    /// <param name="path">путь к файлу</param>
+    /// <param name="image">Объект-поток изображения</param>
+    /// <returns></returns>
+    Task UploadImage(int cityId, string path, Stream image);
 }

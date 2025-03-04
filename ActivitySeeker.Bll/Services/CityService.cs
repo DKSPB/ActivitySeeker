@@ -1,4 +1,6 @@
+using System.Data;
 using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.Utils;
 using ActivitySeeker.Domain;
 using ActivitySeeker.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -39,5 +41,24 @@ public class CityService: ICityService
     public async Task<List<City>> GetCities()
     {
         return await _context.Cities.ToListAsync();
+    }
+    
+    /// <inheritdoc />
+    public async Task UploadImage(int cityId, string path, Stream image)
+    {
+        var city = await GetById(cityId);
+
+        if (city is null)
+        {
+            throw new NoNullAllowedException("Не найден город по заданному идентификатору");
+        }
+
+        city.ImagePath = path;
+
+        await FileProvider.UploadImage(path, image);
+
+        _context.Cities.Update(city);
+
+        await _context.SaveChangesAsync();
     }
 }
