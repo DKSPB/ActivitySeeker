@@ -86,7 +86,7 @@ namespace ActivitySeeker.Bll.Services
         public async Task CreateActivity(ActivityDto activity)
         {
             var activityEntity = activity.ToActivity();
-            
+            activityEntity.IsPublished = false;
             await _context.Activities.AddAsync(activityEntity);
             await _context.SaveChangesAsync();
         }

@@ -60,6 +60,8 @@ public class ConfirmOfferHandler : AbstractHandler
         
         await _activityPublisher.SendMessageAsync(userData.ChatId, offerConfirmResponse);
 
+        await Task.Delay(3000);
+
         var newActivityResponse = new ResponseMessage
         {
             Text = CurrentUser.Offer.GetActivityDescription().ToString(),
