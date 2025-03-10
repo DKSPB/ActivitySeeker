@@ -3,6 +3,7 @@ using System;
 using ActivitySeeker.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ActivitySeeker.Domain.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    partial class ActivitySeekerContextModelSnapshot : ModelSnapshot
+    [Migration("20250304140856_add_image_to_city")]
+    partial class add_image_to_city
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

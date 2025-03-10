@@ -13,4 +13,7 @@ public class City
     
     [Column("name")]
     public string Name { get; set; } = string.Empty;
+    
+    [Column("image_path")]
+    public string? ImagePath { get; set; }
 }
