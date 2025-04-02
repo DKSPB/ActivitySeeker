@@ -3,11 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Domain", "ActivitySeeker.Domain\ActivitySeeker.Domain.csproj", "{F1E1247B-3422-4118-8E1E-DF7ED7778BB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{F1E1247B-3422-4118-8E1E-DF7ED7778BB1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Api", "ActivitySeeker.Api\ActivitySeeker.Api.csproj", "{EA68C017-25CA-48D4-80C9-BE814CA7E62B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Bll", "ActivitySeeker.Bll\ActivitySeeker.Bll.csproj", "{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 Utils", "0 Utils", "{EC7B6B2B-12C5-4A3C-B3D7-0367B36D1A2E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 Entities", "1 Entities", "{325B4363-1518-407B-BFE1-C04AE379D07D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{3F10B46E-C5EB-4FF7-B70F-DFBF82984218}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Interfaces", "Infrastructure.Interfaces\Infrastructure.Interfaces.csproj", "{DA15FBEC-9556-437C-B8DC-AB9AFDC12F60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 Infrastructure.Interfaces", "2 Infrastructure.Interfaces", "{3942A504-1F4F-49D8-AC65-DD72476C64D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Implementation", "Infrastructure.Implementation\Infrastructure.Implementation.csproj", "{CB627DF2-98B1-4ED9-9EA3-8C940AD42A39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure.Implementation", "Infrastructure.Implementation", "{907CCF98-F7CA-41A1-BB3A-0FF2E3701718}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,11 +41,29 @@ Global
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F10B46E-C5EB-4FF7-B70F-DFBF82984218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F10B46E-C5EB-4FF7-B70F-DFBF82984218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F10B46E-C5EB-4FF7-B70F-DFBF82984218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F10B46E-C5EB-4FF7-B70F-DFBF82984218}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA15FBEC-9556-437C-B8DC-AB9AFDC12F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA15FBEC-9556-437C-B8DC-AB9AFDC12F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA15FBEC-9556-437C-B8DC-AB9AFDC12F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA15FBEC-9556-437C-B8DC-AB9AFDC12F60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB627DF2-98B1-4ED9-9EA3-8C940AD42A39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB627DF2-98B1-4ED9-9EA3-8C940AD42A39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB627DF2-98B1-4ED9-9EA3-8C940AD42A39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB627DF2-98B1-4ED9-9EA3-8C940AD42A39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18D8462B-56F7-40FA-8407-E47797BF62CD}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F1E1247B-3422-4118-8E1E-DF7ED7778BB1} = {325B4363-1518-407B-BFE1-C04AE379D07D}
+		{DA15FBEC-9556-437C-B8DC-AB9AFDC12F60} = {3942A504-1F4F-49D8-AC65-DD72476C64D6}
+		{3F10B46E-C5EB-4FF7-B70F-DFBF82984218} = {907CCF98-F7CA-41A1-BB3A-0FF2E3701718}
+		{CB627DF2-98B1-4ED9-9EA3-8C940AD42A39} = {907CCF98-F7CA-41A1-BB3A-0FF2E3701718}
 	EndGlobalSection
 EndGlobal

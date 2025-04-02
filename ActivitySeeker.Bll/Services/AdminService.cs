@@ -1,17 +1,17 @@
 using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
+using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivitySeeker.Bll.Services;
 
 public class AdminService: IAdminService
 {
-    private readonly ActivitySeekerContext _activitySeekerContext;
+    private readonly IDbContext _activitySeekerContext;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtProvider _jwtProvider;
     
-    public AdminService(ActivitySeekerContext activitySeekerContext, IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
+    public AdminService(IDbContext activitySeekerContext, IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
     {
         _activitySeekerContext = activitySeekerContext;
         _passwordHasher = passwordHasher;

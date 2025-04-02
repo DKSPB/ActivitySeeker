@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

@@ -7,7 +7,7 @@ using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Authorization;
 using Telegram.Bot.Types.Enums;
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
 
 namespace ActivitySeeker.Api.Controllers;
 

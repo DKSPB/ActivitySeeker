@@ -1,17 +1,17 @@
 using System.Data;
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Utils;
-using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
+using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivitySeeker.Bll.Services;
 
 public class CityService: ICityService
 {
-    private readonly ActivitySeekerContext _context;
+    private readonly IDbContext _context;
     
-    public CityService(ActivitySeekerContext context)
+    public CityService(IDbContext context)
     {
         _context = context;
     }

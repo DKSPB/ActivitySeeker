@@ -1,15 +1,15 @@
 ﻿using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
+using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivitySeeker.Bll.Services
 {
     public class ActivityService: IActivityService
     {
-        private readonly ActivitySeekerContext _context;
-        public ActivityService(ActivitySeekerContext context)
+        private readonly IDbContext _context;
+        public ActivityService(IDbContext context)
         {
             _context = context;
         }

@@ -1,6 +1,6 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain;
+using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -8,9 +8,9 @@ namespace ActivitySeeker.Bll.Services;
 
 public class UserService: IUserService
 {
-    private readonly ActivitySeekerContext _context;
+    private readonly IDbContext _context;
     
-    public UserService(ActivitySeekerContext context)
+    public UserService(IDbContext context)
     {
         _context = context;
     }
