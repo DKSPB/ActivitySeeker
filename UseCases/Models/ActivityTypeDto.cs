@@ -14,7 +14,7 @@ public class ActivityTypeDto
         TypeName = typeName;
     }
 
-    public ActivityTypeDto(ActivityType activityType)
+    public ActivityTypeDto(Domain.Entities.ActivityType activityType)
     {
         Id = activityType.Id;
         TypeName = activityType.TypeName;
@@ -22,9 +22,9 @@ public class ActivityTypeDto
         ImagePath = activityType.ImagePath;
     }
 
-    public ActivityType ToActivityType()
+    public Domain.Entities.ActivityType ToActivityType()
     {
-        return new ActivityType
+        return new Domain.Entities.ActivityType
         {
             TypeName = TypeName,
             ParentId = ParentId

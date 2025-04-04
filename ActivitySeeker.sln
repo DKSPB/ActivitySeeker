@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Api", "ActivitySeeker.Api\ActivitySeeker.Api.csproj", "{EA68C017-25CA-48D4-80C9-BE814CA7E62B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivitySeeker.Bll", "ActivitySeeker.Bll\ActivitySeeker.Bll.csproj", "{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UseCases", "UseCases\UseCases.csproj", "{0FBFADCC-CD5C-4249-9EC2-4B00EC2F4310}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 Utils", "0 Utils", "{EC7B6B2B-12C5-4A3C-B3D7-0367B36D1A2E}"
 EndProject

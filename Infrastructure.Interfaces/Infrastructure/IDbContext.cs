@@ -11,5 +11,5 @@ public interface IDbContext
     public DbSet<City> Cities { get; }
     public DbSet<Admin> Admins { get; }
 
-    Task<int> SaveChangesAsync(CancellationToken token);
+    Task<int> SaveChangesAsync(CancellationToken token = default);
 }

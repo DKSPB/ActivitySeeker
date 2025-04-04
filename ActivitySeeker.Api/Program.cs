@@ -16,12 +16,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ActivitySeeker.Bll.Notification;
 using System.Globalization;
+using ActivitySeeker.Bll.Configuration;
 using ActivitySeeker.Bll.QuartzJobs;
 using DataAccess;
 using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.AspNetCore.Localization;
 using Newtonsoft.Json.Converters;
 using Quartz;
+using UseCases.ActivityType.Commands.CreateActivityType;
 
 namespace ActivitySeeker.Api
 {
@@ -66,6 +68,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddSignalR();
                 builder.Services.AddDbContext<IDbContext, ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+                builder.Services.RegisterBusinessServices();
                 builder.Services.AddScoped<IUserService, UserService>();
                 builder.Services.AddScoped<ActivityPublisher>();
                 builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();

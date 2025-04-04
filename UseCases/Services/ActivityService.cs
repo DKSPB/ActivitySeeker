@@ -58,8 +58,10 @@ namespace ActivitySeeker.Bll.Services
         /// <inheritdoc />
         public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
         {
-            var result = _context.Activities.FromSqlInterpolated($"select * from activity_seeker.get_activities({requestParams.IsOnline}, {requestParams.ActivityTypeId}, {requestParams.SearchFrom}, {requestParams.SearchTo}, {requestParams.IsPublished}, {requestParams.CityId})");
+            //TODO: Раскомментировать после того, как разберусь с контекстом
+            //var result = _context.Activities.FromSqlInterpolated($"select * from activity_seeker.get_activities({requestParams.IsOnline}, {requestParams.ActivityTypeId}, {requestParams.SearchFrom}, {requestParams.SearchTo}, {requestParams.IsPublished}, {requestParams.CityId})");
 
+            IQueryable<Activity>? result = default;
             return result;
         }
 
@@ -151,7 +153,8 @@ namespace ActivitySeeker.Bll.Services
             var oldActivities = GetActivities(request)!
                 .Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0);
             
-            _context.RemoveRange(oldActivities);
+            //TODO: раскомментировать после того, как разберусь с контекстом
+            //_context.RemoveRange(oldActivities);
 
             await _context.SaveChangesAsync();
         }

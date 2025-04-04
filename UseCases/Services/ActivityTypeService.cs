@@ -1,7 +1,6 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Utils;
-using Domain.Entities;
 using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +23,7 @@ public class ActivityTypeService: IActivityTypeService
             .ToListAsync();
     }
 
-    private IQueryable<ActivityType> GetActivityTypes()
+    private IQueryable<Domain.Entities.ActivityType> GetActivityTypes()
     {
         return _context.ActivityTypes
             .Include(x => x.Parent)
