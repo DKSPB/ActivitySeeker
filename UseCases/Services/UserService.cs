@@ -1,10 +1,10 @@
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using Infrastructure.Interfaces.Infrastracture;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace ActivitySeeker.Bll.Services;
+namespace ActivitySeeker.UseCases.Services;
 
 public class UserService: IUserService
 {

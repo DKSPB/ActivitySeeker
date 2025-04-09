@@ -1,4 +1,4 @@
-﻿using ActivitySeeker.Bll.Interfaces;
+﻿using ActivitySeeker.UseCases.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.Options;
 

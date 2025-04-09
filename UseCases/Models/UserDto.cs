@@ -1,7 +1,8 @@
+using ActivitySeeker.UseCases.ActivityType.Dto;
 using Domain.Entities;
 using Newtonsoft.Json;
 
-namespace ActivitySeeker.Bll.Models;
+namespace ActivitySeeker.UseCases.Models;
 
 public class UserDto
 {

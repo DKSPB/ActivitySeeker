@@ -1,24 +1,23 @@
-using ActivitySeeker.Bll.Models;
-using Infrastructure.Interfaces.Infrastracture;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ActivitySeeker.UseCases.ActivityType.Dto;
+using ApplicationServices.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActivitySeeker.Bll.ActivityType.Queries.GetById;
+namespace ActivitySeeker.UseCases.ActivityType.Queries.GetById;
 
 public class GetActivityTypeByIdQueryHandler : IRequestHandler<GetActivityTypeByIdQuery, ActivityTypeDto>
 {
-    private readonly IDbContext _context;
+    private readonly IActivityTypeService _activityTypeService;
 
-    public GetActivityTypeByIdQueryHandler(IDbContext context)
+    public GetActivityTypeByIdQueryHandler(IActivityTypeService activityTypeService)
     {
-        _context = context;
+        _activityTypeService = activityTypeService;
     }
     
-    public async  Task<ActivityTypeDto> Handle(GetActivityTypeByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ActivityTypeDto> Handle(GetActivityTypeByIdQuery request, CancellationToken cancellationToken)
     {
-        //var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == id);
-
-        var activityTypeEntity = await _context.ActivityTypes
+        var activityTypeEntity = await _activityTypeService.GetAll()
             .FirstOrDefaultAsync(x => x.Id == request.ActivityTypeId, cancellationToken);
 
         if (activityTypeEntity is null)

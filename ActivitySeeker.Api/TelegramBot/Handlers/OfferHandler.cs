@@ -1,9 +1,10 @@
-using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
 using Domain.Entities;
 using Microsoft.OpenApi.Extensions;
-using ActivitySeeker.Bll.Utils;
+using ActivitySeeker.UseCases.ActivityType.Dto;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
+using ActivitySeeker.UseCases.Utils;
 using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;

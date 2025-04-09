@@ -1,7 +1,7 @@
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.Models;
 using Domain.Entities;
 
-namespace ActivitySeeker.Bll.Interfaces;
+namespace ActivitySeeker.UseCases.Interfaces;
 
 public interface IActivityService
 {

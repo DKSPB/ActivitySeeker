@@ -2,11 +2,11 @@ using ActivitySeeker.Api.TelegramBot;
 using Telegram.Bot.Types;
 using Microsoft.AspNetCore.Mvc;
 using ActivitySeeker.Api.TelegramBot.Handlers;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using Microsoft.AspNetCore.Authorization;
 using Telegram.Bot.Types.Enums;
 using ActivitySeeker.Api.Models;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
 using Domain.Entities;
 
 namespace ActivitySeeker.Api.Controllers;

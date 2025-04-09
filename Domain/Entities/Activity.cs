@@ -37,8 +37,8 @@ public class Activity
     #region Навигационные свойства
 
     public ActivityType ActivityType { get; set; } = null!;
-    
-    public City? ActivityCity { get; set; }
+
+    public City? ActivityCity { get; } = default;
 
     #endregion
 }

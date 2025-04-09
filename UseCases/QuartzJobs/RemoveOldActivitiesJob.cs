@@ -1,7 +1,7 @@
-using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.UseCases.Interfaces;
 using Quartz;
 
-namespace ActivitySeeker.Bll.QuartzJobs;
+namespace ActivitySeeker.UseCases.QuartzJobs;
 
 public class RemoveOldActivitiesJob : IJob
 {

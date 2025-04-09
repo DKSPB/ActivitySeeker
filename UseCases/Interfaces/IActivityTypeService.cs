@@ -1,49 +1,50 @@
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.ActivityType.Dto;
+using ActivitySeeker.UseCases.Models;
 
-namespace ActivitySeeker.Bll.Interfaces;
+namespace ActivitySeeker.UseCases.Interfaces;
 
 public interface IActivityTypeService
 {
     /// <summary>
-    /// Получение списка типов активностей
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
     /// <returns></returns>
     Task<List<ActivityTypeDto>> GetAll();
 
     /// <summary>
-    /// Получение типа активностей по модификатору
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="id">Идентификатор типа активности</param>
+    /// <param name="id">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
     /// <returns></returns>
     Task<ActivityTypeDto> GetById(Guid id);
 
     /// <summary>
-    /// Создание новой активности
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="activityType">Объект - тип активности</param>
+    /// <param name="activityType">пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
     /// <returns></returns>
     Task Create(ActivityTypeDto activityType);
 
     /// <summary>
-    /// Изменение типа активности
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="activityType">Объект - тип активности</param>
+    /// <param name="activityType">пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
     /// <returns></returns>
     Task Update(ActivityTypeDto activityType);
 
     /// <summary>
-    /// Удаление типов активностей по идентификаторам
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="activityTypeIds">Список идентификаторов типов активностей</param>
+    /// <param name="activityTypeIds">пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
     /// <returns></returns>
     Task Delete(List<Guid> activityTypeIds);
 
     /// <summary>
-    /// Загрузка изображения для выбранного типа активности
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
-    /// <param name="activityTypeId">Идентификатор активности</param>
-    /// <param name="path">Полный путь к файлу</param>
-    /// <param name="image">Контент</param>
+    /// <param name="activityTypeId">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+    /// <param name="path">пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ</param>
+    /// <param name="image">пїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
     /// <returns></returns>
     Task UploadImage(Guid activityTypeId, string path, Stream image);
 }

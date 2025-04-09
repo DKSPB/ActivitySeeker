@@ -1,10 +1,10 @@
-﻿using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
+﻿using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
 using Domain.Entities;
-using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActivitySeeker.Bll.Services
+namespace ActivitySeeker.UseCases.Services
 {
     public class ActivityService: IActivityService
     {

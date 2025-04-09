@@ -1,4 +1,4 @@
-namespace ActivitySeeker.Bll.Interfaces;
+namespace ActivitySeeker.UseCases.Interfaces;
 
 public interface IPasswordHasher
 {

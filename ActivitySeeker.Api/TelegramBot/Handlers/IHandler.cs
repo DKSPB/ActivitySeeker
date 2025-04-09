@@ -1,5 +1,5 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.Models;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 

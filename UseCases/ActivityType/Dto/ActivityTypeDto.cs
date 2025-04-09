@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace ActivitySeeker.Bll.Models;
+namespace ActivitySeeker.UseCases.ActivityType.Dto;
 
 public class ActivityTypeDto
 {

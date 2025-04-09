@@ -2,10 +2,6 @@ using System.Text;
 using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Api.TelegramBot;
 using Microsoft.EntityFrameworkCore;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Bll.Services;
-using ActivitySeeker.Bll.Utils;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using NLog;
@@ -14,16 +10,19 @@ using Telegram.Bot;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ActivitySeeker.Bll.Notification;
 using System.Globalization;
-using ActivitySeeker.Bll.Configuration;
-using ActivitySeeker.Bll.QuartzJobs;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ActivitySeeker.UseCases.Configuration;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
+using ActivitySeeker.UseCases.Notification;
+using ActivitySeeker.UseCases.QuartzJobs;
+using ActivitySeeker.UseCases.Services;
+using ActivitySeeker.UseCases.Utils;
 using DataAccess;
-using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.AspNetCore.Localization;
 using Newtonsoft.Json.Converters;
 using Quartz;
-using UseCases.ActivityType.Commands.CreateActivityType;
 
 namespace ActivitySeeker.Api
 {

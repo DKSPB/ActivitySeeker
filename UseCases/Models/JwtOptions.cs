@@ -1,4 +1,4 @@
-namespace ActivitySeeker.Bll.Models;
+namespace ActivitySeeker.UseCases.Models;
 
 public class JwtOptions
 {

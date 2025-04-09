@@ -4,11 +4,12 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>ActivitySeeker.Bll</RootNamespace>
+        <RootNamespace>ActivitySeeker.UseCases</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Infrastructure.Interfaces\Infrastructure.Interfaces.csproj" />
+      <ProjectReference Include="..\ApplicationServices.Interfaces\ApplicationServices.Interfaces.csproj" />
+      <ProjectReference Include="..\DataAccess.Interfaces\DataAccess.Interfaces.csproj" />
       <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
@@ -24,6 +25,10 @@
       <Reference Include="Quartz">
         <HintPath>..\..\..\.nuget\packages\quartz\3.7.0\lib\net6.0\Quartz.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="ActivityType\Commands\DeleteActivityType\" />
     </ItemGroup>
 
 </Project>

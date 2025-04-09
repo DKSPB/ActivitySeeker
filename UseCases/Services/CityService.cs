@@ -1,11 +1,11 @@
 using System.Data;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Utils;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Utils;
 using Domain.Entities;
-using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActivitySeeker.Bll.Services;
+namespace ActivitySeeker.UseCases.Services;
 
 public class CityService: ICityService
 {

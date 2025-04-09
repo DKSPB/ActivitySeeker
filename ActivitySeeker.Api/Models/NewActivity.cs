@@ -1,4 +1,4 @@
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.Models;
 using FluentValidation;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Annotations;

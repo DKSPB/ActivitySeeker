@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ActivitySeeker.Bll.Utils
+namespace ActivitySeeker.UseCases.Utils
 {
     public static class FileProvider
     {

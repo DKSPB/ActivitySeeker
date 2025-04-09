@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ActivitySeeker.Bll.Models
+namespace ActivitySeeker.UseCases.Models
 {
     public class PageDto<T>
     {

@@ -1,6 +1,6 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
 using Domain.Entities;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;

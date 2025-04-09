@@ -1,7 +1,8 @@
 ﻿using Domain.Entities;
 using System.Text;
+using ActivitySeeker.UseCases.ActivityType.Dto;
 
-namespace ActivitySeeker.Bll.Models
+namespace ActivitySeeker.UseCases.Models
 {
     public class State
     {

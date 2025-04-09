@@ -1,7 +1,7 @@
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.ActivityType.Dto;
 using MediatR;
 
-namespace ActivitySeeker.Bll.ActivityType.Queries.GetById;
+namespace ActivitySeeker.UseCases.ActivityType.Queries.GetById;
 
 public class GetActivityTypeByIdQuery : IRequest<ActivityTypeDto>
 {

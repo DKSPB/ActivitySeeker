@@ -1,8 +1,8 @@
-using Infrastructure.Interfaces.Infrastracture;
-using MediatR;
-using UseCases.ActivityType.Commands.CreateActivityType;
 
-namespace ActivitySeeker.Bll.ActivityType.Commands;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using MediatR;
+
+namespace ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
 
 public class CreateActivityTypeCommandHandler : IRequestHandler<CreateActivityTypeCommand>
 {

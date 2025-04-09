@@ -1,8 +1,6 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
 
 namespace ActivitySeeker.Api.TelegramBot.Handlers;
 

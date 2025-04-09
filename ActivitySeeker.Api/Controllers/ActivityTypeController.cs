@@ -1,12 +1,11 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.ActivityType.Queries.GetById;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Utils;
+using ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
+using ActivitySeeker.UseCases.ActivityType.Queries.GetById;
+using ActivitySeeker.UseCases.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using UseCases.ActivityType.Commands.CreateActivityType;
+
 
 namespace ActivitySeeker.Api.Controllers;
 

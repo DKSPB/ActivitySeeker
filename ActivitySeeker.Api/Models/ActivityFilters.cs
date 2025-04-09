@@ -1,4 +1,4 @@
-﻿using ActivitySeeker.Bll.Models;
+﻿using ActivitySeeker.UseCases.Models;
 using Newtonsoft.Json;
 
 namespace ActivitySeeker.Api.Models

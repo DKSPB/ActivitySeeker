@@ -1,7 +1,8 @@
 using System.Text;
+using ActivitySeeker.UseCases.Models;
 using Domain.Entities;
 
-namespace ActivitySeeker.Bll.Models;
+namespace ActivitySeeker.UseCases.Models;
 
 public class ActivityTelegramDto: ActivityBaseDto
 {

@@ -1,7 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ActivitySeeker.Bll.Configuration;
+namespace ActivitySeeker.UseCases.Configuration;
 
 public static class ServiceRegistration
 {

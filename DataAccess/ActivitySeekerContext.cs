@@ -1,6 +1,6 @@
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
 using Domain.Entities;
 using DataAccess.Seed;
-using Infrastructure.Interfaces.Infrastracture;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess;

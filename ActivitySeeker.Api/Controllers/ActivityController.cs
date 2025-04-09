@@ -1,7 +1,7 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.Api.TelegramBot;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

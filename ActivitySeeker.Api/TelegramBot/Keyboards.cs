@@ -1,4 +1,4 @@
-﻿using ActivitySeeker.Bll.Models;
+﻿using ActivitySeeker.UseCases.ActivityType.Dto;
 using Domain.Entities;
 using Microsoft.OpenApi.Extensions;
 using Telegram.Bot.Types.ReplyMarkups;

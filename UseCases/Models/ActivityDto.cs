@@ -1,8 +1,8 @@
-using System.Text;
+using ActivitySeeker.UseCases.ActivityType.Dto;
 using Newtonsoft.Json;
 using Domain.Entities;
 
-namespace ActivitySeeker.Bll.Models;
+namespace ActivitySeeker.UseCases.Models;
 
 [JsonObject]
 public class ActivityDto: ActivityBaseDto

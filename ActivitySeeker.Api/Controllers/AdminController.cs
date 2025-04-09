@@ -1,5 +1,5 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.UseCases.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

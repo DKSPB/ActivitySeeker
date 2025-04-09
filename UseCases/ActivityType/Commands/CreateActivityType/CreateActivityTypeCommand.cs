@@ -1,7 +1,7 @@
-using ActivitySeeker.Bll.Models;
+using ActivitySeeker.UseCases.ActivityType.Dto;
 using MediatR;
 
-namespace UseCases.ActivityType.Commands.CreateActivityType;
+namespace ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
 
 public class CreateActivityTypeCommand: IRequest
 {

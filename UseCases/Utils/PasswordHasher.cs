@@ -1,7 +1,7 @@
 
-using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.UseCases.Interfaces;
 
-namespace ActivitySeeker.Bll.Utils;
+namespace ActivitySeeker.UseCases.Utils;
 
 public class PasswordHasher: IPasswordHasher
 {

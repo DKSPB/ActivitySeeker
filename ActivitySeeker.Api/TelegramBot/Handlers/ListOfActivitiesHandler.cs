@@ -1,7 +1,7 @@
 using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Bll.Utils;
+using ActivitySeeker.UseCases.ActivityType.Dto;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.Utils;
 using Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Extensions;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace ActivitySeeker.Bll.Notification
+namespace ActivitySeeker.UseCases.Notification
 {
     public class NotificationAdminHub: Hub
     {

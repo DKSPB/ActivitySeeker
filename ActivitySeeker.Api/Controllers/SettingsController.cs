@@ -1,4 +1,4 @@
-using ActivitySeeker.Bll.Utils;
+using ActivitySeeker.UseCases.Utils;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
