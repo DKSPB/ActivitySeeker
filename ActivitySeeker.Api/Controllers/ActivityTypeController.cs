@@ -1,11 +1,12 @@
-using ActivitySeeker.Api.Models;
 using ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
+using ActivitySeeker.UseCases.ActivityType.Commands.DeleteActivityType;
+using ActivitySeeker.UseCases.ActivityType.Commands.UpdateActivityType;
+using ActivitySeeker.UseCases.ActivityType.Dto;
+using ActivitySeeker.UseCases.ActivityType.Queries.GetAll;
 using ActivitySeeker.UseCases.ActivityType.Queries.GetById;
-using ActivitySeeker.UseCases.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -15,57 +16,54 @@ namespace ActivitySeeker.Api.Controllers;
 public class ActivityTypeController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly IActivityTypeService _activityTypeService;
-    
-    public ActivityTypeController(IActivityTypeService activityTypeService, ISender sender)
+
+    public ActivityTypeController(ISender sender)
     {
         _sender = sender;
-        _activityTypeService = activityTypeService;
     }
     
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var activityTypes = await _activityTypeService.GetAll();
-
-        foreach (var activityType in activityTypes)
-        {
-            activityType.Parent = 
-                activityType.ParentId is null ? null : await _activityTypeService.GetById(activityType.ParentId.Value);
-        }
+        var getAllCommand = new GetAllActivityTypeQuery();
         
-        return Ok(activityTypes.Select(x => new ActivityTypeViewModel(x)));
+        return Ok(await _sender.Send(getAllCommand));
     }
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
-        //return Ok(await _activityTypeService.GetById(id));
-        var result = await _sender.Send(new GetActivityTypeByIdQuery { ActivityTypeId = id });
-        return Ok(result);
+        var getByIdQuery = new GetActivityTypeByIdQuery(id);
+        
+        return Ok(await _sender.Send(getByIdQuery));
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] NewActivityType activityType)
+    public async Task<IActionResult> Create([FromBody] CreateActivityTypeDto activityType)
     {
-        //await _activityTypeService.Create(activityType.ToActivityTypeDto());
-        await _sender.Send(new CreateActivityTypeCommand {ActivityTypeDto = activityType.ToActivityTypeDto() });
+        var createCommand = new CreateActivityTypeCommand(activityType);
+        await _sender.Send(createCommand);
+        
         return Ok();
     }
 
-    //[HttpPut]
-    /*public async Task<IActionResult> Update([FromBody] NewActivityType activityType)
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] UpdateActivityTypeDto activityType)
     {
-        await _activityTypeService.Update(activityType.ToActivityTypeDto());
+        var updateCommand = new UpdateActivityTypeCommand(activityType);
+        await _sender.Send(updateCommand);
+        
         return Ok();
-    }*/
+    }
 
-    //[HttpDelete]
-    /*public async Task<IActionResult> Delete([FromBody] List<Guid> activityTypeIds)
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromBody] List<Guid> activityTypeIds)
     {
-        await _activityTypeService.Delete(activityTypeIds);
+        var deleteCommand = new DeleteActivityTypeCommand(activityTypeIds);
+        await _sender.Send(deleteCommand);
+        
         return Ok();
-    }*/
+    }
 
     //[HttpPost("upload/image")]
     /*public async Task<IActionResult> UploadActivityTypeImage(

@@ -5,5 +5,10 @@ namespace ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
 
 public class CreateActivityTypeCommand: IRequest
 {
-    public ActivityTypeDto ActivityTypeDto { get; set; }
+    public CreateActivityTypeCommand(CreateActivityTypeDto createActivityTypeDto)
+    {
+        CreateActivityTypeDto = createActivityTypeDto;
+    }
+
+    public CreateActivityTypeDto CreateActivityTypeDto { get; }
 }

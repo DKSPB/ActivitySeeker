@@ -5,5 +5,10 @@ namespace ActivitySeeker.UseCases.ActivityType.Commands.UpdateActivityType;
 
 public class UpdateActivityTypeCommand : IRequest
 {
-    public ActivityTypeDto ActivityTypeDto { get; set; }
+    public UpdateActivityTypeCommand(UpdateActivityTypeDto updateActivityTypeDto)
+    {
+        UpdateActivityTypeDto = updateActivityTypeDto;
+    }
+
+    public UpdateActivityTypeDto UpdateActivityTypeDto { get; }
 }

@@ -63,11 +63,12 @@ namespace ActivitySeeker.Api
                         };
                     });
 
+                builder.Services.AddAutoMapper(typeof(MappingProfile.MappingProfile).Assembly);
                 builder.Services.AddAuthorization();
                 builder.Services.AddSignalR();
                 builder.Services.AddDbContext<IDbContext, ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-                builder.Services.RegisterBusinessServices();
+                
                 builder.Services.AddScoped<IUserService, UserService>();
                 builder.Services.AddScoped<ActivityPublisher>();
                 builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
@@ -103,6 +104,8 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveOfferDescriptionHandler>();
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
+                
+                builder.Services.RegisterBusinessServices();
 
                 builder.Services.AddQuartz(quartz =>
                 {

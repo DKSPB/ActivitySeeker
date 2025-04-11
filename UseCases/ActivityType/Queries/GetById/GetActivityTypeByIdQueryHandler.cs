@@ -1,4 +1,3 @@
-using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
 using ActivitySeeker.UseCases.ActivityType.Dto;
 using ApplicationServices.Interfaces;
 using MediatR;

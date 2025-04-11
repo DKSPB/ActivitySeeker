@@ -1,20 +1,21 @@
-
-using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ApplicationServices.Interfaces;
+using AutoMapper;
 using MediatR;
 
 namespace ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
 
 public class CreateActivityTypeCommandHandler : IRequestHandler<CreateActivityTypeCommand>
 {
-    private readonly IDbContext _context;
-    
-    public CreateActivityTypeCommandHandler(IDbContext dbContext)
+    private readonly IMapper _mapper;
+    private readonly IActivityTypeService _activityTypeService;
+    public CreateActivityTypeCommandHandler(IMapper mapper, IActivityTypeService activityTypeService)
     {
-        _context = dbContext;
+        _mapper = mapper;
+        _activityTypeService = activityTypeService;
     }
     public async Task Handle(CreateActivityTypeCommand command, CancellationToken cancellationToken)
     {
-        await _context.ActivityTypes.AddAsync(command.ActivityTypeDto.ToActivityType(), cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        var entity = _mapper.Map<Domain.Entities.ActivityType>(command.CreateActivityTypeDto);
+        await _activityTypeService.Create(entity, cancellationToken);
     }
 }
