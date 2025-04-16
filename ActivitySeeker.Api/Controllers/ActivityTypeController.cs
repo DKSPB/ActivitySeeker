@@ -1,12 +1,17 @@
-using ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
-using ActivitySeeker.UseCases.ActivityType.Commands.DeleteActivityType;
-using ActivitySeeker.UseCases.ActivityType.Commands.UpdateActivityType;
+using ActivitySeeker.Api.Models;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ActivitySeeker.UseCases.ActivityType.Dto;
 using ActivitySeeker.UseCases.ActivityType.Queries.GetAll;
 using ActivitySeeker.UseCases.ActivityType.Queries.GetById;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
+using ActivitySeeker.UseCases.ActivityType.Commands.DeleteActivityType;
+using ActivitySeeker.UseCases.ActivityType.Commands.UpdateActivityType;
+using ActivitySeeker.UseCases.ActivityType.Commands.UploadActivityTypeImage;
+using ActivitySeeker.UseCases.Utils;
+using AutoMapper;
+using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -16,10 +21,12 @@ namespace ActivitySeeker.Api.Controllers;
 public class ActivityTypeController : ControllerBase
 {
     private readonly ISender _sender;
+    private readonly IMapper _mapper;
 
-    public ActivityTypeController(ISender sender)
+    public ActivityTypeController(ISender sender, IMapper mapper)
     {
         _sender = sender;
+        _mapper = mapper;
     }
     
     [HttpGet]
@@ -65,14 +72,14 @@ public class ActivityTypeController : ControllerBase
         return Ok();
     }
 
-    //[HttpPost("upload/image")]
-    /*public async Task<IActionResult> UploadActivityTypeImage(
+    [HttpPost("upload/image")]
+    public async Task<IActionResult> UploadActivityTypeImage(
         [FromServices]IWebHostEnvironment webHostEnvironment, 
         [FromServices]IOptions<BotConfiguration> botConfigOptions, 
-        [FromForm] ActivityTypeImage activityTypeImage)
+        [FromForm] ActivityTypeImageVM activityTypeImageVm)
     {
         var maxFileSize = botConfigOptions.Value.MaxFileSize;
-        var fileSize = activityTypeImage.File.Length;
+        var fileSize = activityTypeImageVm.File.Length;
 
         if (FileProvider.ValidateFileSize(fileSize, maxFileSize))
         {
@@ -82,13 +89,15 @@ public class ActivityTypeController : ControllerBase
 
             var fullPath = FileProvider.CombinePathToFile(webRootPath, rootImageFolder, newFilename);
 
-            await using (Stream imageStream = activityTypeImage.File.OpenReadStream())
-                await _activityTypeService.UploadImage(activityTypeImage.ActivityTypeId, fullPath, imageStream);
+            var imageDto = _mapper.Map<UploadActivityTypeImageDto>(activityTypeImageVm);
+            imageDto.Path = fullPath;
+            var uploadActivityTypeImageCommand = new UploadActivityTypeImageCommand(imageDto);
+            await _sender.Send(uploadActivityTypeImageCommand);
 
             return Ok();
         }
 
-        return BadRequest($"������ ������������ ����� ��������� {maxFileSize / (1024 * 1024)} ��");
+        return BadRequest($"Размер файла превышает {maxFileSize / (1024 * 1024)} Мб");
         
-    }*/
+    }
 }

@@ -3,7 +3,7 @@
 namespace ActivitySeeker.Api.Models
 {
     [JsonObject]
-    public class ActivityTypeImage
+    public class ActivityTypeImageVM
     {
         public Guid ActivityTypeId { get; set; }
 
