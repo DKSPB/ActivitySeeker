@@ -29,11 +29,11 @@ public class SettingsController : ControllerBase
     [HttpPost("states/upload/img")]
     public async Task<IActionResult> UploadStateImage([FromForm] FileUploader fileUploader)
     {
-        if (!FileProvider.ValidateFileSize(fileUploader.File.Length, _botConfig.MaxFileSize) || 
+        /*if (!FileProvider.ValidateFileSize(fileUploader.File.Length, _botConfig.MaxFileSize) || 
             !FileProvider.ValidateFileNameIsNotNull(fileUploader.File.FileName))
         {
             return BadRequest();
-        }
+        }*/
         
         var stateName = fileUploader.State.ToString();
 

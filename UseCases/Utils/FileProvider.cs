@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace ActivitySeeker.UseCases.Utils
 {
     public static class FileProvider
@@ -38,16 +33,6 @@ namespace ActivitySeeker.UseCases.Utils
             await using var fileStream = fileInfo.OpenRead();
             var readAsync = await fileStream.ReadAsync(data);
             return data;
-        }
-
-        public static bool ValidateFileSize(long imageLength, long maxLength)
-        {
-            return imageLength < maxLength;
-        }
-
-        public static bool ValidateFileNameIsNotNull(string fileName) 
-        {
-            return fileName is not null;
         }
     }
 }

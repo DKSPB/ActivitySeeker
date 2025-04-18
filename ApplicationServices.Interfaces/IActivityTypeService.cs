@@ -21,4 +21,5 @@ public interface IActivityTypeService
     Task Update(ActivityType activityType, CancellationToken cancellationToken = default);
     
     Task Delete(List<Guid> activityTypeIds, CancellationToken cancellationToken = default);
+    
 }

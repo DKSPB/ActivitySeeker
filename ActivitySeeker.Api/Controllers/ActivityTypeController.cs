@@ -1,6 +1,7 @@
-using ActivitySeeker.Api.Models;
 using MediatR;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using ActivitySeeker.Api.Models;
 using Microsoft.AspNetCore.Authorization;
 using ActivitySeeker.UseCases.ActivityType.Dto;
 using ActivitySeeker.UseCases.ActivityType.Queries.GetAll;
@@ -9,9 +10,6 @@ using ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
 using ActivitySeeker.UseCases.ActivityType.Commands.DeleteActivityType;
 using ActivitySeeker.UseCases.ActivityType.Commands.UpdateActivityType;
 using ActivitySeeker.UseCases.ActivityType.Commands.UploadActivityTypeImage;
-using ActivitySeeker.UseCases.Utils;
-using AutoMapper;
-using Microsoft.Extensions.Options;
 
 namespace ActivitySeeker.Api.Controllers;
 
@@ -73,31 +71,19 @@ public class ActivityTypeController : ControllerBase
     }
 
     [HttpPost("upload/image")]
-    public async Task<IActionResult> UploadActivityTypeImage(
-        [FromServices]IWebHostEnvironment webHostEnvironment, 
-        [FromServices]IOptions<BotConfiguration> botConfigOptions, 
-        [FromForm] ActivityTypeImageVM activityTypeImageVm)
+    public async Task<IActionResult> UploadActivityTypeImage([FromForm] ActivityTypeImageVM activityTypeImageVm)
     {
-        var maxFileSize = botConfigOptions.Value.MaxFileSize;
-        var fileSize = activityTypeImageVm.File.Length;
-
-        if (FileProvider.ValidateFileSize(fileSize, maxFileSize))
+        /*if (!ModelState.IsValid)
         {
-            var webRootPath = webHostEnvironment.WebRootPath;
-            var rootImageFolder = botConfigOptions.Value.RootImageFolder;
-            var newFilename = Path.GetRandomFileName();
-
-            var fullPath = FileProvider.CombinePathToFile(webRootPath, rootImageFolder, newFilename);
-
-            var imageDto = _mapper.Map<UploadActivityTypeImageDto>(activityTypeImageVm);
-            imageDto.Path = fullPath;
-            var uploadActivityTypeImageCommand = new UploadActivityTypeImageCommand(imageDto);
-            await _sender.Send(uploadActivityTypeImageCommand);
-
-            return Ok();
-        }
-
-        return BadRequest($"Размер файла превышает {maxFileSize / (1024 * 1024)} Мб");
+            return BadRequest(ModelState);
+        }*/
         
+        var imageDto = _mapper.Map<UploadActivityTypeImageDto>(activityTypeImageVm);
+        
+        var uploadActivityTypeImageCommand = new UploadActivityTypeImageCommand(imageDto);
+        
+        await _sender.Send(uploadActivityTypeImageCommand);
+
+        return Ok();
     }
 }

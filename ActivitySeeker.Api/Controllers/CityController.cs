@@ -38,10 +38,10 @@ namespace ActivitySeeker.Api.Controllers
             var maxFileSize = botConfigOptions.Value.MaxFileSize;
             var fileSize = cityImage.File.Length;
 
-            if (!FileProvider.ValidateFileSize(fileSize, maxFileSize))
+            /*if (!FileProvider.ValidateFileSize(fileSize, maxFileSize))
             {
                 return BadRequest($"Размер файла превышает {maxFileSize / (1024 * 1024)} Мб");
-            }
+            }*/
                 
             var webRootPath = webHostEnvironment.WebRootPath;
             var rootImageFolder = botConfigOptions.Value.RootImageFolder;

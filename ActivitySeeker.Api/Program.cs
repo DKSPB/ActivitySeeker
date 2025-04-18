@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Globalization;
+using ActivitySeeker.Api.Utils;
 using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
 using ActivitySeeker.UseCases.Configuration;
 using ActivitySeeker.UseCases.Interfaces;
@@ -68,7 +69,8 @@ namespace ActivitySeeker.Api
                 builder.Services.AddSignalR();
                 builder.Services.AddDbContext<IDbContext, ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-                
+                builder.Services.AddScoped<IFilePathGenerator, FilePathGenerator>();
+                builder.Services.AddTransient<FilePathResolver>(); 
                 builder.Services.AddScoped<IUserService, UserService>();
                 builder.Services.AddScoped<ActivityPublisher>();
                 builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
@@ -136,8 +138,8 @@ namespace ActivitySeeker.Api
 
                 #region serialize settings
 
-                builder.Services.AddControllers().AddNewtonsoftJson(options =>
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+                builder.Services.AddControllers()
+                    .AddNewtonsoftJson(options => options.SerializerSettings.Converters.Add(new StringEnumConverter()));
 
                 #endregion
 
