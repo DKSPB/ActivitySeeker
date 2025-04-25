@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace ActivitySeeker.UseCases.Interfaces;
+namespace ApplicationServices.Interfaces;
 
 /// <summary>
 /// Сервис доступа с сущности City

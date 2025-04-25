@@ -1,10 +1,9 @@
-﻿using ActivitySeeker.UseCases.Interfaces;
-using ActivitySeeker.UseCases.Models;
-using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+﻿using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ApplicationServices.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActivitySeeker.UseCases.Services
+namespace ApplicationServices.Implementation
 {
     public class ActivityService: IActivityService
     {
@@ -14,7 +13,7 @@ namespace ActivitySeeker.UseCases.Services
             _context = context;
         }
         
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(UserDto currentUser)
         {
             var currentUserState = currentUser.State;
@@ -53,20 +52,20 @@ namespace ActivitySeeker.UseCases.Services
             }
 
             return activities;
-        }
+        }*/
 
         /// <inheritdoc />
-        public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
+        /*public IQueryable<Activity>? GetActivities(ActivityRequest requestParams)
         {
             //TODO: Раскомментировать после того, как разберусь с контекстом
             //var result = _context.Activities.FromSqlInterpolated($"select * from activity_seeker.get_activities({requestParams.IsOnline}, {requestParams.ActivityTypeId}, {requestParams.SearchFrom}, {requestParams.SearchTo}, {requestParams.IsPublished}, {requestParams.CityId})");
 
             IQueryable<Activity>? result = default;
             return result;
-        }
+        }*/
 
         /// <inheritdoc />
-        public async Task<ActivityDto> GetActivityAsync(Guid activityId)
+        public async Task<Activity> GetActivityAsync(Guid activityId)
         {
             var activityEntity = await _context.Activities
                 .Include(x => x.ActivityType)
@@ -74,22 +73,22 @@ namespace ActivitySeeker.UseCases.Services
 
             return activityEntity is null
                 ? throw new NullReferenceException($"Активность с идентификатором {activityId} не найдена")
-                : new ActivityDto(activityEntity);
-        }
-        
-        /// <inheritdoc />
-        public async Task<List<ActivityDto>> GetActivitiesByType(Guid activityTypeId)
-        {
-            return await _context.Activities.Where(x => x.ActivityTypeId.Equals(activityTypeId))
-                .Select(x => new ActivityDto(x)).ToListAsync();
+                : activityEntity; //new ActivityDto(activityEntity);
         }
 
         /// <inheritdoc />
-        public async Task CreateActivity(ActivityDto activity)
+        public async Task<List<Activity>> GetActivitiesByType(Guid activityTypeId)
         {
-            var activityEntity = activity.ToActivity();
-            activityEntity.IsPublished = false;
-            await _context.Activities.AddAsync(activityEntity);
+            return await _context.Activities.Where(x => x.ActivityTypeId.Equals(activityTypeId)).ToListAsync();
+            //.Select(x => new ActivityDto(x)).ToListAsync();
+        }
+
+        /// <inheritdoc />
+        public async Task CreateActivity(Activity activity)
+        {
+            //var activityEntity = activity.ToActivity();
+            activity.IsPublished = false;
+            await _context.Activities.AddAsync(activity);
             await _context.SaveChangesAsync();
         }
         
@@ -106,7 +105,7 @@ namespace ActivitySeeker.UseCases.Services
         }
         
         /// <inheritdoc />
-        public async Task UpdateActivity(ActivityDto activity)
+        public async Task UpdateActivity(Activity activity)
         {
             var activityEntity = _context.Activities.FirstOrDefault(x => x.Id.Equals(activity.Id));
 
@@ -118,36 +117,36 @@ namespace ActivitySeeker.UseCases.Services
                 activityEntity.IsOnline = activity.IsOnline;
                 activityEntity.CityId = activity.CityId;
                 activityEntity.Image = activity.Image;
-                activityEntity.IsPublished = activity.OfferState;
+                activityEntity.IsPublished = activity.IsPublished;
                 activityEntity.TgMessageId = activity.TgMessageId;
             }
 
             await _context.SaveChangesAsync();
         }
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public async Task<byte[]?> GetImage(Guid activityId)
         {
             return (await _context.Activities.FindAsync(activityId))?.Image;
-        }
+        }*/
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public async Task PublishActivity(ActivityDto activity, int tgMessageId)
         {
             activity.OfferState = true;
             activity.TgMessageId = tgMessageId;
             await UpdateActivity(activity);
-        }
+        }*/
 
-        /// <inheritdoc />
+        /*/// <inheritdoc />
         public async Task WithdrawFromPublication(ActivityDto activity)
         {
             activity.OfferState = false;
             activity.TgMessageId = null;
             await UpdateActivity(activity);
-        }
+        }*/
 
-        public async Task RemoveOldActivities()
+        /*public async Task RemoveOldActivities()
         {
             var request = new ActivityRequest();
             var oldActivities = GetActivities(request)!
@@ -157,6 +156,6 @@ namespace ActivitySeeker.UseCases.Services
             //_context.RemoveRange(oldActivities);
 
             await _context.SaveChangesAsync();
-        }
+        }*/
     }
 }

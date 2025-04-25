@@ -31,4 +31,18 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Activity\Commands\" />
+      <Folder Include="Activity\Queries\" />
+      <Folder Include="Admin\Commands\" />
+      <Folder Include="Admin\Dto\" />
+      <Folder Include="Admin\Queries\" />
+      <Folder Include="City\Commands\" />
+      <Folder Include="City\Dto\" />
+      <Folder Include="City\Queries\" />
+      <Folder Include="User\Commands\" />
+      <Folder Include="User\Dto\" />
+      <Folder Include="User\Queries\" />
+    </ItemGroup>
+
 </Project>

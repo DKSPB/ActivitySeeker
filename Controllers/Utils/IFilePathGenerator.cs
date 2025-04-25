@@ -1,4 +1,4 @@
-namespace ActivitySeeker.Api.Utils;
+namespace Controllers.Utils;
 
 public interface IFilePathGenerator
 {

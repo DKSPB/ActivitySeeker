@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace ActivitySeeker.UseCases.Interfaces;
+namespace ApplicationServices.Interfaces;
 
 public interface IAdminService
 {

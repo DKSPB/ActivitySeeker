@@ -1,7 +1,6 @@
-using ActivitySeeker.UseCases.Models;
 using Domain.Entities;
 
-namespace ActivitySeeker.UseCases.Interfaces;
+namespace ApplicationServices.Interfaces;
 
 public interface IUserService
 {
@@ -9,18 +8,18 @@ public interface IUserService
     /// Добавление нового пользователя
     /// </summary>
     /// <param name="user">Объект - пользователь</param>
-    Task CreateUser(UserDto user);
+    Task CreateUser(User user);
     
     /// <summary>
     /// Обновление данных существующего пользователя
     /// </summary>
     /// <param name="user">Объект - пользователь</param>
-    Task UpdateUser(UserDto user);
+    Task UpdateUser(User user);
 
     /// <summary>
     /// Получение пользователя по идентификаторуs
     /// </summary>
     /// <param name="id">Идентификатор пользователя</param>
     /// <returns>Объект - пользователь или null</returns>
-    Task<UserDto?> GetUserById(long id);
+    Task<User?> GetUserById(long id);
 }

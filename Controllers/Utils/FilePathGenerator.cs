@@ -1,13 +1,15 @@
+using Controllers.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace ActivitySeeker.Api.Utils;
+namespace Controllers.Utils;
 
 public class FilePathGenerator : IFilePathGenerator
 {
     private readonly IWebHostEnvironment _environment;
-    private readonly BotConfiguration _botConfig;
+    private readonly ActivitySeekerConfig _botConfig;
 
-    public FilePathGenerator(IWebHostEnvironment environment, IOptions<BotConfiguration> botConfigOptions)
+    public FilePathGenerator(IWebHostEnvironment environment, IOptions<ActivitySeekerConfig> botConfigOptions)
     {
         _environment = environment;
         _botConfig = botConfigOptions.Value;

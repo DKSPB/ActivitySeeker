@@ -1,12 +1,12 @@
-using ActivitySeeker.Api.Models;
+using Controllers.Models;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 
-namespace ActivitySeeker.Api.Utils.Validators;
+namespace Controllers.Utils.Validators;
 
 public class ActivityTypeImageVValidator : AbstractValidator<ActivityTypeImageVM>
 {
-    public ActivityTypeImageVValidator(IOptions<BotConfiguration> botConfigOptions)
+    public ActivityTypeImageVValidator(IOptions<ActivitySeekerConfig> botConfigOptions)
     {
         var maxFileSize = botConfigOptions.Value.MaxFileSize;
         

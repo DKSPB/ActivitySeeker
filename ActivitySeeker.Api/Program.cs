@@ -1,29 +1,31 @@
-using System.Text;
-using ActivitySeeker.Api.TelegramBot.Handlers;
-using ActivitySeeker.Api.TelegramBot;
-using Microsoft.EntityFrameworkCore;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using NLog;
-using NLog.Web;
-using Telegram.Bot;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Globalization;
-using ActivitySeeker.Api.Utils;
-using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
-using ActivitySeeker.UseCases.Configuration;
-using ActivitySeeker.UseCases.Interfaces;
-using ActivitySeeker.UseCases.Models;
-using ActivitySeeker.UseCases.Notification;
-using ActivitySeeker.UseCases.QuartzJobs;
-using ActivitySeeker.UseCases.Services;
-using ActivitySeeker.UseCases.Utils;
-using DataAccess;
-using Microsoft.AspNetCore.Localization;
-using Newtonsoft.Json.Converters;
 using Quartz;
+using NLog.Web;
+using DataAccess;
+using System.Text;
+using Telegram.Bot;
+using FluentValidation;
+using Controllers.Utils;
+using Controllers.Models;
+using System.Globalization;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
+using ActivitySeeker.UseCases.Utils;
+using Microsoft.EntityFrameworkCore;
+using ActivitySeeker.UseCases.Models;
+using ActivitySeeker.Api.TelegramBot;
+using Microsoft.IdentityModel.Tokens;
+using ActivitySeeker.UseCases.Services;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.HttpOverrides;
+using ActivitySeeker.UseCases.Interfaces;
+using ActivitySeeker.UseCases.QuartzJobs;
+using ActivitySeeker.UseCases.Notification;
+using ActivitySeeker.UseCases.Configuration;
+using ActivitySeeker.Api.TelegramBot.Handlers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+
 
 namespace ActivitySeeker.Api
 {
@@ -41,10 +43,10 @@ namespace ActivitySeeker.Api
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
 
-                var botConfigurationSection = builder.Configuration.GetSection(nameof(BotConfiguration));
-                builder.Services.Configure<BotConfiguration>(botConfigurationSection);
+                var botConfigurationSection = builder.Configuration.GetSection(nameof(ActivitySeekerConfig));
+                builder.Services.Configure<ActivitySeekerConfig>(botConfigurationSection);
 
-                var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
+                var botConfiguration = botConfigurationSection.Get<ActivitySeekerConfig>();
                 var connection = builder.Configuration.GetConnectionString("ActivitySeekerConnection");
 
                 var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));
@@ -225,21 +227,6 @@ namespace ActivitySeeker.Api
                 LogManager.Shutdown();
             }
         }
-    }
-    
-    public class BotConfiguration
-    {
-        public string BotToken { get; set; } = default!;
-
-        public string WebhookUrl { get; set; } = default!;
-
-        public string? PathToCertificate { get; set; }
-
-        public string TelegramChannel { get; set; } = default!;
-
-        public string RootImageFolder { get; set; } = default!;
-
-        public long MaxFileSize { get; set; }
     }
 }
 

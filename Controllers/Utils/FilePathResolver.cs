@@ -1,9 +1,8 @@
-using ActivitySeeker.Api.Models;
 using ActivitySeeker.UseCases.ActivityType.Dto;
-using ActivitySeeker.UseCases.Utils;
 using AutoMapper;
+using Controllers.Models;
 
-namespace ActivitySeeker.Api.Utils;
+namespace Controllers.Utils;
 
 public class FilePathResolver : IValueResolver<ActivityTypeImageVM,  UploadActivityTypeImageDto, string>
 {

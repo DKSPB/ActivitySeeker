@@ -1,7 +1,7 @@
-using ActivitySeeker.UseCases.Models;
+//using ActivitySeeker.UseCases.Models;
 using Domain.Entities;
 
-namespace ActivitySeeker.UseCases.Interfaces;
+namespace ApplicationServices.Interfaces;
 
 public interface IActivityService
 {
@@ -10,46 +10,46 @@ public interface IActivityService
     /// </summary>
     /// <param name="currentUser">Объект, содержащий запрос пользователя</param>
     /// <returns>Двусвязный список активностей</returns>
-    LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(UserDto currentUser);
+    //LinkedList<ActivityTelegramDto> GetActivitiesLinkedList(UserDto currentUser);
 
     /// <summary>
     /// Получение списка активностей
     /// </summary>
     /// <param name="requestParams">Объект, содержащий запрос пользователя</param>
     /// <returns>Список активностей</returns>
-    IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
+    //IQueryable<Activity>? GetActivities(ActivityRequest requestParams);
 
     /// <summary>
     /// Получение активностей по типу
     /// </summary>
     /// <param name="activityTypeId">Идентификатор типа активностей</param>
     /// <returns></returns>
-    Task<List<ActivityDto>> GetActivitiesByType(Guid activityTypeId);
+    Task<List<Activity>> GetActivitiesByType(Guid activityTypeId);
 
     /// <summary>
     /// Получение информации об активности по идентфиикатору
     /// </summary>
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns></returns>
-    Task<ActivityDto?> GetActivityAsync(Guid activityId);
+    Task<Activity?> GetActivityAsync(Guid activityId);
 
-    /// <summary>
+    /*/// <summary>
     /// Получение изображения от активности
     /// </summary>
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns>Массив байтов изображения</returns>
-    Task<byte[]?> GetImage(Guid activityId);
+    Task<byte[]?> GetImage(Guid activityId);*/
     
     /// <summary>
     /// Добавление новой активности
     /// </summary>
     /// <param name="newActivity"></param>
-    Task CreateActivity(ActivityDto newActivity);
+    Task CreateActivity(Activity newActivity);
 
     /// <summary>
     /// Обновление существующей активности
     /// </summary>
-    Task UpdateActivity(ActivityDto activity);
+    Task UpdateActivity(Activity activity);
     
     /// <summary>
     /// Удаление активностей
@@ -57,20 +57,20 @@ public interface IActivityService
     /// <param name="activitiesForRemove">Список объектов для удаления</param>
     Task DeleteActivity(List<Guid> activitiesForRemove);
 
-    /// <summary>
+    /*/// <summary>
     /// Публикация активности
     /// </summary>
     /// <param name="activity">Публикуемая активность</param>
     /// <param name="tgMessageId">Номер сообщения в канале</param>
     /// <returns></returns>
-    Task PublishActivity(ActivityDto activity, int tgMessageId);
+    Task PublishActivity(ActivityDto activity, int tgMessageId);*/
 
-    /// <summary>
+    /*/// <summary>
     /// Снятие активности с публикации
     /// </summary>
     /// <param name="activity">Активность, которую нужно снять с публикации</param>
     /// <returns></returns>
-    Task WithdrawFromPublication(ActivityDto activity);
+    Task WithdrawFromPublication(ActivityDto activity);*/
 
-    Task RemoveOldActivities();
+    //Task RemoveOldActivities();
 }

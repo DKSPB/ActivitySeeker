@@ -1,3 +1,4 @@
+using Controllers.Models;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -8,9 +9,9 @@ namespace ActivitySeeker.Api.TelegramBot;
 public class ConfigureWebhook : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly BotConfiguration _botConfig;
+    private readonly ActivitySeekerConfig _botConfig;
 
-    public ConfigureWebhook(IServiceProvider serviceProvider, IOptions<BotConfiguration> botOptions)
+    public ConfigureWebhook(IServiceProvider serviceProvider, IOptions<ActivitySeekerConfig> botOptions)
     {
         _serviceProvider = serviceProvider;
         _botConfig = botOptions.Value;
