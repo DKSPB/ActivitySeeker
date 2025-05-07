@@ -1,4 +1,5 @@
 using ActivitySeeker.UseCases.Interfaces;
+using ApplicationServices.Interfaces;
 using Quartz;
 
 namespace ActivitySeeker.UseCases.QuartzJobs;
@@ -12,8 +13,8 @@ public class RemoveOldActivitiesJob : IJob
         _activityService = activityService;
     }
     
-    public async Task Execute(IJobExecutionContext context)
+    public /*async*/ Task Execute(IJobExecutionContext context)
     {
-        await _activityService.RemoveOldActivities();
+        return Task.CompletedTask; //await _activityService.RemoveOldActivities();
     }
 }

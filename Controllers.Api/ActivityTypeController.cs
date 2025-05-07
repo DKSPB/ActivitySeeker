@@ -1,7 +1,6 @@
 using MediatR;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Controllers.Models;
 using Microsoft.AspNetCore.Authorization;
 using ActivitySeeker.UseCases.ActivityType.Dto;
 using ActivitySeeker.UseCases.ActivityType.Queries.GetAll;
@@ -10,8 +9,9 @@ using ActivitySeeker.UseCases.ActivityType.Commands.CreateActivityType;
 using ActivitySeeker.UseCases.ActivityType.Commands.DeleteActivityType;
 using ActivitySeeker.UseCases.ActivityType.Commands.UpdateActivityType;
 using ActivitySeeker.UseCases.ActivityType.Commands.UploadActivityTypeImage;
+using Controllers.Api.Models;
 
-namespace Controllers;
+namespace Controllers.Api;
 
 [ApiController]
 [AllowAnonymous]

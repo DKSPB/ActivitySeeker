@@ -1,4 +1,4 @@
-namespace Controllers.Models;
+namespace Controllers.Api.Models;
 
 public class ActivitySeekerConfig
 {

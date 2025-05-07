@@ -1,20 +1,23 @@
 using ActivitySeeker.Api.Models;
 using ActivitySeeker.UseCases.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ActivitySeeker.Api.Controllers;
+namespace Controllers.Api;
 
 [ApiController]
 [AllowAnonymous]
 [Route("api/admin")]
 public class AdminController : ControllerBase
 {
-    private readonly IAdminService _adminService;
+    private readonly ISender _sender;
+    //private readonly IAdminService _adminService;
     
-    public AdminController(IAdminService adminService)
+    public AdminController(ISender sender/*IAdminService adminService*/)
     {
-        _adminService = adminService;
+        _sender = sender;
+        //_adminService = adminService;
     }
     
     [HttpPost]

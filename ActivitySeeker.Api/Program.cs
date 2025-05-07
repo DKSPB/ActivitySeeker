@@ -5,8 +5,8 @@ using DataAccess;
 using System.Text;
 using Telegram.Bot;
 using FluentValidation;
-using Controllers.Utils;
-using Controllers.Models;
+using Controllers.Api.Utils;
+using Controllers.Api.Models;
 using System.Globalization;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using ActivitySeeker.UseCases.Models;
 using ActivitySeeker.Api.TelegramBot;
 using Microsoft.IdentityModel.Tokens;
-using ActivitySeeker.UseCases.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
 using ActivitySeeker.UseCases.Interfaces;
@@ -25,6 +24,8 @@ using ActivitySeeker.UseCases.Configuration;
 using ActivitySeeker.Api.TelegramBot.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
+using ApplicationServices.Implementation.Conf;
+using Controllers.Api.Conf;
 
 
 namespace ActivitySeeker.Api
@@ -66,21 +67,22 @@ namespace ActivitySeeker.Api
                         };
                     });
 
-                builder.Services.AddAutoMapper(typeof(MappingProfile.MappingProfile).Assembly);
+                builder.Services.RegisterApplicationServices();
+                builder.Services.RegisterBusinessServices();
+                builder.Services.RegisterControllers();
+                
                 builder.Services.AddAuthorization();
                 builder.Services.AddSignalR();
                 builder.Services.AddDbContext<IDbContext, ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
                 builder.Services.AddScoped<IFilePathGenerator, FilePathGenerator>();
                 builder.Services.AddTransient<FilePathResolver>(); 
-                builder.Services.AddScoped<IUserService, UserService>();
-                builder.Services.AddScoped<ActivityPublisher>();
-                builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
-                builder.Services.AddScoped<IActivityService, ActivityService>();
-                builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-                builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-                builder.Services.AddScoped<IAdminService, AdminService>();
-                builder.Services.AddScoped<ICityService, CityService>();
+                //builder.Services.AddScoped<IUserService, UserService>();
+                //builder.Services.AddScoped<ActivityPublisher>();
+                //builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
+                //builder.Services.AddScoped<IActivityService, ActivityService>();
+                //builder.Services.AddScoped<IAdminService, AdminService>();
+                //builder.Services.AddScoped<ICityService, CityService>();
                 builder.Services.AddScoped<SetDefaultSettingsHandler>();
                 builder.Services.AddScoped<StartHandler>();
                 builder.Services.AddScoped<MainMenuHandler>();
@@ -109,7 +111,6 @@ namespace ActivitySeeker.Api
                 builder.Services.AddScoped<SaveDefaultSettingsHandler>();
                 builder.Services.AddSingleton<NotificationAdminHub>();
                 
-                builder.Services.RegisterBusinessServices();
 
                 builder.Services.AddQuartz(quartz =>
                 {

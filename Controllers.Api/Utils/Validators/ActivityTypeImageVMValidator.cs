@@ -1,8 +1,8 @@
-using Controllers.Models;
+using Controllers.Api.Models;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 
-namespace Controllers.Utils.Validators;
+namespace Controllers.Api.Utils.Validators;
 
 public class ActivityTypeImageVValidator : AbstractValidator<ActivityTypeImageVM>
 {

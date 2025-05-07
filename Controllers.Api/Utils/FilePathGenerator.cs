@@ -1,8 +1,8 @@
-using Controllers.Models;
+using Controllers.Api.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace Controllers.Utils;
+namespace Controllers.Api.Utils;
 
 public class FilePathGenerator : IFilePathGenerator
 {

@@ -1,4 +1,4 @@
-using Controllers.Models;
+using Controllers.Api.Models;
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Telegram.Bot.Types;

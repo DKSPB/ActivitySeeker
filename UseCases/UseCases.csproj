@@ -32,7 +32,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Activity\Commands\" />
+      <Folder Include="Activity\Commands\CreateActivity\" />
+      <Folder Include="Activity\Commands\DeleteActivity\" />
+      <Folder Include="Activity\Commands\UpdateActivity\" />
       <Folder Include="Activity\Queries\" />
       <Folder Include="Admin\Commands\" />
       <Folder Include="Admin\Dto\" />

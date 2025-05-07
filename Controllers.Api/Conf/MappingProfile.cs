@@ -1,11 +1,11 @@
 using AutoMapper;
 using Domain.Entities;
 using ActivitySeeker.UseCases.ActivityType.Dto;
-using Controllers.Models;
-using Controllers.Utils;
+using Controllers.Api.Models;
+using Controllers.Api.Utils;
 using ActivityTypeViewModel = ActivitySeeker.UseCases.ActivityType.Dto.ActivityTypeViewModel;
 
-namespace Controllers.MappingProfile;
+namespace Controllers.Api.MappingProfile;
 
 public class MappingProfile : Profile
 {

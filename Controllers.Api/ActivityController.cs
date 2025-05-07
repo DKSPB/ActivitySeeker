@@ -1,14 +1,9 @@
-using ActivitySeeker.Api.Models;
-using ActivitySeeker.Api.TelegramBot;
-using ActivitySeeker.UseCases.Interfaces;
 using ActivitySeeker.UseCases.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Telegram.Bot.Types.ReplyMarkups;
 
-namespace ActivitySeeker.Api.Controllers;
+namespace Controllers.Api;
 
 [ApiController]
 [AllowAnonymous]

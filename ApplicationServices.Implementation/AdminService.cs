@@ -1,24 +1,23 @@
-
 using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
-using ActivitySeeker.UseCases.Interfaces;
+using ApplicationServices.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActivitySeeker.UseCases.Services;
+namespace ApplicationServices.Implementation;
 
 public class AdminService: IAdminService
 {
-    private readonly IDbContext _activitySeekerContext;
-    private readonly IPasswordHasher _passwordHasher;
-    private readonly IJwtProvider _jwtProvider;
+    private readonly IDbContext _context;
+    //private readonly IPasswordHasher _passwordHasher;
+    //private readonly IJwtProvider _jwtProvider;
     
-    public AdminService(IDbContext activitySeekerContext, IPasswordHasher passwordHasher, IJwtProvider jwtProvider)
+    public AdminService(IDbContext context/*, IPasswordHasher passwordHasher, IJwtProvider jwtProvider*/)
     {
-        _activitySeekerContext = activitySeekerContext;
-        _passwordHasher = passwordHasher;
-        _jwtProvider = jwtProvider;
+        _context = context;
+        //_passwordHasher = passwordHasher;
+        //_jwtProvider = jwtProvider;
     }
-    public async Task RegisterAsync( string login, string password)
+    /*public async Task RegisterAsync( string login, string password)
     {
         var adminExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Login == login);
 
@@ -38,9 +37,9 @@ public class AdminService: IAdminService
         await _activitySeekerContext.Admins.AddAsync(admin);
 
         await _activitySeekerContext.SaveChangesAsync();
-    }
+    }*/
 
-    public async Task<string> LoginAsync(string userName, string password)
+    /*public async Task<string> LoginAsync(string userName, string password)
     {
         var userExists = await _activitySeekerContext.Admins.FirstOrDefaultAsync(x => x.Login == userName);
 
@@ -59,10 +58,18 @@ public class AdminService: IAdminService
         var token = _jwtProvider.GenerateToken(userExists);
 
         return token;
-    }
+    }*/
 
+    ///<inheritdoc/>
     public async Task<IEnumerable<Admin>> GetAll()
     {
-        return await _activitySeekerContext.Admins.ToListAsync();
+        return await _context.Admins.ToListAsync();
+    }
+
+    ///<inheritdoc/>
+    public async Task<Admin> GetByLogin(string login)
+    {
+        return await _context.Admins.FirstOrDefaultAsync(x => x.Login == login) ?? 
+               throw new NullReferenceException($"Администраторм c логином {login} не существует");
     }
 }

@@ -29,7 +29,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationServices.Interfa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationServices.Implementation", "ApplicationServices.Implementation\ApplicationServices.Implementation.csproj", "{3CC138E4-31F7-459D-BDF0-CE35B36E4B45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "Controllers\Controllers.csproj", "{3A4DB010-88E3-4010-841F-68D6599AD1C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers.Api", "Controllers.Api\Controllers.Api.csproj", "{3A4DB010-88E3-4010-841F-68D6599AD1C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 Controllers", "5 Controllers", "{3B116830-F6CC-43E5-BC50-5B4519DAD525}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

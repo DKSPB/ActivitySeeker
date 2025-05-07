@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace Controllers.Models
+namespace Controllers.Api.Models
 {
     [JsonObject]
     public class ActivityTypeImageVM

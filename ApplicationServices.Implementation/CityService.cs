@@ -1,11 +1,10 @@
 using System.Data;
 using ActivitySeeker.DataAccess.Interfaces.Infrastructure;
-using ActivitySeeker.UseCases.Interfaces;
-using ActivitySeeker.UseCases.Utils;
+using ApplicationServices.Interfaces;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ActivitySeeker.UseCases.Services;
+namespace ApplicationServices.Implementation;
 
 public class CityService: ICityService
 {
@@ -55,7 +54,8 @@ public class CityService: ICityService
 
         city.ImagePath = path;
 
-        await FileProvider.UploadImage(path, image);
+        //TODO Перенести в юзкейсы
+        //await FileProvider.UploadImage(path, image);
 
         _context.Cities.Update(city);
 

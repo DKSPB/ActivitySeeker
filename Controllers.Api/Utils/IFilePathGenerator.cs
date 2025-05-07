@@ -1,4 +1,4 @@
-namespace Controllers.Utils;
+namespace Controllers.Api.Utils;
 
 public interface IFilePathGenerator
 {
