@@ -1,6 +1,7 @@
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 import legacy from '@vitejs/plugin-legacy';
+import path from 'path';
 
 function handleModuleDirectivesPlugin() {
   return {
@@ -57,6 +58,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: 'build',
+    outDir: path.resolve(__dirname, '../ActivitySeeker.Api/wwwroot'),
+    emptyOutDir: true,
   },
 });

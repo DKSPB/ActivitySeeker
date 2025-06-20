@@ -48,7 +48,7 @@ namespace ActivitySeeker.Api
                 builder.Services.Configure<JwtOptions>(jwtConfigurationSection);
                 var jwtOptions = jwtConfigurationSection.Get<JwtOptions>();
                 
-                builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                /*builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                     {
                         options.TokenValidationParameters = new()
@@ -59,9 +59,9 @@ namespace ActivitySeeker.Api
                             ValidateIssuerSigningKey = true,
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                         };
-                    });
+                    });*/
 
-                builder.Services.AddAuthorization();
+                //builder.Services.AddAuthorization();
                 builder.Services.AddSignalR();
                 builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
@@ -126,7 +126,16 @@ namespace ActivitySeeker.Api
                 });
 
                 builder.Services.AddHttpClient();
-                builder.Services.AddCors();
+                /*builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("Dev", policy =>
+                    {
+                        policy
+                            .AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+                });*/
                 builder.Services.AddHostedService<ConfigureWebhook>();
 
                 #region serialize settings
@@ -200,10 +209,12 @@ namespace ActivitySeeker.Api
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
                 app.UseRouting();
-                app.UseCors(builder => builder.AllowAnyOrigin());
-                app.UseAuthentication();
-                app.UseAuthorization();
-                app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+                //app.UseCors("Dev");
+                //app.UseAuthentication();
+                //app.UseAuthorization();
+                app.MapControllers();
+                app.MapFallbackToFile("index.html");
+                
                 app.MapHub<NotificationAdminHub>("/notify");
 
                 app.Run();

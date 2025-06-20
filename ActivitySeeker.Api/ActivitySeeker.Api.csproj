@@ -45,4 +45,37 @@
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\files\3wepz511.v52" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\3zimoohs.fwh" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\5utnm3oa.mt3" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\ActivityPeriodChapter" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\ActivityTypeChapter" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\axeuebe4.qco" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\e4c5bonq.u2y" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\frbvtzom.a3p" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\i0ihx2oo.b3r" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\j1exfng2.ndp" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\ListOfActivities" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\MainMenu" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\n2bzebkx.zef" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\Offer" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\pmyvy300.p3a" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\qk4leeey.scp" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\SaveDefaultSettings" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\SaveOfferDate" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\SaveOfferDescription" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\SaveOfferFormat" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\SelectActivityFormat" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\SelectOfferCity" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\syb5ened.uu3" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\wh4tlxoo.r00" />
+      <_ContentIncludedByDefault Remove="wwwroot\files\zst03mmz.bgn" />
+    </ItemGroup>
+
+    <Target Name="BuildFrontend" AfterTargets="Build">
+        <Exec Command="npm install" WorkingDirectory="..\activity_seeker_vk" />
+        <Exec Command="npm run build" WorkingDirectory="..\activity_seeker_vk" />
+    </Target>
+    
 </Project>
