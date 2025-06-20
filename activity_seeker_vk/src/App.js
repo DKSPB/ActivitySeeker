@@ -17,6 +17,16 @@ export const App = () => {
       setUser(user);
       setPopout(null);
     }
+    const getActivityTypes = async () => {
+      try {
+        const response = await axios.get('http://0.0.0.0:5199/api/activityType');
+        setActivityTypes(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('Ошибка при получении данных активности:', error);
+      }
+    };
+    getActivityTypes();
     fetchData();
   }, []);
 
