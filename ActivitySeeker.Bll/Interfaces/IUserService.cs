@@ -1,5 +1,4 @@
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain.Entities;
 
 namespace ActivitySeeker.Bll.Interfaces;
 

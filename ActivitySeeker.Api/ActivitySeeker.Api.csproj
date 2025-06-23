@@ -26,7 +26,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\ActivitySeeker.Bll\ActivitySeeker.Bll.csproj" />
-      <ProjectReference Include="..\ActivitySeeker.Domain\ActivitySeeker.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

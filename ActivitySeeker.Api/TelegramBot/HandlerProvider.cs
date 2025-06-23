@@ -1,6 +1,6 @@
 ﻿using ActivitySeeker.Api.TelegramBot.Handlers;
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
 using Microsoft.OpenApi.Extensions;
 using System.Reflection;
 using Telegram.Bot.Types;

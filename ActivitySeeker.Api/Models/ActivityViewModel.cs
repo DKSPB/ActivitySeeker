@@ -1,4 +1,4 @@
-﻿using ActivitySeeker.Domain.Entities;
+﻿using Domain.Entities;
 using Newtonsoft.Json;
 
 namespace ActivitySeeker.Api.Models

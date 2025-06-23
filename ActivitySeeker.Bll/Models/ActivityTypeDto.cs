@@ -1,4 +1,4 @@
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
 
 namespace ActivitySeeker.Bll.Models;
 

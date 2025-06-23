@@ -6,7 +6,7 @@ using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Services;
 using ActivitySeeker.Bll.Utils;
-using ActivitySeeker.Domain;
+using DataAccess.Interfaces;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using NLog;
@@ -63,9 +63,9 @@ namespace ActivitySeeker.Api
 
                 //builder.Services.AddAuthorization();
                 builder.Services.AddSignalR();
-                builder.Services.AddDbContext<ActivitySeekerContext>(options => options.UseNpgsql(connection));
+                //builder.Services.AddDbContext<IDbContext, ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-                builder.Services.AddScoped<ActivitySeekerContext>();
+                //builder.Services.AddScoped<ActivitySeekerContext>();
                 builder.Services.AddScoped<IUserService, UserService>();
                 builder.Services.AddScoped<ActivityPublisher>();
                 builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
@@ -126,16 +126,7 @@ namespace ActivitySeeker.Api
                 });
 
                 builder.Services.AddHttpClient();
-                /*builder.Services.AddCors(options =>
-                {
-                    options.AddPolicy("Dev", policy =>
-                    {
-                        policy
-                            .AllowAnyOrigin()
-                            .AllowAnyHeader()
-                            .AllowAnyMethod();
-                    });
-                });*/
+
                 builder.Services.AddHostedService<ConfigureWebhook>();
 
                 #region serialize settings
@@ -209,7 +200,6 @@ namespace ActivitySeeker.Api
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
                 app.UseRouting();
-                //app.UseCors("Dev");
                 //app.UseAuthentication();
                 //app.UseAuthorization();
                 app.MapControllers();

@@ -1,17 +1,17 @@
 using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
 using ActivitySeeker.Bll.Utils;
-using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
+using DataAccess.Interfaces;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivitySeeker.Bll.Services;
 
 public class ActivityTypeService: IActivityTypeService
 {
-    private readonly ActivitySeekerContext _context;
+    private readonly IDbContext _context;
     
-    public ActivityTypeService(ActivitySeekerContext context)
+    public ActivityTypeService(IDbContext context)
     {
         _context = context;
     }
@@ -36,12 +36,9 @@ public class ActivityTypeService: IActivityTypeService
     {
         var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == id);
 
-        if (activityTypeEntity is null)
-        {
-            throw new NullReferenceException($"Тип активности с идентификатором {id} не найден");
-        }
-
-        return new ActivityTypeDto(activityTypeEntity);
+        return activityTypeEntity is null
+            ? throw new NullReferenceException($"Тип активности с идентификатором {id} не найден")
+            : new ActivityTypeDto(activityTypeEntity);
     }
 
     /// <inheritdoc />
@@ -54,12 +51,8 @@ public class ActivityTypeService: IActivityTypeService
     /// <inheritdoc />
     public async Task Update(ActivityTypeDto activityType)
     {
-        var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == activityType.Id);
-
-        if (activityTypeEntity is null)
-        {
-            throw new NullReferenceException($"Тип активности с идентификатором {activityType.Id} не найден");
-        }
+        var activityTypeEntity = await GetActivityTypes().FirstOrDefaultAsync(x => x.Id == activityType.Id) 
+            ?? throw new NullReferenceException($"Тип активности с идентификатором {activityType.Id} не найден");
 
         activityTypeEntity.TypeName = activityType.TypeName;
         activityTypeEntity.ParentId = activityType.ParentId;
