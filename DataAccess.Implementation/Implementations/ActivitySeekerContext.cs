@@ -23,7 +23,6 @@ namespace DataAccess.Implementations
         {
             modelBuilder.ApplyConfiguration(new ConfigureActivityTypes());
             modelBuilder.ApplyConfiguration(new ConfigureActivity());
-            modelBuilder.ApplyConfiguration(new ConfigureUser());
         }
 
         public Task<List<ActivityType>> GetActivityTypeTreeAsync(int parentId)

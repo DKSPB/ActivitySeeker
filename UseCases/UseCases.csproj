@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="ActivityType\Commands\Delete\" />
+      <Folder Include="ActivityType\Commands\Update\" />
+      <Folder Include="ActivityType\Queries\GetAll\" />
+      <Folder Include="ActivityType\Queries\GetById\" />
+      <Folder Include="Activity\Queries\GetById\" />
+      <Folder Include="User\Commands\" />
+      <Folder Include="User\Queries\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="MediatR" Version="12.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DataAccess.Implementation\DataAccess.csproj" />
+    </ItemGroup>
+
+</Project>

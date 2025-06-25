@@ -93,7 +93,7 @@ public class ActivityController : ControllerBase
             return StatusCode(StatusCodes.Status400BadRequest, validationResult.Errors);
         }
 
-        await _activityService.CreateActivity(activity.ToActivityDto());
+        //await _activityService.CreateActivity(activity.ToActivityDto());
         return Ok();
     }
 
@@ -105,7 +105,7 @@ public class ActivityController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateActivity([FromForm] NewActivity activity)
     {
-        await _activityService.UpdateActivity(activity.ToActivityDto());
+        //await _activityService.UpdateActivity(activity.ToActivityDto());
         return Ok();
     }
     

@@ -24,6 +24,9 @@ namespace Domain.Entities
 
         [Column("start_date")]
         public DateTime StartDate { get; set; }
+        
+        [Column("end_date")]
+        public DateTime? EndDate { get; set; }
 
         [Column("activity_type_id")]
         public Guid ActivityTypeId { get; set; }

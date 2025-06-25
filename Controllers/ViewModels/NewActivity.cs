@@ -22,20 +22,6 @@ public class NewActivity
     
     public IFormFile? Image { get; set; }
 
-    public ActivityDto ToActivityDto()
-    {
-        return new ActivityDto()
-        {
-            Id = Id,
-            ActivityTypeId = ActivityTypeId,
-            IsOnline = IsOnline,
-            CityId = CityId,
-            StartDate = StartDate,
-            LinkOrDescription = LinkOrDescription,
-            Image = ImageToByteArray()
-        };
-    }
-
     private byte[]? ImageToByteArray()
     {
         if (Image is null)
