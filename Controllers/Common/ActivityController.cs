@@ -1,10 +1,10 @@
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
 using Controllers.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using ActivitySeeker.Bll.Models;
 using Microsoft.EntityFrameworkCore;
+using ActivitySeeker.Bll.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers.Common;
 

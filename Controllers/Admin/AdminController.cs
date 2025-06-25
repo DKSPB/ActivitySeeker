@@ -1,9 +1,9 @@
-using ActivitySeeker.Api.Models;
+using Controllers.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using ActivitySeeker.Bll.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
-namespace ActivitySeeker.Api.Controllers;
+namespace Controllers.Admin;
 
 [ApiController]
 [AllowAnonymous]

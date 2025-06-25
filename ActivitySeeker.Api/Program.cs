@@ -1,22 +1,22 @@
-using System.Text;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Bll.Services;
-using ActivitySeeker.Bll.Utils;
-using FluentValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using NLog;
-using NLog.Web;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using ActivitySeeker.Bll.Notification;
-using System.Globalization;
-using ActivitySeeker.Bll.QuartzJobs;
-using DataAccess.DI;
-using Microsoft.AspNetCore.Localization;
-using Newtonsoft.Json.Converters;
 using Quartz;
+using NLog.Web;
+using System.Text;
+using DataAccess.DI;
+using FluentValidation;
+using System.Globalization;
+using ActivitySeeker.Bll.Utils;
+using Microsoft.OpenApi.Models;
+using ActivitySeeker.Bll.Models;
+using Newtonsoft.Json.Converters;
+using ActivitySeeker.Bll.Services;
+using ActivitySeeker.Bll.Interfaces;
+using ActivitySeeker.Bll.QuartzJobs;
+using Microsoft.IdentityModel.Tokens;
+using ActivitySeeker.Bll.Notification;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ActivitySeeker.Api
 {
@@ -33,12 +33,7 @@ namespace ActivitySeeker.Api
 
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
-
-                //var botConfigurationSection = builder.Configuration.GetSection(nameof(BotConfiguration));
-                //builder.Services.Configure<BotConfiguration>(botConfigurationSection);
-
-                //var botConfiguration = botConfigurationSection.Get<BotConfiguration>();
-                //var connection = builder.Configuration.GetConnectionString("ActivitySeekerConnection");
+                
 
                 builder.Services.AddInfrastructure(builder.Configuration);
                 
@@ -183,21 +178,6 @@ namespace ActivitySeeker.Api
                 LogManager.Shutdown();
             }
         }
-    }
-    
-    public class BotConfiguration
-    {
-        public string BotToken { get; set; } = default!;
-
-        public string WebhookUrl { get; set; } = default!;
-
-        public string? PathToCertificate { get; set; }
-
-        public string TelegramChannel { get; set; } = default!;
-
-        public string RootImageFolder { get; set; } = default!;
-
-        public long MaxFileSize { get; set; }
     }
 }
 

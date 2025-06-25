@@ -1,10 +1,11 @@
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.Utils;
 using Controllers.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+using ActivitySeeker.Bll.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Hosting;
+using ActivitySeeker.Bll.Interfaces;
+using Controllers.DI;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers.Common;
 
@@ -64,16 +65,16 @@ public class ActivityTypeController : ControllerBase
     [HttpPost("upload/image")]
     public async Task<IActionResult> UploadActivityTypeImage(
         [FromServices]IWebHostEnvironment webHostEnvironment, 
-        [FromServices]IOptions<BotConfiguration> botConfigOptions, 
+        [FromServices]IOptions<FileInfoOption> fileInfoOption, 
         [FromForm] ActivityTypeImage activityTypeImage)
     {
-        var maxFileSize = botConfigOptions.Value.MaxFileSize;
+        var maxFileSize = fileInfoOption.Value.MaxFileSize;
         var fileSize = activityTypeImage.File.Length;
 
         if (FileProvider.ValidateFileSize(fileSize, maxFileSize))
         {
             var webRootPath = webHostEnvironment.WebRootPath;
-            var rootImageFolder = botConfigOptions.Value.RootImageFolder;
+            var rootImageFolder = fileInfoOption.Value.RootImageFolder;
             var newFilename = Path.GetRandomFileName();
 
             var fullPath = FileProvider.CombinePathToFile(webRootPath, rootImageFolder, newFilename);

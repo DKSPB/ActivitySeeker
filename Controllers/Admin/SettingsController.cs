@@ -1,4 +1,5 @@
 using ActivitySeeker.Bll.Utils;
+using Controllers.DI;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -6,19 +7,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace Controllers.Common;
+namespace Controllers.Admin;
 
 [ApiController]
 [AllowAnonymous]
 [Route("api/settings")]
 public class SettingsController : ControllerBase
 {
-    private readonly BotConfiguration _botConfig;
+    private readonly FileInfoOption _fileInfoOption;
     private readonly string _webRootPath;
    
-    public SettingsController(IWebHostEnvironment hostEnvironment, IOptions<BotConfiguration> botConfigOptions)
+    public SettingsController(IWebHostEnvironment hostEnvironment, IOptions<FileInfoOption> fileInfoOption)
     {
-        _botConfig = botConfigOptions.Value;
+        _fileInfoOption = fileInfoOption.Value;
         _webRootPath = hostEnvironment.WebRootPath;
     }
 
@@ -31,7 +32,7 @@ public class SettingsController : ControllerBase
     [HttpPost("states/upload/img")]
     public async Task<IActionResult> UploadStateImage([FromForm] FileUploader fileUploader)
     {
-        if (!FileProvider.ValidateFileSize(fileUploader.File.Length, _botConfig.MaxFileSize) || 
+        if (!FileProvider.ValidateFileSize(fileUploader.File.Length, _fileInfoOption.MaxFileSize) || 
             !FileProvider.ValidateFileNameIsNotNull(fileUploader.File.FileName))
         {
             return BadRequest();
@@ -39,7 +40,7 @@ public class SettingsController : ControllerBase
         
         var stateName = fileUploader.State.ToString();
 
-        var path = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, stateName);
+        var path = FileProvider.CombinePathToFile(_webRootPath, _fileInfoOption.RootImageFolder, stateName);
 
         await using (var stream = fileUploader.File.OpenReadStream())
             await FileProvider.UploadImage(path, stream);
@@ -51,7 +52,7 @@ public class SettingsController : ControllerBase
     public async Task<IActionResult> GetStateImage([FromQuery]StatesEnum state)
     {
         var fileName = state.ToString();
-        var path = FileProvider.CombinePathToFile(_webRootPath, _botConfig.RootImageFolder, fileName);
+        var path = FileProvider.CombinePathToFile(_webRootPath, _fileInfoOption.RootImageFolder, fileName);
 
         return Ok(await FileProvider.GetImage(path));
     }

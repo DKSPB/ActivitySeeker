@@ -1,10 +1,12 @@
-﻿using ActivitySeeker.Api.Models;
-using ActivitySeeker.Bll.Interfaces;
+﻿using Controllers.ViewModels;
 using ActivitySeeker.Bll.Utils;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
+using ActivitySeeker.Bll.Interfaces;
+using Controllers.DI;
 
-namespace ActivitySeeker.Api.Controllers
+namespace Controllers.Common
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -32,7 +34,7 @@ namespace ActivitySeeker.Api.Controllers
         [HttpPost("/upload/image")]
         public async Task<IActionResult> UploadCityImage(
             [FromServices] IWebHostEnvironment webHostEnvironment,
-            [FromServices]IOptions<BotConfiguration> botConfigOptions,
+            [FromServices]IOptions<FileInfoOption> botConfigOptions,
             [FromForm] CityImage cityImage)
         {
             var maxFileSize = botConfigOptions.Value.MaxFileSize;

@@ -16,8 +16,4 @@
       <ProjectReference Include="..\ActivitySeeker.Bll\ActivitySeeker.Bll.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="DI\" />
-    </ItemGroup>
-
 </Project>
