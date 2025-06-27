@@ -1,6 +1,5 @@
 using Controllers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using ActivitySeeker.Bll.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers.Admin;
@@ -10,9 +9,9 @@ namespace Controllers.Admin;
 [Route("api/admin")]
 public class AdminController : ControllerBase
 {
-    private readonly IAdminService _adminService;
+   // private readonly IAdminService _adminService;
     
-    public AdminController(IAdminService adminService)
+    /*public AdminController(IAdminService adminService)
     {
         _adminService = adminService;
     }
@@ -29,5 +28,5 @@ public class AdminController : ControllerBase
     {
         var token  = await _adminService.LoginAsync(login, password);
         return Ok(token);
-    }
+    }*/
 }

@@ -1,4 +1,3 @@
-using ActivitySeeker.Bll.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;

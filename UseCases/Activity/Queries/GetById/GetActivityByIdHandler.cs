@@ -5,7 +5,7 @@ using UseCases.Activity.Models;
 
 namespace UseCases.Activity.Queries.GetById
 {
-    internal class GetActivityByIdHandler : IRequestHandler<GetActivityByIdCommand, ActivityDto>
+    internal class GetActivityByIdHandler : IRequestHandler<GetActivityByIdQuery, ActivityDto>
     {
         private readonly IMapper _mapper;
         private readonly IDbContext _context;
@@ -14,7 +14,7 @@ namespace UseCases.Activity.Queries.GetById
             _mapper = mapper;
             _context = context;
         }
-        public async Task<ActivityDto> Handle(GetActivityByIdCommand request, CancellationToken cancellationToken)
+        public async Task<ActivityDto> Handle(GetActivityByIdQuery request, CancellationToken cancellationToken)
         {
             var entity = await _context.Activities
                 .FindAsync(new object?[] { request.Id, cancellationToken }, cancellationToken: cancellationToken) ?? 

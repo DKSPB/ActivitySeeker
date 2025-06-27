@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Controllers.ViewModels
 {
@@ -8,13 +7,13 @@ namespace Controllers.ViewModels
     {
         public Guid Id { get; set; }
 
-        public string LinkOrDescription { get; set; }
+        public string LinkOrDescription { get; set; } = string.Empty;
 
         public DateTime StartDate { get; set; }
 
         public Guid ActivityTypeId { get; set; }
 
-        public string TypeName { get; set; }
+        public string TypeName { get; set; } = string.Empty;
 
         public bool? IsPublished { get; set; }
 
@@ -26,7 +25,7 @@ namespace Controllers.ViewModels
 
         public int? TgMessageId { get; set; }
 
-        public ActivityViewModel(Activity activity)
+        /*public ActivityViewModel(Activity activity)
         {
             Id = activity.Id;
             LinkOrDescription = activity.LinkOrDescription;
@@ -38,6 +37,6 @@ namespace Controllers.ViewModels
             CityId = activity.ActivityCity?.Id;
             CityName = activity.ActivityCity?.Name;
             TgMessageId = activity.TgMessageId;
-        }
+        }*/
     }
 }

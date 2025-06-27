@@ -1,9 +1,7 @@
 using Controllers.ViewModels;
-using ActivitySeeker.Bll.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Hosting;
-using ActivitySeeker.Bll.Interfaces;
 using Controllers.DI;
 using Microsoft.AspNetCore.Authorization;
 
@@ -14,7 +12,7 @@ namespace Controllers.Common;
 [Route("api/activityType")]
 public class ActivityTypeController : ControllerBase
 {
-    private readonly IActivityTypeService _activityTypeService;
+    /*private readonly IActivityTypeService _activityTypeService;
     
     public ActivityTypeController(IActivityTypeService activityTypeService)
     {
@@ -87,5 +85,5 @@ public class ActivityTypeController : ControllerBase
 
         return BadRequest($"������ ������������ ����� ��������� {maxFileSize / (1024 * 1024)} ��");
         
-    }
+    }*/
 }

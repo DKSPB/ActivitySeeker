@@ -1,6 +1,12 @@
+using MediatR;
 using Controllers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using UseCases.Activity.Queries.GetAll;
+using UseCases.Activity.Commands.Create;
+using UseCases.Activity.Queries.GetById;
+using UseCases.Activity.Commands.Create;
+using UseCases.Activity.Commands.Update;
+using UseCases.Activity.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers.Common;
@@ -10,47 +16,23 @@ namespace Controllers.Common;
 [Route("api/activity")]
 public class ActivityController : ControllerBase
 {
-    //private readonly IActivityService _activityService;
-    //private readonly NewActivityValidator _newActivityValidator;
+    private readonly IMediator _mediator;
 
-    /*public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator)
+    public ActivityController(IMediator mediator)
     {
-        _activityService = activityService;
-        _newActivityValidator = newActivityValidator;
-    }*/
+        _mediator = mediator;
+    }
 
     /// <summary>
     /// Получение списка активностей
     /// </summary>
     /// <param name="filters">Набор необязательных параметров</param>
     /// <returns>Список объектов-активностей</returns>
-    /*[HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] ActivityFilters filters)
+    [HttpPost]
+    public async Task<IActionResult> GetAll([FromBody] GetActivitiesQuery filters)
     {
-        var activities = _activityService.GetActivities(filters.ActivityRequest);
-
-        if (activities == null) 
-        {
-            return Ok(new PageDto<ActivityViewModel>());
-        }
-
-        var total = activities.Count();
-
-        var data = await activities
-            .Where(y => y.IsPublished != null)
-            .Include(x => x.ActivityType)
-            .Include(z => z.ActivityCity)
-            .OrderByDescending(x => x.StartDate)
-            .Skip(filters.Offset)
-            .Take(filters.Limit)
-            .Select(x => new ActivityViewModel(x))
-            .ToListAsync();
-
-        return Ok(new PageDto<ActivityViewModel>
-        {
-            Total = total,
-            Data = data
-        });
+        var activities = await _mediator.Send(filters);
+        return Ok(activities);
     }
 
     /// <summary>
@@ -61,48 +43,30 @@ public class ActivityController : ControllerBase
     [HttpGet("{activityId:guid}")]
     public async Task<IActionResult> GetByActivityId([FromRoute]Guid activityId)
     {
-        return Ok(await _activityService.GetActivityAsync(activityId));
-    }
-
-    /// <summary>
-    /// Получение списка активностей заданного типа
-    /// </summary>
-    /// <param name="activityTypeId">Идентификатор типа активности</param>
-    /// <returns>Список активностей</returns>
-    [HttpGet("type/{activityTypeId:guid}")]
-    public async Task<IActionResult> GetByActivitiesTypeId([FromRoute]Guid activityTypeId)
-    {
-        return Ok(await _activityService.GetActivitiesByType(activityTypeId));
+        return Ok(await _mediator.Send(new GetActivityByIdQuery(activityId)));
     }
 
     /// <summary>
     /// Создание активности
     /// </summary>
-    /// <param name="activity">Объект-активность</param>
+    /// <param name="createCommand">Объект-активность</param>
     /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> CreateActivity([FromForm] NewActivity activity)
+    public async Task<IActionResult> CreateActivity([FromForm] CreateActivityCommand createCommand)
     {
-        var validationResult = await _newActivityValidator.ValidateAsync(activity);
-
-        if (!validationResult.IsValid)
-        {
-            return StatusCode(StatusCodes.Status400BadRequest, validationResult.Errors);
-        }
-
-        //await _activityService.CreateActivity(activity.ToActivityDto());
+        await _mediator.Send(createCommand);
         return Ok();
     }
 
     /// <summary>
     /// Обновление активности
     /// </summary>
-    /// <param name="activity">Объект-активность</param>
+    /// <param name="updateCommand">Объект-активность</param>
     /// <returns></returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateActivity([FromForm] NewActivity activity)
+    public async Task<IActionResult> UpdateActivity([FromForm] UpdateActivityCommand updateCommand)
     {
-        //await _activityService.UpdateActivity(activity.ToActivityDto());
+        await _mediator.Send(updateCommand);
         return Ok();
     }
     
@@ -114,9 +78,9 @@ public class ActivityController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteActivities([FromBody]List<Guid> activities)
     {
-        await _activityService.DeleteActivity(activities);
+        await _mediator.Send(new DeleteActivityCommand(activities));
         return Ok();
-    }*/
+    }
 
     /*/// <summary>
     /// Публикация активностей

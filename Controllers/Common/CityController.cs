@@ -1,9 +1,7 @@
 ﻿using Controllers.ViewModels;
-using ActivitySeeker.Bll.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
-using ActivitySeeker.Bll.Interfaces;
 using Controllers.DI;
 
 namespace Controllers.Common
@@ -12,7 +10,7 @@ namespace Controllers.Common
     [ApiController]
     public class CityController : ControllerBase
     {
-        private readonly ICityService _cityService;
+        /*private readonly ICityService _cityService;
 
         public CityController(ICityService cityService)
         {
@@ -55,6 +53,6 @@ namespace Controllers.Common
                 await _cityService.UploadImage(cityImage.CityId, fullPath, imageStream);
 
             return Ok();
-        }
+        }*/
     }
 }

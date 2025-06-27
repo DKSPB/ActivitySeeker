@@ -3,10 +3,11 @@ using DataAccess.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using UseCases.Activity.Models;
+using UseCases.Common;
 
 namespace UseCases.Activity.Queries.GetAll;
 
-public class GetActivitiesHandler : IRequestHandler<GetActivitiesCommand, List<ActivityDto>>
+public class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedResult<ActivityDto>>
 {
     private readonly IDbContext _context;
     private readonly IMapper _mapper;
@@ -17,9 +18,21 @@ public class GetActivitiesHandler : IRequestHandler<GetActivitiesCommand, List<A
         _mapper = mapper;
     }
 
-    public async Task<List<ActivityDto>> Handle(GetActivitiesCommand request, CancellationToken cancellationToken)
+    public async Task<PagedResult<ActivityDto>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
     {
-        var entities = await _context.Activities.ToListAsync(cancellationToken);
-        return _mapper.Map<List<ActivityDto>>(entities);
+        var entities = _context.Activities.AsQueryable();
+            
+        var total = await entities.CountAsync(cancellationToken);
+            
+        var items = entities.OrderBy(x => x.StartDate)
+            .Skip((request.Offset - 1) * request.Limit)
+            .Take(request.Limit)
+            .ToListAsync(cancellationToken);
+        
+        return new PagedResult<ActivityDto>
+        {
+            Items = _mapper.Map<List<ActivityDto>>(entities),
+            Total = total
+        };
     }
 }

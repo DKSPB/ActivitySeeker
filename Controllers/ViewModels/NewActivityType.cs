@@ -1,5 +1,4 @@
-﻿using ActivitySeeker.Bll.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Controllers.ViewModels
 {
@@ -12,7 +11,7 @@ namespace Controllers.ViewModels
 
         public Guid? ParentId { get; set; }
 
-        public ActivityTypeDto ToActivityTypeDto()
+        /*public ActivityTypeDto ToActivityTypeDto()
         {
             return new ActivityTypeDto
             {
@@ -20,7 +19,7 @@ namespace Controllers.ViewModels
                 TypeName = TypeName,
                 ParentId = ParentId
             };
-        }
+        }*/
 
     }
 }

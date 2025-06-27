@@ -4,7 +4,7 @@ namespace UseCases.Activity.Commands.Update;
 
 public class UpdateActivityCommand : IRequest
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     public Guid ActivityTypeId { get; init; }
     public string Description { get; init; } = string.Empty;
     public DateTime StartDate { get; init; }
