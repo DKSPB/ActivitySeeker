@@ -7,11 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="ActivityType\Commands\Delete\" />
-      <Folder Include="ActivityType\Commands\Update\" />
-      <Folder Include="ActivityType\Queries\GetAll\" />
-      <Folder Include="ActivityType\Queries\GetById\" />
-      <Folder Include="Activity\Queries\GetById\" />
       <Folder Include="User\Commands\" />
       <Folder Include="User\Queries\" />
     </ItemGroup>

@@ -1,38 +1,35 @@
-using AutoMapper;
-using DataAccess.Interfaces;
 using MediatR;
+using DataAccess.Interfaces;
 
 namespace UseCases.Activity.Commands.Update;
 
 public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand>
 {
-    private readonly IMapper _mapper;
-    private readonly IDbContext _dbContext;
+    private readonly IDbContext _context;
 
-    public UpdateActivityHandler(IDbContext dbContext, IMapper mapper)
+    public UpdateActivityHandler(IDbContext context)
     {
-        _mapper = mapper;
-        _dbContext = dbContext;
+        _context = context;
     }
     
     public async Task Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _dbContext.Activities
+        var entity = await _context.Activities
             .FindAsync(new object?[] { request.Id, cancellationToken }, cancellationToken: cancellationToken);
 
         if (entity is null)
         {
-            throw new  NullReferenceException($"Активность с идентификатором {request.Id} не найдена");
+            throw new NullReferenceException($"Активность с идентификатором {request.Id} не найдена");
         }
         
         entity.ActivityTypeId = request.ActivityTypeId;
-        entity.LinkOrDescription = request.LinkOrDescription;
+        entity.Description = request.Description;
         entity.StartDate = request.StartDate;
         entity.EndDate = request.EndDate;
         entity.Image = request.Image;
         entity.IsOnline = request.IsOnline;
         entity.CityId = request.CityId;
         
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }

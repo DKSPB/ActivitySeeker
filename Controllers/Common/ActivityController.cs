@@ -1,9 +1,6 @@
 using Controllers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-using ActivitySeeker.Bll.Models;
-using Microsoft.EntityFrameworkCore;
-using ActivitySeeker.Bll.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers.Common;
@@ -13,21 +10,21 @@ namespace Controllers.Common;
 [Route("api/activity")]
 public class ActivityController : ControllerBase
 {
-    private readonly IActivityService _activityService;
-    private readonly NewActivityValidator _newActivityValidator;
+    //private readonly IActivityService _activityService;
+    //private readonly NewActivityValidator _newActivityValidator;
 
-    public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator)
+    /*public ActivityController(IActivityService activityService, NewActivityValidator newActivityValidator)
     {
         _activityService = activityService;
         _newActivityValidator = newActivityValidator;
-    }
+    }*/
 
     /// <summary>
     /// Получение списка активностей
     /// </summary>
     /// <param name="filters">Набор необязательных параметров</param>
     /// <returns>Список объектов-активностей</returns>
-    [HttpGet]
+    /*[HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] ActivityFilters filters)
     {
         var activities = _activityService.GetActivities(filters.ActivityRequest);
@@ -119,7 +116,7 @@ public class ActivityController : ControllerBase
     {
         await _activityService.DeleteActivity(activities);
         return Ok();
-    }
+    }*/
 
     /*/// <summary>
     /// Публикация активностей

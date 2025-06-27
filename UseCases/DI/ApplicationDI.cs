@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace UseCases.DI;
 
-public static class Infrastructure
+public static class ApplicationDI
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {

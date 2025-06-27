@@ -10,17 +10,14 @@ namespace Domain.Entities
         [Column("id")]
         public Guid Id { get; set; }
 
-        [Column("city_id")]
-        public int? CityId { get; set; }
+        [Column("author_id")]
+        public Guid AuthorId { get; set; }
 
-        [Column("is_online")]
-        public bool IsOnline { get; set; }
+        [Column("activity_type_id")]
+        public Guid ActivityTypeId { get; set; }
 
-        [Column("link_description")]
-        public string LinkOrDescription { get; set; } = null!;
-
-        [Column("image")]
-        public byte[]? Image { get; set; }
+        [Column("description")]
+        public string Description { get; set; } = null!;
 
         [Column("start_date")]
         public DateTime StartDate { get; set; }
@@ -28,14 +25,17 @@ namespace Domain.Entities
         [Column("end_date")]
         public DateTime? EndDate { get; set; }
 
-        [Column("activity_type_id")]
-        public Guid ActivityTypeId { get; set; }
+        [Column("image")]
+        public byte[]? Image { get; set; }
+
+        [Column("city_id")]
+        public int? CityId { get; set; }
+
+        [Column("is_online")]
+        public bool IsOnline { get; set; }
 
         [Column("is_published")]
         public bool? IsPublished { get; set; }
-
-        [Column("tg_message_id")]
-        public int? TgMessageId { get; set; }
 
         #region Навигационные свойства
 

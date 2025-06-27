@@ -1,6 +1,3 @@
-using System.Text;
-using Domain.Entities;
-
 namespace UseCases.Activity.Models;
 
 public class ActivityDto

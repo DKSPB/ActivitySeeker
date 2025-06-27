@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Diagnostics;
+//using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers.Common;
@@ -13,7 +13,7 @@ namespace Controllers.Common;
 [AllowAnonymous]
 [Route("ErrorHandling")]
 [ApiExplorerSettings(IgnoreApi = true)]
-public class ErrorHandlingController : Controller
+public class ErrorHandlingController : ControllerBase
 {
     private readonly IHostEnvironment _hostEnvironment;
     
@@ -30,7 +30,7 @@ public class ErrorHandlingController : Controller
     /// Метод отображения ошибок
     /// </summary>
     /// <returns></returns>
-    [Route("ProcessError")]
+    /*[Route("ProcessError")]
     public IActionResult ProcessError()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
@@ -46,5 +46,5 @@ public class ErrorHandlingController : Controller
             title: "Ошибка сервера",
             detail: "Для подробной информации свяжитесь с администратором",
             statusCode: StatusCodes.Status200OK);
-    }
+    }*/
 }

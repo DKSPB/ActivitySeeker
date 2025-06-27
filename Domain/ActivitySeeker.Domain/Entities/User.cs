@@ -1,10 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
 {
     [Table("user", Schema = "activity_seeker")]
     public class User
     {
+        [Key]
+        [Column("id")]
+        public Guid Id { get; set; }
+
         [Column("vk_id")]
         public long VkId { get; set; }
 

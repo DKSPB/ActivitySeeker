@@ -5,18 +5,12 @@ using System.Text;
 using DataAccess.DI;
 using FluentValidation;
 using System.Globalization;
-using ActivitySeeker.Bll.Utils;
 using Microsoft.OpenApi.Models;
-using ActivitySeeker.Bll.Models;
 using Newtonsoft.Json.Converters;
-using ActivitySeeker.Bll.Services;
-using ActivitySeeker.Bll.Interfaces;
-using ActivitySeeker.Bll.QuartzJobs;
-using Microsoft.IdentityModel.Tokens;
-using ActivitySeeker.Bll.Notification;
+//using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ActivitySeeker.Api
 {
@@ -37,7 +31,7 @@ namespace ActivitySeeker.Api
 
                 builder.Services.AddInfrastructure(builder.Configuration);
                 
-                var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));
+                /*var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));
                 builder.Services.Configure<JwtOptions>(jwtConfigurationSection);
                 var jwtOptions = jwtConfigurationSection.Get<JwtOptions>();
                 
@@ -53,22 +47,12 @@ namespace ActivitySeeker.Api
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
                         };
                     });
-
-                builder.Services.AddAuthorization();
+                
+                builder.Services.AddAuthorization();*/
                 builder.Services.AddSignalR();
-                //builder.Services.AddDbContext<IDbContext, ActivitySeekerContext>(options => options.UseNpgsql(connection));
                 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-                //builder.Services.AddScoped<ActivitySeekerContext>();
-                builder.Services.AddScoped<IUserService, UserService>();
-                //builder.Services.AddScoped<ActivityPublisher>();
-                builder.Services.AddScoped<IActivityTypeService, ActivityTypeService>();
-                builder.Services.AddScoped<IActivityService, ActivityService>();
-                builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-                builder.Services.AddScoped<IJwtProvider, JwtProvider>();
-                builder.Services.AddScoped<IAdminService, AdminService>();
-                builder.Services.AddScoped<ICityService, CityService>();
 
-                builder.Services.AddSingleton<NotificationAdminHub>();
+                /*builder.Services.AddSingleton<NotificationAdminHub>();
 
                 builder.Services.AddQuartz(quartz =>
                 {
@@ -85,7 +69,7 @@ namespace ActivitySeeker.Api
                 {
                     quartz.AwaitApplicationStarted = true;
                     quartz.WaitForJobsToComplete = true;
-                });
+                });*/
                 
 
                 #region serialize settings
@@ -119,7 +103,7 @@ namespace ActivitySeeker.Api
                                     Id="Bearer"
                                 }
                             },
-                            new string[]{}
+                            Array.Empty<string>()
                         }
                     });
                 });
@@ -164,7 +148,7 @@ namespace ActivitySeeker.Api
                 app.MapControllers();
                 app.MapFallbackToFile("index.html");
                 
-                app.MapHub<NotificationAdminHub>("/notify");
+                //app.MapHub<NotificationAdminHub>("/notify");
 
                 app.Run();
             }
