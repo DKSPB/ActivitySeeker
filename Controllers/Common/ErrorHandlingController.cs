@@ -26,11 +26,11 @@ public class ErrorHandlingController : ControllerBase
         _hostEnvironment = hostEnvironment;
     }
     
-    /// <summary>
+    /*/// <summary>
     /// Метод отображения ошибок
     /// </summary>
     /// <returns></returns>
-    /*[Route("ProcessError")]
+    [Route("ProcessError")]
     public IActionResult ProcessError()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();

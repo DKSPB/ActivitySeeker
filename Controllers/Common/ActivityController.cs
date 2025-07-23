@@ -1,11 +1,7 @@
 using MediatR;
-using Controllers.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Activity.Queries.GetAll;
-using UseCases.Activity.Commands.Create;
 using UseCases.Activity.Queries.GetById;
-using UseCases.Activity.Commands.Create;
-using UseCases.Activity.Commands.Update;
 using UseCases.Activity.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
 
@@ -13,11 +9,10 @@ namespace Controllers.Common;
 
 [ApiController]
 [AllowAnonymous]
-[Route("api/activity")]
+[Route("api/[controller]")]
 public class ActivityController : ControllerBase
 {
     private readonly IMediator _mediator;
-
     public ActivityController(IMediator mediator)
     {
         _mediator = mediator;
@@ -46,7 +41,7 @@ public class ActivityController : ControllerBase
         return Ok(await _mediator.Send(new GetActivityByIdQuery(activityId)));
     }
 
-    /// <summary>
+    /*/// <summary>
     /// Создание активности
     /// </summary>
     /// <param name="createCommand">Объект-активность</param>
@@ -68,7 +63,7 @@ public class ActivityController : ControllerBase
     {
         await _mediator.Send(updateCommand);
         return Ok();
-    }
+    }*/
     
     /// <summary>
     /// Удаление указанных активностей

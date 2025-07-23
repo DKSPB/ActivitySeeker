@@ -17,7 +17,7 @@ namespace UseCases.ActivityType.Queries.GetById
         public async Task<ActivityTypeDto> Handle(GetActivityTypeByIdQuery request, CancellationToken cancellationToken)
         {
             var entity = await _context.ActivityTypes
-                .FindAsync(new object?[] { request.Id, cancellationToken }, cancellationToken: cancellationToken) ?? 
+                .FindAsync(new object?[] { request.Id }, cancellationToken: cancellationToken) ?? 
                 throw new NullReferenceException($"Тип активности с идентификатором {request.Id} не найден");
             return _mapper.Map<ActivityTypeDto>(entity);
         }

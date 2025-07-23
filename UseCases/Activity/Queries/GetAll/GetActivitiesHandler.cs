@@ -24,14 +24,14 @@ public class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedRes
             
         var total = await entities.CountAsync(cancellationToken);
             
-        var items = entities.OrderBy(x => x.StartDate)
+        var items = await entities.OrderBy(x => x.StartDate)
             .Skip((request.Offset - 1) * request.Limit)
             .Take(request.Limit)
             .ToListAsync(cancellationToken);
         
         return new PagedResult<ActivityDto>
         {
-            Items = _mapper.Map<List<ActivityDto>>(entities),
+            Items = _mapper.Map<List<ActivityDto>>(items),
             Total = total
         };
     }

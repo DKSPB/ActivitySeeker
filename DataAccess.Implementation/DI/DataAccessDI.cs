@@ -16,7 +16,7 @@ namespace DataAccess.DI
             services.AddDbContext<ActivitySeekerContext>((sp, options) =>
             {
                 var dbOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-                options.UseNpgsql(dbOptions.ConnectionString);
+                options.UseNpgsql(dbOptions.ActivitySeekerConnection);
             });
             
             services.AddScoped<IDbContext>(sp => sp.GetRequiredService<ActivitySeekerContext>());

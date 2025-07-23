@@ -2,5 +2,5 @@
 
 namespace UseCases.ActivityType.Commands.Delete
 {
-    internal record DeleteActivityTypeCommand (List<Guid> ActivityTypeIds) : IRequest;
+    public record DeleteActivityTypeCommand (List<Guid> ActivityTypeIds) : IRequest;
 }

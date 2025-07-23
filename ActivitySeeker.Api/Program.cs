@@ -10,6 +10,8 @@ using Newtonsoft.Json.Converters;
 //using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.HttpOverrides;
+using UseCases.DI;
+
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ActivitySeeker.Api
@@ -30,6 +32,7 @@ namespace ActivitySeeker.Api
                 
 
                 builder.Services.AddInfrastructure(builder.Configuration);
+                builder.Services.AddApplication();
                 
                 /*var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));
                 builder.Services.Configure<JwtOptions>(jwtConfigurationSection);

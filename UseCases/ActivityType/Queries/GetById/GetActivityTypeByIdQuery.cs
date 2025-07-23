@@ -3,5 +3,5 @@ using UseCases.ActivityType.Models;
 
 namespace UseCases.ActivityType.Queries.GetById
 {
-    internal record GetActivityTypeByIdQuery(Guid Id) : IRequest<ActivityTypeDto>;
+    public record GetActivityTypeByIdQuery(Guid Id) : IRequest<ActivityTypeDto>;
 }

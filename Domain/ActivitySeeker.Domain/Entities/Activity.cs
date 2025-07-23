@@ -10,9 +10,6 @@ namespace Domain.Entities
         [Column("id")]
         public Guid Id { get; set; }
 
-        [Column("author_id")]
-        public Guid AuthorId { get; set; }
-
         [Column("activity_type_id")]
         public Guid ActivityTypeId { get; set; }
 
@@ -41,7 +38,9 @@ namespace Domain.Entities
 
         public ActivityType ActivityType { get; set; } = null!;
 
-        public City? ActivityCity { get; set; }
+        public User Author { get; set; } = null!;
+
+        //public City? ActivityCity { get; set; }
 
         #endregion
     }
