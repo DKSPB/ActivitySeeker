@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccess.Migrations
 {
-    public partial class change_entities : Migration
+    public partial class rewrite_entity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -80,6 +80,11 @@ namespace DataAccess.Migrations
                 table: "user");
 
             migrationBuilder.DropColumn(
+                name: "chat_id",
+                schema: "activity_seeker",
+                table: "user");
+
+            migrationBuilder.DropColumn(
                 name: "city_id",
                 schema: "activity_seeker",
                 table: "user");
@@ -115,29 +120,20 @@ namespace DataAccess.Migrations
                 table: "user");
 
             migrationBuilder.DropColumn(
+                name: "image_path",
+                schema: "activity_seeker",
+                table: "activity_type");
+
+            migrationBuilder.DropColumn(
                 name: "tg_message_id",
                 schema: "activity_seeker",
                 table: "activity");
-
-            migrationBuilder.RenameColumn(
-                name: "chat_id",
-                schema: "activity_seeker",
-                table: "user",
-                newName: "vk_id");
 
             migrationBuilder.RenameColumn(
                 name: "link_description",
                 schema: "activity_seeker",
                 table: "activity",
                 newName: "description");
-
-            migrationBuilder.AddColumn<long>(
-                name: "AuthorId",
-                schema: "activity_seeker",
-                table: "activity",
-                type: "bigint",
-                nullable: false,
-                defaultValue: 0L);
 
             migrationBuilder.AddColumn<DateTime>(
                 name: "end_date",
@@ -146,17 +142,33 @@ namespace DataAccess.Migrations
                 type: "timestamp without time zone",
                 nullable: true);
 
-            migrationBuilder.CreateIndex(
-                name: "IX_activity_AuthorId",
+            migrationBuilder.AddColumn<int>(
+                name: "timezone",
                 schema: "activity_seeker",
                 table: "activity",
-                column: "AuthorId");
+                type: "integer",
+                nullable: false,
+                defaultValue: 0);
+
+            migrationBuilder.AddColumn<long>(
+                name: "user_id",
+                schema: "activity_seeker",
+                table: "activity",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_activity_user_id",
+                schema: "activity_seeker",
+                table: "activity",
+                column: "user_id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_activity_user_AuthorId",
+                name: "FK_activity_user_user_id",
                 schema: "activity_seeker",
                 table: "activity",
-                column: "AuthorId",
+                column: "user_id",
                 principalSchema: "activity_seeker",
                 principalTable: "user",
                 principalColumn: "id",
@@ -166,17 +178,12 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_activity_user_AuthorId",
+                name: "FK_activity_user_user_id",
                 schema: "activity_seeker",
                 table: "activity");
 
             migrationBuilder.DropIndex(
-                name: "IX_activity_AuthorId",
-                schema: "activity_seeker",
-                table: "activity");
-
-            migrationBuilder.DropColumn(
-                name: "AuthorId",
+                name: "IX_activity_user_id",
                 schema: "activity_seeker",
                 table: "activity");
 
@@ -185,11 +192,15 @@ namespace DataAccess.Migrations
                 schema: "activity_seeker",
                 table: "activity");
 
-            migrationBuilder.RenameColumn(
-                name: "vk_id",
+            migrationBuilder.DropColumn(
+                name: "timezone",
                 schema: "activity_seeker",
-                table: "user",
-                newName: "chat_id");
+                table: "activity");
+
+            migrationBuilder.DropColumn(
+                name: "user_id",
+                schema: "activity_seeker",
+                table: "activity");
 
             migrationBuilder.RenameColumn(
                 name: "description",
@@ -226,6 +237,14 @@ namespace DataAccess.Migrations
                 type: "uuid",
                 nullable: true);
 
+            migrationBuilder.AddColumn<long>(
+                name: "chat_id",
+                schema: "activity_seeker",
+                table: "user",
+                type: "bigint",
+                nullable: false,
+                defaultValue: 0L);
+
             migrationBuilder.AddColumn<int>(
                 name: "city_id",
                 schema: "activity_seeker",
@@ -279,6 +298,13 @@ namespace DataAccess.Migrations
                 type: "text",
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AddColumn<string>(
+                name: "image_path",
+                schema: "activity_seeker",
+                table: "activity_type",
+                type: "text",
+                nullable: true);
 
             migrationBuilder.AddColumn<int>(
                 name: "tg_message_id",

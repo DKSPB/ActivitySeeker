@@ -12,6 +12,9 @@ namespace Domain.Entities
 
         [Column("activity_type_id")]
         public Guid ActivityTypeId { get; set; }
+        
+        [Column("user_id")]
+        public long UserId { get; set; }
 
         [Column("description")]
         public string Description { get; set; } = null!;
@@ -21,6 +24,9 @@ namespace Domain.Entities
         
         [Column("end_date")]
         public DateTime? EndDate { get; set; }
+
+        [Column("timezone")]
+        public int Timezone { get; set; }
 
         [Column("image")]
         public byte[]? Image { get; set; }
@@ -38,9 +44,7 @@ namespace Domain.Entities
 
         public ActivityType ActivityType { get; set; } = null!;
 
-        public User Author { get; set; } = null!;
-
-        //public City? ActivityCity { get; set; }
+        public User User { get; set; } = null!;
 
         #endregion
     }

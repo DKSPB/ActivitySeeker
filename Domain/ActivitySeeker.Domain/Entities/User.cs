@@ -9,9 +9,6 @@ namespace Domain.Entities
         [Key]
         [Column("id")]
         public long Id { get; set; }
-        
-        [Column("vk_id")]
-        public long VkId { get; set; }
 
         #region Навигационные свойства
 

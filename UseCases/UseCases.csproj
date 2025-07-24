@@ -7,11 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="User\Commands\" />
-      <Folder Include="User\Queries\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="MediatR" Version="12.5.0" />
     </ItemGroup>

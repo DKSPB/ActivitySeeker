@@ -18,9 +18,9 @@ namespace Domain.Entities
 
         #region Navigation properties
 
-        public IEnumerable<Activity>? Activities { get; set; }
+        public ICollection<Activity>? Activities { get; set; }
 
-        public List<ActivityType>? Children { get; set; }
+        public ICollection<ActivityType>? Children { get; set; }
 
         public ActivityType? Parent { get; set; }
 

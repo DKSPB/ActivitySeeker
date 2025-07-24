@@ -12,14 +12,14 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ActivitySeekerContext))]
-    [Migration("20250723110736_change_entities")]
-    partial class change_entities
+    [Migration("20250724075558_rewrite_entity")]
+    partial class rewrite_entity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.26")
+                .HasAnnotation("ProductVersion", "6.0.22")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -34,9 +34,6 @@ namespace DataAccess.Migrations
                     b.Property<Guid>("ActivityTypeId")
                         .HasColumnType("uuid")
                         .HasColumnName("activity_type_id");
-
-                    b.Property<long>("AuthorId")
-                        .HasColumnType("bigint");
 
                     b.Property<int?>("CityId")
                         .HasColumnType("integer")
@@ -67,11 +64,19 @@ namespace DataAccess.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("start_date");
 
+                    b.Property<int>("Timezone")
+                        .HasColumnType("integer")
+                        .HasColumnName("timezone");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ActivityTypeId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("activity", "activity_seeker");
                 });
@@ -82,10 +87,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
-
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("text")
-                        .HasColumnName("image_path");
 
                     b.Property<Guid?>("ParentId")
                         .HasColumnType("uuid")
@@ -174,10 +175,6 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("VkId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("vk_id");
-
                     b.HasKey("Id");
 
                     b.ToTable("user", "activity_seeker");
@@ -191,15 +188,15 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.User", "Author")
+                    b.HasOne("Domain.Entities.User", "User")
                         .WithMany("Activities")
-                        .HasForeignKey("AuthorId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ActivityType");
 
-                    b.Navigation("Author");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.ActivityType", b =>

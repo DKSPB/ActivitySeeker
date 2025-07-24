@@ -9,7 +9,7 @@ namespace Controllers.Common;
 
 [ApiController]
 [AllowAnonymous]
-[Route("api/[controller]")]
+[Route("api/activities")]
 public class ActivityController : ControllerBase
 {
     private readonly IMediator _mediator;
