@@ -1,5 +1,6 @@
 ﻿using DataAccess.Interfaces;
 using MediatR;
+using UseCases.User.Models;
 
 namespace UseCases.User.Queries.GetById
 {
@@ -16,6 +17,7 @@ namespace UseCases.User.Queries.GetById
         {
             var userEntity = await _context.Users
                 .FindAsync(new object?[] { query.UserId }, cancellationToken: cancellationToken);
+            
         }
     }
 }

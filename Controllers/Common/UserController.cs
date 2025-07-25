@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using UseCases.User.Commands.Create;
+using UseCases.User.Commands.EnsureUserExists;
+using UseCases.User.Queries.GetById;
 
 namespace Controllers.Common
 {
@@ -16,20 +18,27 @@ namespace Controllers.Common
             _mediator = mediator;
         }
 
+        [HttpGet("{userId:long}/exists")]
+        public async Task<IActionResult> EnsureUserExists(long userId)
+        {
+            await _mediator.Send(new EnsureUserExistsCommand(userId));
+            return Ok();
+        }
+        
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             return Ok();
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById()
+        [HttpGet("{userId:long}")]
+        public async Task<IActionResult> GetById(long userId)
         {
-            return Ok();
+            return Ok(await _mediator.Send(new GetUserByIdQuery(userId)));
         }
 
-        [HttpGet("{id:guid}/activities")]
-        public async Task<IActionResult> GetUsersActivities(long id)
+        [HttpGet("{userId:long}/activities")]
+        public async Task<IActionResult> GetUsersActivities(long userId)
         {
             return Ok();
         }

@@ -1,5 +1,6 @@
 ﻿using DataAccess.Interfaces;
 using MediatR;
+using UseCases.User.Models;
 using Entity = Domain.Entities;
 
 namespace UseCases.User.Commands.Create
@@ -13,8 +14,8 @@ namespace UseCases.User.Commands.Create
         }
         public async Task Handle(CreateUserCommand command, CancellationToken cancellationToken)
         {
-            await _context.Users.AddAsync(new Entity.User { Id = command.Id});
-            await _context.SaveChangesAsync();
+            await _context.Users.AddAsync(new Entity.User { Id = command.Id}, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
