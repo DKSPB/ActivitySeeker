@@ -1,26 +1,27 @@
-using AutoMapper;
-using DataAccess.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using UseCases.Activity.Models;
+using AutoMapper;
 using UseCases.Common;
+using DataAccess.Interfaces;
+using UseCases.Activity.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace UseCases.Activity.Queries.GetAll;
 
-public class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedResult<ActivityDto>>
+internal class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedResult<ActivityDto>>
 {
-    private readonly IDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IDbContext _context;
 
-    public GetActivitiesHandler(IDbContext context, IMapper mapper)
+    public GetActivitiesHandler(IMapper mapper, IDbContext context)
     {
-        _context = context;
         _mapper = mapper;
+        _context = context;
     }
 
     public async Task<PagedResult<ActivityDto>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
     {
-        var entities = _context.Activities.AsQueryable();
+        var entities = _context.Activities;
             
         var total = await entities.CountAsync(cancellationToken);
             

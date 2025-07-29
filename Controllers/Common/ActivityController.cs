@@ -4,6 +4,8 @@ using UseCases.Activity.Queries.GetAll;
 using UseCases.Activity.Queries.GetById;
 using UseCases.Activity.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
+using UseCases.Activity.Commands.Create;
+using UseCases.Activity.Commands.Update;
 
 namespace Controllers.Common;
 
@@ -23,7 +25,7 @@ public class ActivityController : ControllerBase
     /// </summary>
     /// <param name="filters">Набор необязательных параметров</param>
     /// <returns>Список объектов-активностей</returns>
-    [HttpPost]
+    [HttpPost("getAll")]
     public async Task<IActionResult> GetAll([FromBody] GetActivitiesQuery filters)
     {
         var activities = await _mediator.Send(filters);
@@ -41,13 +43,13 @@ public class ActivityController : ControllerBase
         return Ok(await _mediator.Send(new GetActivityByIdQuery(activityId)));
     }
 
-    /*/// <summary>
+    /// <summary>
     /// Создание активности
     /// </summary>
     /// <param name="createCommand">Объект-активность</param>
     /// <returns></returns>
-    [HttpPost]
-    public async Task<IActionResult> CreateActivity([FromForm] CreateActivityCommand createCommand)
+    [HttpPost("create")]
+    public async Task<IActionResult> CreateActivity([FromBody] CreateActivityCommand createCommand)
     {
         await _mediator.Send(createCommand);
         return Ok();
@@ -59,11 +61,11 @@ public class ActivityController : ControllerBase
     /// <param name="updateCommand">Объект-активность</param>
     /// <returns></returns>
     [HttpPut]
-    public async Task<IActionResult> UpdateActivity([FromForm] UpdateActivityCommand updateCommand)
+    public async Task<IActionResult> UpdateActivity([FromBody] UpdateActivityCommand updateCommand)
     {
         await _mediator.Send(updateCommand);
         return Ok();
-    }*/
+    }
     
     /// <summary>
     /// Удаление указанных активностей
@@ -76,56 +78,4 @@ public class ActivityController : ControllerBase
         await _mediator.Send(new DeleteActivityCommand(activities));
         return Ok();
     }
-
-    /*/// <summary>
-    /// Публикация активностей
-    /// </summary>
-    /// <param name="activityIds">Идентификаторы активностей</param>
-    /// <returns></returns>
-    [HttpPut("publish")]
-    public async Task<IActionResult> PublishActivities([FromBody] List<Guid> activityIds)
-    {
-        if (activityIds is not null && activityIds.Count > 0) 
-        {
-            foreach (var id in activityIds)
-            {
-                var activity = await _activityService.GetActivityAsync(id);
-
-                if (activity is not null)
-                {
-                    var responseMessage = new ResponseMessage
-                    {
-                        Text = activity.GetActivityDescription().ToString(),
-                        Image = activity.Image,
-                        Keyboard = InlineKeyboardMarkup.Empty()
-                    };
-                    var tgMessage = await _activityPublisher.SendMessageAsync(_botConfig.TelegramChannel, responseMessage);
-
-                    await _activityService.PublishActivity(activity, tgMessage.MessageId);
-                }
-            }
-        }
-
-        return Ok();
-    }*/
-
-    /*[HttpPut("withdraw")]
-    public async Task<IActionResult> WithdrawFromPublication([FromBody] List<Guid> activityIds)
-    {
-        if (activityIds is not null && activityIds.Count > 0)
-        {
-            foreach (var id in activityIds)
-            {
-                var activity = await _activityService.GetActivityAsync(id);
-
-                if (activity is not null && activity.TgMessageId.HasValue)
-                {
-                    await _activityPublisher.DeleteMessage(_botConfig.TelegramChannel, activity.TgMessageId.Value);
-                    await _activityService.WithdrawFromPublication(activity);
-                }
-            }
-        }
-
-        return Ok();
-    }*/
 }

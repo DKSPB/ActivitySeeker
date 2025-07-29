@@ -1,7 +1,10 @@
 ﻿using MediatR;
 using AutoMapper;
+using UseCases.Common;
 using DataAccess.Interfaces;
 using UseCases.Activity.Models;
+using Entities = Domain.Entities;
+
 
 namespace UseCases.Activity.Queries.GetById
 {
@@ -18,7 +21,7 @@ namespace UseCases.Activity.Queries.GetById
         {
             var entity = await _context.Activities
                 .FindAsync(new object?[] { request.Id, cancellationToken }, cancellationToken: cancellationToken) ?? 
-                throw new NullReferenceException($"Активность с идентификатором {request.Id} не найдена");
+                throw new ObjectNotFoundException(nameof(Entities.Activity), request.Id);
 
             return _mapper.Map<ActivityDto>(entity);
         }

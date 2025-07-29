@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using UseCases.Common;
+using UseCases.User.Models;
 
 namespace UseCases.User.Queries.GetAll
 {
-    internal class GetUsersQuery
-    {
-    }
+    public record GetUsersQuery(int Limit = 20, int Offset = 1) : IRequest<PagedResult<UserDto>>;
 }
