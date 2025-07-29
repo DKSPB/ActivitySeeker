@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 using UseCases.User.Commands.EnsureUserExists;
 using UseCases.User.Queries.GetUsersActivities;
 
-
-
 namespace Controllers.Common
 {
     [ApiController]

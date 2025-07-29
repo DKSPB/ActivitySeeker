@@ -38,7 +38,12 @@ namespace Domain.Entities
         public bool IsOnline { get; set; }
 
         [Column("is_published")]
-        public bool? IsPublished { get; set; }
+        public bool IsPublished { get; set; }
+
+        public static void PublishActivity(Activity activity)
+        {
+            activity.IsPublished = true;
+        }
 
         #region Навигационные свойства
 
