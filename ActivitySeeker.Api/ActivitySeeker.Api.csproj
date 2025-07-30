@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Controllers\Controllers.csproj" />
+      <ProjectReference Include="..\FileSystem\FileSystem.csproj" />
       <ProjectReference Include="..\UseCases\UseCases.csproj" />
     </ItemGroup>
 

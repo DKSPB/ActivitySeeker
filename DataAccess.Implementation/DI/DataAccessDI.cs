@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace DataAccess.DI
+
 {
     public static class Infrastructure
     {

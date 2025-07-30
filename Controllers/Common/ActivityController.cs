@@ -1,9 +1,11 @@
+using Controllers.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Activity.Queries.GetAll;
 using UseCases.Activity.Queries.GetById;
 using UseCases.Activity.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using UseCases.Activity.Commands.Create;
 using UseCases.Activity.Commands.Update;
 
@@ -76,6 +78,13 @@ public class ActivityController : ControllerBase
     public async Task<IActionResult> DeleteActivities([FromBody]List<Guid> activities)
     {
         await _mediator.Send(new DeleteActivityCommand(activities));
+        return Ok();
+    }
+
+    [HttpPost("upload/image")]
+    //[Consumes("multipart/form-data")]
+    public async Task<IActionResult> UploadImage([FromForm] UploadActivityImage uploadActivityImage)
+    {
         return Ok();
     }
 }

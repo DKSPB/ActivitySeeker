@@ -28,8 +28,8 @@ namespace Domain.Entities
         [Column("timezone")]
         public int Timezone { get; set; }
 
-        [Column("image")]
-        public byte[]? Image { get; set; }
+        [Column("image_path")]
+        public string? ImagePath { get; set; }
 
         [Column("city_id")]
         public int? CityId { get; set; }

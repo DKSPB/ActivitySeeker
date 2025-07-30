@@ -15,4 +15,8 @@
       <ProjectReference Include="..\DataAccess.Implementation\DataAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Interfaces\" />
+    </ItemGroup>
+
 </Project>

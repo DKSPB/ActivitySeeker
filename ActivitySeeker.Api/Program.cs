@@ -5,6 +5,7 @@ using System.Text;
 using DataAccess.DI;
 using FluentValidation;
 using System.Globalization;
+using FileSystem.DI;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 //using Microsoft.IdentityModel.Tokens;
@@ -32,6 +33,7 @@ namespace ActivitySeeker.Api
                 
 
                 builder.Services.AddInfrastructure(builder.Configuration);
+                builder.Services.AddFileSystemInfrastructure(builder.Configuration);
                 builder.Services.AddApplication();
                 
                 /*var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));

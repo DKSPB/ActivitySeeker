@@ -1,5 +1,4 @@
-﻿using Controllers.ViewModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
 using Controllers.DI;

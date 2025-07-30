@@ -6,7 +6,6 @@ using UseCases.ActivityType.Commands.Create;
 using UseCases.ActivityType.Commands.Delete;
 using UseCases.ActivityType.Commands.Update;
 using UseCases.ActivityType.Queries.GetById;
-using UseCases.ActivityType.Queries.GetActivitiesByType;
 
 namespace Controllers.Common;
 
@@ -31,12 +30,6 @@ public class ActivityTypeController : ControllerBase
     public async Task<IActionResult> GetById(Guid id)
     {
         return Ok(await _mediator.Send(new GetActivityTypeByIdQuery(id)));
-    }
-
-    [HttpGet("{id:guid}/activities")]
-    public async Task<IActionResult> GetActivitiesByType(Guid id)
-    {
-        return Ok(await _mediator.Send(new GetActivitiesByTypeQuery(id)));
     }
 
     [HttpPost]
