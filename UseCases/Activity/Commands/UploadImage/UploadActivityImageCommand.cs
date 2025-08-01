@@ -1,5 +1,6 @@
 using MediatR;
+using UseCases.Common;
 
 namespace UseCases.Activity.Commands.UploadImage;
 
-public record UploadActivityImageCommand(Guid ActivityId, string FileName) : IRequest;
+public record UploadActivityImageCommand(Guid ActivityId, FileData File) : IRequest;

@@ -1,11 +1,11 @@
-using Controllers.Models;
+using AutoMapper;
 using MediatR;
+using Controllers.Models;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Activity.Queries.GetAll;
 using UseCases.Activity.Queries.GetById;
 using UseCases.Activity.Commands.Delete;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using UseCases.Activity.Commands.Create;
 using UseCases.Activity.Commands.Update;
 using UseCases.Activity.Commands.UploadImage;
@@ -17,9 +17,11 @@ namespace Controllers.Common;
 [Route("api/activities")]
 public class ActivityController : ControllerBase
 {
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    public ActivityController(IMediator mediator)
+    public ActivityController(IMapper mapper, IMediator mediator)
     {
+        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -85,7 +87,8 @@ public class ActivityController : ControllerBase
     [HttpPost("upload/image")]
     public async Task<IActionResult> UploadImage([FromForm] UploadActivityImage uploadActivityImage)
     {
-        //await _mediator.Send(new UploadActivityImageCommand());
+        var command = _mapper.Map<UploadActivityImageCommand>(uploadActivityImage);
+        await _mediator.Send(command);
         return Ok();
     }
 }

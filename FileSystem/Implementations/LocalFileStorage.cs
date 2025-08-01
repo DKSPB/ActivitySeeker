@@ -6,28 +6,48 @@ namespace FileSystem.Implementations;
 
 public class LocalFileStorage : IFileStorage
 {
+    private readonly string _storagePath;
     public LocalFileStorage(IOptions<FileStorageOptions> options)
     {
-        var storagePath = Path.Combine(Directory.GetCurrentDirectory(), options.Value.BasePath);
+        _storagePath = Path.Combine(Directory.GetCurrentDirectory(), options.Value.BasePath);
+    }
 
-        if (!Directory.Exists(storagePath))
+    /// <summary>
+    /// Сохраняет файл в сгенерированному пути
+    /// </summary>
+    /// <param name="contentStream">Поток с данными файла</param>
+    /// <param name="extension">Расширение файла</param>
+    /// <param name="cancellationToken">Токен прерывания</param>
+    /// <returns></returns>
+    public async Task<string> SaveAsync(Stream contentStream, string extension, CancellationToken cancellationToken = default)
+    {
+        CreateDirectoryIfNotExists();
+        
+        var fileName = GenerateUniqueFileName(extension);
+
+        await using var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+        await contentStream.CopyToAsync(fileStream, cancellationToken);
+
+        return fileName;
+    }
+
+    /// <summary>
+    /// Создаёт директорию хранения изображения, если она не существует
+    /// </summary>
+    private void CreateDirectoryIfNotExists()
+    {
+        if (!Directory.Exists(_storagePath))
         {
-            Directory.CreateDirectory(storagePath);
+            Directory.CreateDirectory(_storagePath);
         }
     }
     
     /// <summary>
     /// Генерирует уникальное имя файла с расширением
     /// </summary>
-    public string GenerateUniqueFileName(string originalFileName)
+    private string GenerateUniqueFileName(string fileExtension)
     {
-        var extension = Path.GetExtension(originalFileName);
-        var uniqueName = $"{Guid.NewGuid()}{extension}";
-        return uniqueName;
-    }
-
-    public Task<string> SaveAsync(Stream fileStream, string extension, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
+        var shortName = $"{Guid.NewGuid()}{fileExtension}";
+        return Path.Combine(_storagePath, shortName);
     }
 }

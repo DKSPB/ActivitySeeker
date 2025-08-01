@@ -5,7 +5,7 @@ namespace UseCases.DI;
 
 public static class ApplicationDi
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(UseCaseMappingProfile).Assembly);
 

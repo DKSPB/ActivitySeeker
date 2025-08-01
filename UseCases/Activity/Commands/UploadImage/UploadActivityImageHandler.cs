@@ -2,16 +2,19 @@ using DataAccess.Interfaces;
 using MediatR;
 using UseCases.Common;
 using DataAccess.Interfaces;
+using UseCases.Interfaces;
 
 namespace UseCases.Activity.Commands.UploadImage;
 
 internal class UploadActivityImageHandler : IRequestHandler<UploadActivityImageCommand>
 {
     private readonly IDbContext _context;
+    private readonly IFileStorage _fileStorage;
     
-    public UploadActivityImageHandler(IDbContext context)
+    public UploadActivityImageHandler(IDbContext context, IFileStorage fileStorage)
     {
         _context = context;
+        _fileStorage = fileStorage;
     }
     public async Task Handle(UploadActivityImageCommand request, CancellationToken cancellationToken)
     {
@@ -23,8 +26,10 @@ internal class UploadActivityImageHandler : IRequestHandler<UploadActivityImageC
             throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.ActivityId);
         }
 
-        entity.ImagePath = request.FileName;
+        var fileName = await _fileStorage.SaveAsync(request.File.Content, request.File.FileExtension, cancellationToken);
         
+        entity.ImagePath = fileName;
+
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
