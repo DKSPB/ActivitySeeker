@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using UseCases.Activity.Commands.Create;
 using UseCases.Activity.Commands.Update;
+using UseCases.Activity.Commands.UploadImage;
 
 namespace Controllers.Common;
 
@@ -82,9 +83,9 @@ public class ActivityController : ControllerBase
     }
 
     [HttpPost("upload/image")]
-    //[Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadImage([FromForm] UploadActivityImage uploadActivityImage)
     {
+        //await _mediator.Send(new UploadActivityImageCommand());
         return Ok();
     }
 }

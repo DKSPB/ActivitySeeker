@@ -1,4 +1,4 @@
-namespace FileSystem.Interfaces;
+namespace UseCases.Interfaces;
 
 public interface IFileStorage
 {

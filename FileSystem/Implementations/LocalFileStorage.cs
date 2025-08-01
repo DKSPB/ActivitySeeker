@@ -1,6 +1,6 @@
 using FileSystem.Di;
-using FileSystem.Interfaces;
 using Microsoft.Extensions.Options;
+using UseCases.Interfaces;
 
 namespace FileSystem.Implementations;
 

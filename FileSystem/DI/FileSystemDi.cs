@@ -1,8 +1,8 @@
 using FileSystem.Di;
 using FileSystem.Implementations;
-using FileSystem.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using UseCases.Interfaces;
 
 
 namespace FileSystem.DI;

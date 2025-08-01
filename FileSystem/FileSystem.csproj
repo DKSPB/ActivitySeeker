@@ -22,4 +22,8 @@
       <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\UseCases\UseCases.csproj" />
+    </ItemGroup>
+
 </Project>
