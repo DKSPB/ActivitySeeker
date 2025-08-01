@@ -30,6 +30,21 @@ public class LocalFileStorage : IFileStorage
 
         return fileName;
     }
+    
+    /// <summary>
+    /// Получение изображения по полному имени
+    /// </summary>
+    /// <param name="path">Полный путь к файлу</param>
+    /// <returns></returns>
+    public Task<Stream?> GetAsync(string path)
+    {
+        if (!File.Exists(path))
+            return Task.FromResult<Stream?>(null);
+
+        // OpenRead не грузит файл в память, а открывает поток
+        Stream stream = File.OpenRead(path);
+        return Task.FromResult<Stream?>(stream);
+    }
 
     /// <summary>
     /// Создаёт директорию хранения изображения, если она не существует

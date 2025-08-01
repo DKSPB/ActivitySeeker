@@ -91,4 +91,10 @@ public class ActivityController : ControllerBase
         await _mediator.Send(command);
         return Ok();
     }
+
+    [HttpGet("get/image")]
+    public async Task<IActionResult> GetImage()
+    {
+        return Ok();
+    }
 }
