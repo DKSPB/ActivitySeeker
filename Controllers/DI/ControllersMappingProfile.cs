@@ -12,11 +12,11 @@ public class ControllersMappingProfile : Profile
     {
         public MappingProfile()
         {
-            CreateMap<UploadActivityImage, UploadActivityImageCommand>()
+            /*CreateMap<UploadActivityImage, UploadActivityImageCommand>()
                 .ConvertUsing(src => new UploadActivityImageCommand(
                     src.ActivityId,
                     src.File.Convert()
-                ));
+                ));*/
         }
     }
 }

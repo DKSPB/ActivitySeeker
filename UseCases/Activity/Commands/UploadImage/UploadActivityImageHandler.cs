@@ -1,7 +1,6 @@
 using DataAccess.Interfaces;
 using MediatR;
 using UseCases.Common;
-using DataAccess.Interfaces;
 using UseCases.Interfaces;
 
 namespace UseCases.Activity.Commands.UploadImage;

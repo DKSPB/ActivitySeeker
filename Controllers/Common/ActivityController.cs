@@ -1,13 +1,14 @@
-using AutoMapper;
 using MediatR;
+using Controllers.Utils;
 using Controllers.Models;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Activity.Queries.GetAll;
 using UseCases.Activity.Queries.GetById;
 using UseCases.Activity.Commands.Delete;
-using Microsoft.AspNetCore.Authorization;
 using UseCases.Activity.Commands.Create;
 using UseCases.Activity.Commands.Update;
+using UseCases.Activity.Queries.GetImage;
+using Microsoft.AspNetCore.Authorization;
 using UseCases.Activity.Commands.UploadImage;
 
 namespace Controllers.Common;
@@ -17,11 +18,9 @@ namespace Controllers.Common;
 [Route("api/activities")]
 public class ActivityController : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    public ActivityController(IMapper mapper, IMediator mediator)
+    public ActivityController(IMediator mediator)
     {
-        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -87,14 +86,25 @@ public class ActivityController : ControllerBase
     [HttpPost("upload/image")]
     public async Task<IActionResult> UploadImage([FromForm] UploadActivityImage uploadActivityImage)
     {
-        var command = _mapper.Map<UploadActivityImageCommand>(uploadActivityImage);
+        var activityId = uploadActivityImage.ActivityId;
+        var validatedFile = await FileValidator.ValidateAndGetStreamAsync(uploadActivityImage.File);
+
+        var command = new UploadActivityImageCommand(activityId, validatedFile);
         await _mediator.Send(command);
+
         return Ok();
     }
 
-    [HttpGet("get/image")]
-    public async Task<IActionResult> GetImage()
+    [HttpGet("{activityId:guid}/image")]
+    public async Task<IActionResult> GetImage(Guid activityId)
     {
-        return Ok();
+        var fileResult = await _mediator.Send(new GetImageCommand(activityId));
+
+        if (fileResult is null)
+            return Ok();
+
+        var mimeType = FileValidator.GetMimeTypeByExtension(fileResult.Extension);
+
+        return Ok(File(fileResult.Content, mimeType));
     }
 }

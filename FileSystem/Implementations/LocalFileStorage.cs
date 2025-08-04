@@ -36,14 +36,14 @@ public class LocalFileStorage : IFileStorage
     /// </summary>
     /// <param name="path">Полный путь к файлу</param>
     /// <returns></returns>
-    public Task<Stream?> GetAsync(string path)
+    public Task<Stream> GetAsync(string path)
     {
         if (!File.Exists(path))
-            return Task.FromResult<Stream?>(null);
+            throw new FileNotFoundException($"Файл с именем {Path.GetFileName(path)} не существует");
 
         // OpenRead не грузит файл в память, а открывает поток
         Stream stream = File.OpenRead(path);
-        return Task.FromResult<Stream?>(stream);
+        return Task.FromResult<Stream>(stream);
     }
 
     /// <summary>
