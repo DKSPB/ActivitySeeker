@@ -101,10 +101,10 @@ public class ActivityController : ControllerBase
         var fileResult = await _mediator.Send(new GetImageCommand(activityId));
 
         if (fileResult is null)
-            return Ok();
+            return NotFound();
 
         var mimeType = FileValidator.GetMimeTypeByExtension(fileResult.Extension);
 
-        return Ok(File(fileResult.Content, mimeType));
+        return File(fileResult.Content, mimeType);
     }
 }
