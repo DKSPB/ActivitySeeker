@@ -4,7 +4,6 @@ using UseCases.User.Queries.GetAll;
 using UseCases.User.Queries.GetById;
 using Microsoft.AspNetCore.Authorization;
 using UseCases.User.Commands.EnsureUserExists;
-using UseCases.User.Queries.GetUsersActivities;
 
 namespace Controllers.Common
 {
@@ -47,17 +46,5 @@ namespace Controllers.Common
         {
             return Ok(await _mediator.Send(new GetUserByIdQuery(userId)));
         }
-
-        /// <summary>
-        /// Получение всех активностей заданного пользователя (группы)
-        /// </summary>
-        /// <param name="userId">Идентификатор пользователя (группы)</param>
-        /// <returns></returns>
-        [HttpGet("{userId:long}/activities")]
-        public async Task<IActionResult> GetUsersActivities(long userId)
-        {
-            return Ok(await _mediator.Send(new GetUsersActivitiesQuery(userId)));
-        }
-
     }
 }
