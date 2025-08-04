@@ -21,8 +21,13 @@ internal class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedR
 
     public async Task<PagedResult<ActivityDto>> Handle(GetActivitiesQuery request, CancellationToken cancellationToken)
     {
-        var entities = _context.Activities;
-            
+        var entities = _context.Activities
+            .Where(x => x.UserId == request.UserId || request.UserId == null &&
+                x.ActivityTypeId == request.ActivityTypeId || request.ActivityTypeId == null &&
+                x.CityId == request.CityId || request.CityId == null &&
+                x.IsOnline == request.IsOnline || request.IsOnline == null &&
+                x.IsPublished == request.IsPublished || request.IsPublished == null);
+
         var total = await entities.CountAsync(cancellationToken);
             
         var items = await entities.OrderBy(x => x.StartDate)

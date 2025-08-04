@@ -8,9 +8,9 @@ namespace Controllers.Utils
 {
     internal static class FileValidator
     {
-        private const string defaultMimetype = "application/octet-stream";
+        private const string DefaultMimetype = "application/octet-stream";
 
-        private static readonly Dictionary<string, byte[]> _fileSignatures = new()
+        private static readonly Dictionary<string, byte[]> FileSignatures = new()
         {
             { ".jpg",  new byte[] { 0xFF, 0xD8, 0xFF } },
             { ".jpeg", new byte[] { 0xFF, 0xD8, 0xFF } },
@@ -26,14 +26,14 @@ namespace Controllers.Utils
                 
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-            if (!_fileSignatures.ContainsKey(ext))
+            if (!FileSignatures.ContainsKey(ext))
             {
                 throw new InvalidOperationException($"Недопустимое расширение файла: {ext}");
             }
                 
-            var expectedSignature = _fileSignatures[ext];
+            var expectedSignature = FileSignatures[ext];
 
-            using (var sigStream = file.OpenReadStream())
+            await using (var sigStream = file.OpenReadStream())
             {
                 var buffer = new byte[expectedSignature.Length];
                 await sigStream.ReadAsync(buffer, cancellationToken);
@@ -59,10 +59,10 @@ namespace Controllers.Utils
             {
                 ".jpg" or ".jpeg" => "image/jpeg",
                 ".png" => "image/png",
-                _ => defaultMimetype
+                _ => DefaultMimetype
             };
 
-            return new FileData (outputStream, mimeType, file.Name);
+            return new FileData (outputStream, Path.GetExtension(file.FileName), mimeType);
         }
 
         private static IImageEncoder GetEncoder(string ext) =>
@@ -76,15 +76,15 @@ namespace Controllers.Utils
         /// <summary>
         /// Получение Mime-типа по расширению файла
         /// </summary>
-        /// <param name="fileExtansion">Расширение файла</param>
+        /// <param name="fileExtension">Расширение файла</param>
         /// <returns>Mime-тип</returns>
-        public static string GetMimeTypeByExtension(string fileExtansion)
+        public static string GetMimeTypeByExtension(string fileExtension)
         {
             var provider = new FileExtensionContentTypeProvider();
 
-            if (!provider.TryGetContentType(fileExtansion, out var contentType))
+            if (!provider.TryGetContentType(fileExtension, out var contentType))
             {
-                contentType = defaultMimetype;
+                contentType = DefaultMimetype;
             }
 
             return contentType;
