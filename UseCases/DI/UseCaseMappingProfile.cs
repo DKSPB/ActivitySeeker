@@ -13,8 +13,14 @@ public class UseCaseMappingProfile : Profile
     public UseCaseMappingProfile()
     {
         CreateMap<ActivityTypeEntity, ActivityTypeDto>();
-        CreateMap<ActivityEntity, ActivityDto>();
+        
+        CreateMap<ActivityEntity, ActivityDto>()
+            .ForMember(dto => dto.ActivityType, 
+                conf => 
+                    conf.MapFrom(entity => entity.ActivityType.TypeName));
+
         CreateMap<CreateActivityCommand, ActivityEntity>();
+
         CreateMap<CreateActivityTypeCommand, ActivityTypeEntity>();
     }
 }

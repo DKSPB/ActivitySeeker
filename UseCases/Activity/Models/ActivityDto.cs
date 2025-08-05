@@ -3,8 +3,8 @@ namespace UseCases.Activity.Models;
 public class ActivityDto
 {   
     public Guid Id { get; set; }
-    
-    public Guid ActivityTypeId { get; set; }
+
+    public string ActivityType { get; set; } = default!;
     
     public long UserId { get; set; }
 

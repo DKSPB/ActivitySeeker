@@ -2,6 +2,7 @@
 using AutoMapper;
 using UseCases.Common;
 using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using UseCases.Activity.Models;
 using Entities = Domain.Entities;
 
@@ -19,8 +20,8 @@ namespace UseCases.Activity.Queries.GetById
         }
         public async Task<ActivityDto> Handle(GetActivityByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Activities
-                .FindAsync(new object?[] { request.Id, cancellationToken }, cancellationToken: cancellationToken) ?? 
+            var entity = await _context.Activities.Include(x => x.ActivityType)
+                             .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken) ?? 
                 throw new ObjectNotFoundException(nameof(Entities.Activity), request.Id);
 
             return _mapper.Map<ActivityDto>(entity);
