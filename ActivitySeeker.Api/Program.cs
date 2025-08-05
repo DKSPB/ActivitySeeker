@@ -1,21 +1,10 @@
 using NLog;
-using Quartz;
 using NLog.Web;
-using System.Text;
-using DataAccess.DI;
-using FluentValidation;
-using System.Globalization;
-using Controllers.DI;
 using UseCases.DI;
+using DataAccess.DI;
 using FileSystem.DI;
-using Microsoft.OpenApi.Models;
-using Newtonsoft.Json.Converters;
-//using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Localization;
+using ActivitySeeker.Api.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
-
-
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ActivitySeeker.Api
 {
@@ -25,7 +14,7 @@ namespace ActivitySeeker.Api
         {
             var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
             logger.Info("init main");
-            
+
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
@@ -33,134 +22,30 @@ namespace ActivitySeeker.Api
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
                 
-
+                builder.Services.AddControllers();
                 builder.Services.AddInfrastructure(builder.Configuration);
                 builder.Services.AddFileSystemInfrastructure(builder.Configuration);
                 builder.Services.AddApplicationServices();
-                builder.Services.AddControllersServices();
-                
-                /*var jwtConfigurationSection = builder.Configuration.GetSection(nameof(JwtOptions));
-                builder.Services.Configure<JwtOptions>(jwtConfigurationSection);
-                var jwtOptions = jwtConfigurationSection.Get<JwtOptions>();
-                
-                builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
-                    {
-                        options.TokenValidationParameters = new()
-                        {
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
-                        };
-                    });
-                
-                builder.Services.AddAuthorization();*/
-                builder.Services.AddSignalR();
-                builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-
-                /*builder.Services.AddSingleton<NotificationAdminHub>();
-
-                builder.Services.AddQuartz(quartz =>
-                {
-                    quartz.SchedulerId = "AUTO";
-
-                    var jobKey = new JobKey("WriteToConsole");
-                    quartz.AddJob<RemoveOldActivitiesJob>(opts => opts.WithIdentity(jobKey));
-                    quartz.AddTrigger(opts => opts.ForJob(jobKey)
-                        .WithIdentity(jobKey.Name + " trigger")
-                        .StartNow()
-                        .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(00, 00)));
-                });
-                builder.Services.AddQuartzHostedService(quartz =>
-                {
-                    quartz.AwaitApplicationStarted = true;
-                    quartz.WaitForJobsToComplete = true;
-                });*/
-                
-
-                #region serialize settings
-
-                MvcServiceCollectionExtensions.AddControllers(builder.Services).AddNewtonsoftJson(options =>
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter()));
-
-                #endregion
-
-                builder.Services.AddSwaggerGen(opt =>
-                {
-                    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
-                    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                    {
-                        In = ParameterLocation.Header,
-                        Description = "Please enter token",
-                        Name = "Authorization",
-                        Type = SecuritySchemeType.Http,
-                        BearerFormat = "JWT",
-                        Scheme = "bearer"
-                    });
-                    
-                    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-                    {
-                        {
-                            new OpenApiSecurityScheme
-                            {
-                                Reference = new OpenApiReference
-                                {
-                                    Type=ReferenceType.SecurityScheme,
-                                    Id="Bearer"
-                                }
-                            },
-                            Array.Empty<string>()
-                        }
-                    });
-                });
-                
-                builder.Logging.ClearProviders();
-                builder.Host.UseNLog();
+                builder.Services.AddSwaggerGenConfiguration();
 
                 var app = builder.Build();
-
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("ru-RU"),
-                    new CultureInfo("ru"),
-                    new CultureInfo("en-US")
-                };
-
-                app.UseRequestLocalization(new RequestLocalizationOptions 
-                {
-                    DefaultRequestCulture = new RequestCulture("ru-RU"),
-                    SupportedCultures = supportedCultures,
-                    SupportedUICultures = supportedCultures
-                });
-
+                
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
 
                 app.UseExceptionHandler("/ErrorHandling/ProcessError");
-
-                if (app.Environment.IsDevelopment())
-                {
-                    app.UseSwagger();
-                    app.UseSwaggerUI(options => 
-                    { 
-                        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                        options.ConfigObject.AdditionalItems["tryItOutEnabled"] = true;
-                    });
-                }
-
+                
+                app.UseSwaggerUiConfiguration(app.Environment);
+                
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
+
                 app.UseRouting();
-                app.UseAuthentication();
-                app.UseAuthorization();
                 app.MapControllers();
-                app.MapFallbackToFile("index.html");
                 
-                //app.MapHub<NotificationAdminHub>("/notify");
+                app.MapFallbackToFile("index.html");
 
                 app.Run();
             }
