@@ -12,8 +12,10 @@ public static class FileSystemDi
     public static IServiceCollection AddFileSystemInfrastructure(this IServiceCollection services, IConfiguration config)
     {
         services.Configure<FileStorageOptions>(config.GetSection(FileStorageOptions.SectionName));
+        services.Configure<ImageVariantOptions>(config.GetSection(ImageVariantOptions.SectionName));
 
         services.AddScoped<IFileStorage, LocalFileStorage>();
+        services.AddScoped<IImageVariantGenerator, ImageVariantGenerator>();
 
         return services;
     }

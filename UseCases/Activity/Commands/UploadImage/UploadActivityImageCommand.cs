@@ -3,4 +3,4 @@ using UseCases.Common;
 
 namespace UseCases.Activity.Commands.UploadImage;
 
-public record UploadActivityImageCommand(Guid ActivityId, FileData File) : IRequest;
+public record UploadActivityImageCommand(Guid ActivityId, InputFile InputFile) : IRequest;

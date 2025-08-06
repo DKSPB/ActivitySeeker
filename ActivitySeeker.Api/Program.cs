@@ -4,6 +4,7 @@ using UseCases.DI;
 using DataAccess.DI;
 using FileSystem.DI;
 using ActivitySeeker.Api.Extensions;
+using Controllers.DI;
 using Microsoft.AspNetCore.HttpOverrides;
 
 namespace ActivitySeeker.Api
@@ -26,6 +27,7 @@ namespace ActivitySeeker.Api
                 builder.Services.AddInfrastructure(builder.Configuration);
                 builder.Services.AddFileSystemInfrastructure(builder.Configuration);
                 builder.Services.AddApplicationServices();
+                builder.Services.AddControllersServices();
                 builder.Services.AddSwaggerGenConfiguration();
 
                 var app = builder.Build();

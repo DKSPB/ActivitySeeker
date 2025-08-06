@@ -1,6 +1,7 @@
+using AutoMapper;
 using MediatR;
-using Controllers.Utils;
 using Controllers.Models;
+using Controllers.Utils;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Activity.Queries.GetAll;
 using UseCases.Activity.Queries.GetById;
@@ -18,9 +19,11 @@ namespace Controllers.Common;
 [Route("api/activities")]
 public class ActivityController : ControllerBase
 {
+    private readonly IMapper _mapper;
     private readonly IMediator _mediator;
-    public ActivityController(IMediator mediator)
+    public ActivityController(IMediator mediator, IMapper mapper)
     {
+        _mapper = mapper;
         _mediator = mediator;
     }
 
@@ -86,10 +89,7 @@ public class ActivityController : ControllerBase
     [HttpPost("upload/image")]
     public async Task<IActionResult> UploadImage([FromForm] UploadActivityImage uploadActivityImage)
     {
-        var activityId = uploadActivityImage.ActivityId;
-        var validatedFile = await FileValidator.ValidateAndGetStreamAsync(uploadActivityImage.File);
-
-        var command = new UploadActivityImageCommand(activityId, validatedFile);
+        var command = _mapper.Map<UploadActivityImage, UploadActivityImageCommand>(uploadActivityImage);
         await _mediator.Send(command);
 
         return Ok();
@@ -103,8 +103,10 @@ public class ActivityController : ControllerBase
         if (fileResult is null)
             return NotFound();
 
-        var mimeType = FileValidator.GetMimeTypeByExtension(fileResult.Extension);
+        var mimeType = MimeTypeExtractor.GetMimeTypeByExtension (fileResult.Extension);
 
         return File(fileResult.Content, mimeType);
     }
+    
+   
 }
