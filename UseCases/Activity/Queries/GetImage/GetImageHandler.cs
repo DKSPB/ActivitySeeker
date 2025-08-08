@@ -30,7 +30,6 @@ public class GetImageHandler : IRequestHandler<GetImageCommand, FileResult?>
 
         var imageFullPath = Path.Combine(imagePath, entity.ImagePath);
         
-        
         return entity.ImagePath is null ? null : 
             new FileResult 
             { 

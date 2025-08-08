@@ -87,6 +87,11 @@ public class ActivityController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Загрузка изображения в систему
+    /// </summary>
+    /// <param name="uploadActivityImage"></param>
+    /// <returns></returns>
     [HttpPost("upload/image")]
     public async Task<IActionResult> UploadImage([FromForm] UploadActivityImage uploadActivityImage)
     {
@@ -96,6 +101,12 @@ public class ActivityController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// Получение изображения по идентификатору активности и размеру
+    /// </summary>
+    /// <param name="activityId">Идентификатор активности</param>
+    /// <param name="imageSize">Размер активности</param>
+    /// <returns></returns>
     [HttpGet("{activityId:guid}/image")]
     public async Task<IActionResult> GetImage(Guid activityId, ImageSize imageSize)
     {
@@ -108,6 +119,10 @@ public class ActivityController : ControllerBase
 
         return File(fileResult.Content, mimeType);
     }
-    
-   
+
+    [HttpPut("{activityId:guid}/publish")]
+    public async Task<IActionResult> Publish(Guid activityId)
+    {
+        return Ok();
+    }
 }
