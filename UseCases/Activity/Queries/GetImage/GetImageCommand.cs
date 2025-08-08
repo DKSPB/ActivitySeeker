@@ -4,4 +4,4 @@ using UseCases.Common;
 
 namespace UseCases.Activity.Queries.GetImage;
 
-public record GetImageCommand(Guid ActivityId) : IRequest<FileResult?>;
+public record GetImageCommand(Guid ActivityId, ImageSize ImageSize) : IRequest<FileResult?>;

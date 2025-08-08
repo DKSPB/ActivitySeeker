@@ -7,7 +7,7 @@ using UseCases.Interfaces;
 
 namespace FileSystem.Implementations
 {
-    internal class FileValidator : IFileValidator
+    public class FileValidator : IFileValidator
     {
         private const string DefaultMimetype = "application/octet-stream";
 

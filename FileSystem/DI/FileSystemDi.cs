@@ -14,8 +14,9 @@ public static class FileSystemDi
         services.Configure<FileStorageOptions>(config.GetSection(FileStorageOptions.SectionName));
         services.Configure<ImageVariantOptions>(config.GetSection(ImageVariantOptions.SectionName));
 
-        services.AddScoped<IFileStorage, LocalFileStorage>();
+        services.AddScoped<IFileValidator, FileValidator>();
         services.AddScoped<IImageVariantGenerator, ImageVariantGenerator>();
+        services.AddScoped<IFileStorage, LocalFileStorage>();
 
         return services;
     }

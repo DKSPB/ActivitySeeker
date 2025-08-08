@@ -1,34 +1,34 @@
 using FileSystem.Di;
 using Microsoft.Extensions.Options;
+using UseCases.Activity.Queries.GetImage.Models;
 using UseCases.Interfaces;
 
 namespace FileSystem.Implementations;
 
 public class LocalFileStorage : IFileStorage
 {
-    private readonly string _storagePath;
+    private readonly FileStorageOptions _storageOptions;
     public LocalFileStorage(IOptions<FileStorageOptions> options)
     {
-        _storagePath = Path.Combine(Directory.GetCurrentDirectory(), options.Value.BasePath);
+        _storageOptions = options.Value;
     }
-
-    /// <summary>
-    /// Сохраняет файл в сгенерированному пути
-    /// </summary>
-    /// <param name="contentStream">Поток с данными файла</param>
-    /// <param name="extension">Расширение файла</param>
-    /// <param name="cancellationToken">Токен прерывания</param>
-    /// <returns></returns>
-    public async Task<string> SaveAsync(Stream contentStream, string extension, CancellationToken cancellationToken = default)
+    
+    public async Task SaveAsync(Stream contentStream, string filePath, string fileName, CancellationToken cancellationToken = default)
     {
-        CreateDirectoryIfNotExists();
-        
-        var fileName = GenerateUniqueFileName(extension);
+        CreateDirectoryIfNotExists(filePath);
 
-        await using var fileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+        var fulName = Path.Combine(filePath, fileName);
+
+        await using var fileStream = new FileStream(fulName, FileMode.Create, FileAccess.Write, FileShare.None);
         await contentStream.CopyToAsync(fileStream, cancellationToken);
-
-        return fileName;
+    }
+    
+    /// <summary>
+    /// Генерирует уникальное имя файла с расширением
+    /// </summary>
+    public string GenerateUniqueFileName(string fileExtension)
+    {
+        return $"{Guid.NewGuid()}{fileExtension}";
     }
     
     /// <summary>
@@ -49,20 +49,24 @@ public class LocalFileStorage : IFileStorage
     /// <summary>
     /// Создаёт директорию хранения изображения, если она не существует
     /// </summary>
-    private void CreateDirectoryIfNotExists()
+    private void CreateDirectoryIfNotExists(string storagePath)
     {
-        if (!Directory.Exists(_storagePath))
+        if (!Directory.Exists(storagePath))
         {
-            Directory.CreateDirectory(_storagePath);
+            Directory.CreateDirectory(storagePath);
         }
     }
-    
-    /// <summary>
-    /// Генерирует уникальное имя файла с расширением
-    /// </summary>
-    private string GenerateUniqueFileName(string fileExtension)
+
+    public string GetImagePath(ImageSize imageSize)
     {
-        var shortName = $"{Guid.NewGuid()}{fileExtension}";
-        return Path.Combine(_storagePath, shortName);
+        var currentDirectory = Directory.GetCurrentDirectory();
+        
+        return imageSize switch
+        {
+            ImageSize.Small => Path.Combine(currentDirectory, _storageOptions.SmallImagePath),
+            ImageSize.Medium => Path.Combine(currentDirectory, _storageOptions.MediumImagePath),
+            ImageSize.Original => Path.Combine(currentDirectory, _storageOptions.OriginalImagePath),
+            _ => Path.Combine(currentDirectory, _storageOptions.OriginalImagePath)
+        };
     }
 }

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using NLog;
 using NLog.Web;
 using UseCases.DI;
@@ -23,7 +24,10 @@ namespace ActivitySeeker.Api
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
                 
-                builder.Services.AddControllers();
+                builder.Services.AddControllers()
+                    .AddJsonOptions(opt => 
+                        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+                
                 builder.Services.AddInfrastructure(builder.Configuration);
                 builder.Services.AddFileSystemInfrastructure(builder.Configuration);
                 builder.Services.AddApplicationServices();

@@ -11,6 +11,7 @@ using UseCases.Activity.Commands.Update;
 using UseCases.Activity.Queries.GetImage;
 using Microsoft.AspNetCore.Authorization;
 using UseCases.Activity.Commands.UploadImage;
+using UseCases.Activity.Queries.GetImage.Models;
 
 namespace Controllers.Common;
 
@@ -96,9 +97,9 @@ public class ActivityController : ControllerBase
     }
 
     [HttpGet("{activityId:guid}/image")]
-    public async Task<IActionResult> GetImage(Guid activityId)
+    public async Task<IActionResult> GetImage(Guid activityId, ImageSize imageSize)
     {
-        var fileResult = await _mediator.Send(new GetImageCommand(activityId));
+        var fileResult = await _mediator.Send(new GetImageCommand(activityId, imageSize));
 
         if (fileResult is null)
             return NotFound();
