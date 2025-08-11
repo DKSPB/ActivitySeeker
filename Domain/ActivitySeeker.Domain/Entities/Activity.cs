@@ -28,8 +28,8 @@ namespace Domain.Entities
         [Column("timezone")]
         public int Timezone { get; set; }
 
-        [Column("image_path")]
-        public string? ImagePath { get; set; }
+        [Column("image_name")]
+        public string? ImageName { get; set; }
 
         [Column("city_id")]
         public int? CityId { get; set; }
@@ -40,10 +40,16 @@ namespace Domain.Entities
         [Column("is_published")]
         public bool IsPublished { get; set; }
 
-        public static void PublishActivity(Activity activity)
+        public void PublishActivity()
         {
-            activity.IsPublished = true;
+            IsPublished = true;
         }
+
+        public void UnpublishActivity()
+        {
+            IsPublished = false;
+        }
+
 
         #region Навигационные свойства
 

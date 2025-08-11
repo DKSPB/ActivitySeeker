@@ -1,7 +1,7 @@
-using AutoMapper;
 using MediatR;
-using Controllers.Models;
+using AutoMapper;
 using Controllers.Utils;
+using Controllers.Models;
 using Microsoft.AspNetCore.Mvc;
 using UseCases.Activity.Queries.GetAll;
 using UseCases.Activity.Queries.GetById;
@@ -10,6 +10,8 @@ using UseCases.Activity.Commands.Create;
 using UseCases.Activity.Commands.Update;
 using UseCases.Activity.Queries.GetImage;
 using Microsoft.AspNetCore.Authorization;
+using UseCases.Activity.Commands.Publish;
+using UseCases.Activity.Commands.Unpublish;
 using UseCases.Activity.Commands.UploadImage;
 using UseCases.Activity.Queries.GetImage.Models;
 
@@ -46,7 +48,7 @@ public class ActivityController : ControllerBase
     /// <param name="activityId">Идентификатор активности</param>
     /// <returns>Возвращает объект - активность</returns>
     [HttpGet("{activityId:guid}")]
-    public async Task<IActionResult> GetByActivityId([FromRoute]Guid activityId)
+    public async Task<IActionResult> GetByActivityId([FromRoute] Guid activityId)
     {
         return Ok(await _mediator.Send(new GetActivityByIdQuery(activityId)));
     }
@@ -74,14 +76,14 @@ public class ActivityController : ControllerBase
         await _mediator.Send(updateCommand);
         return Ok();
     }
-    
+
     /// <summary>
     /// Удаление указанных активностей
     /// </summary>
     /// <param name="activities">Объект-список активностей, подлежащих удалению</param>
     /// <returns></returns>
     [HttpDelete]
-    public async Task<IActionResult> DeleteActivities([FromBody]List<Guid> activities)
+    public async Task<IActionResult> DeleteActivities([FromBody] List<Guid> activities)
     {
         await _mediator.Send(new DeleteActivityCommand(activities));
         return Ok();
@@ -115,7 +117,7 @@ public class ActivityController : ControllerBase
         if (fileResult is null)
             return NotFound();
 
-        var mimeType = MimeTypeExtractor.GetMimeTypeByExtension (fileResult.Extension);
+        var mimeType = MimeTypeExtractor.GetMimeTypeByExtension(fileResult.Extension);
 
         return File(fileResult.Content, mimeType);
     }
@@ -123,6 +125,14 @@ public class ActivityController : ControllerBase
     [HttpPut("{activityId:guid}/publish")]
     public async Task<IActionResult> Publish(Guid activityId)
     {
+        await _mediator.Send(new PublishActivityCommand(activityId));
+        return Ok();
+    }
+
+    [HttpPut("{activityId:guid}/unPublish")]
+    public async Task<IActionResult> UnPublish(Guid activityId)
+    {
+        await _mediator.Send(new UnpublishActivityCommand(activityId));
         return Ok();
     }
 }

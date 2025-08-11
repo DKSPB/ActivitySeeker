@@ -23,14 +23,14 @@ public class GetImageHandler : IRequestHandler<GetImageCommand, FileResult?>
             .FindAsync(new object?[] { request.ActivityId }, cancellationToken) ?? 
             throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.ActivityId);
 
-        if (entity.ImagePath is null) 
+        if (entity.ImageName is null) 
             throw new FileNotFoundException($"У активности {request.ActivityId} нет изображения");
 
         var imagePath = _fileStorage.GetImagePath(request.ImageSize);
 
-        var imageFullPath = Path.Combine(imagePath, entity.ImagePath);
+        var imageFullPath = Path.Combine(imagePath, entity.ImageName);
         
-        return entity.ImagePath is null ? null : 
+        return entity.ImageName is null ? null : 
             new FileResult 
             { 
                 Extension = Path.GetExtension(imageFullPath), 

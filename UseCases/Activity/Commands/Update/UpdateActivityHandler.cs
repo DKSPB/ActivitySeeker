@@ -17,7 +17,7 @@ public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand>
     public async Task Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Activities
-            .FindAsync(new object?[] { request.Id }, cancellationToken: cancellationToken) ?? 
+            .FindAsync(new object?[] { request.Id }, cancellationToken) ?? 
             throw new ObjectNotFoundException(nameof(Entities.Activity), request.Id);
 
         entity.ActivityTypeId = request.ActivityTypeId;
