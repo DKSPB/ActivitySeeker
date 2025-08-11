@@ -122,17 +122,17 @@ public class ActivityController : ControllerBase
         return File(fileResult.Content, mimeType);
     }
 
-    [HttpPut("{activityId:guid}/publish")]
+    [HttpPatch("{activityId:guid}/publish")]
     public async Task<IActionResult> Publish(Guid activityId)
     {
         await _mediator.Send(new PublishActivityCommand(activityId));
-        return Ok();
+        return NoContent();
     }
 
-    [HttpPut("{activityId:guid}/unPublish")]
+    [HttpPatch("{activityId:guid}/unPublish")]
     public async Task<IActionResult> UnPublish(Guid activityId)
     {
         await _mediator.Send(new UnpublishActivityCommand(activityId));
-        return Ok();
+        return NoContent();
     }
 }

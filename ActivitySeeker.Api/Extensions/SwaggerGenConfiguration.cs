@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 namespace ActivitySeeker.Api.Extensions;
 
 
@@ -10,6 +11,10 @@ public static class SwaggerGenConfiguration
         
         services.AddSwaggerGen(options =>
         {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+
             options.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "Activity Seeker API",

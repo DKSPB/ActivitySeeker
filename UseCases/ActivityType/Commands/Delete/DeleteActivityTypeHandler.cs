@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using UseCases.Common;
 using DataAccess.Interfaces;
 
 namespace UseCases.ActivityType.Commands.Delete
@@ -14,9 +15,11 @@ namespace UseCases.ActivityType.Commands.Delete
 
         public async Task Handle(DeleteActivityTypeCommand request, CancellationToken cancellationToken)
         {
-            var entities = _context.ActivityTypes.Where(x => request.ActivityTypeIds.Contains(x.Id));
+            var entity = await _context.ActivityTypes
+                .FindAsync(new object?[] { request.ActivityTypeId }, cancellationToken: cancellationToken) ??
+                throw new ObjectNotFoundException(nameof(Domain.Entities.ActivityType), request.ActivityTypeId);
 
-            _context.ActivityTypes.RemoveRange(entities);
+            _context.ActivityTypes.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
         }

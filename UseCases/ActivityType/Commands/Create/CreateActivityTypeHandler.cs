@@ -2,10 +2,11 @@ using MediatR;
 using AutoMapper;
 using DataAccess.Interfaces;
 using ActivityTypeEntity = Domain.Entities.ActivityType;
+using UseCases.ActivityType.Models;
 
 namespace UseCases.ActivityType.Commands.Create;
 
-public class CreateActivityTypeHandler : IRequestHandler<CreateActivityTypeCommand>
+public class CreateActivityTypeHandler : IRequestHandler<CreateActivityTypeCommand, ActivityTypeDto>
 {
     private readonly IMapper _mapper;
     private readonly IDbContext _dbContext;
@@ -16,9 +17,13 @@ public class CreateActivityTypeHandler : IRequestHandler<CreateActivityTypeComma
         _dbContext = dbContext;
     }
     
-    public async Task Handle(CreateActivityTypeCommand request, CancellationToken cancellationToken)
+    public async Task<ActivityTypeDto> Handle(CreateActivityTypeCommand request, CancellationToken cancellationToken)
     {
-        await _dbContext.ActivityTypes.AddAsync(_mapper.Map<ActivityTypeEntity>(request), cancellationToken);
+        var entity = _mapper.Map<ActivityTypeEntity>(request);
+
+        await _dbContext.ActivityTypes.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<ActivityTypeDto>(entity);
     }
 }

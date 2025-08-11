@@ -1,32 +1,31 @@
 ﻿using MediatR;
 using DataAccess.Interfaces;
 using UseCases.Common;
+using AutoMapper;
+using UseCases.ActivityType.Models;
 
 namespace UseCases.ActivityType.Commands.Update
 {
-    public class UpdateActivityTypeHandler : IRequestHandler<UpdateActivityTypeCommand>
+    public class UpdateActivityTypeHandler : IRequestHandler<UpdateActivityTypeCommand, ActivityTypeDto>
     {
+        private readonly IMapper _mapper;
         private readonly IDbContext _context;
-        public UpdateActivityTypeHandler(IDbContext context)
+        public UpdateActivityTypeHandler(IMapper mapper, IDbContext context)
         {
+            _mapper = mapper;
             _context = context;
         }
-        public async Task Handle(UpdateActivityTypeCommand request, CancellationToken cancellationToken)
+        public async Task<ActivityTypeDto> Handle(UpdateActivityTypeCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.ActivityTypes
-                .FindAsync(new object?[] { request.Id }, cancellationToken);
-
-            if(entity is null)
-            {
+                .FindAsync(new object?[] { request.Id }, cancellationToken) ??
                 throw new ObjectNotFoundException(nameof(Domain.Entities.ActivityType), request.Id);
-            }
+
             
             if (request.ParentId is not null)
             {
                 var parentEntity = await _context.ActivityTypes
-                    .FindAsync(new object?[] { request.ParentId }, cancellationToken);
-
-                if ( parentEntity is null) 
+                    .FindAsync(new object?[] { request.ParentId }, cancellationToken) ??
                     throw new ObjectNotFoundException(nameof(ActivityType), request.ParentId);
             }
 
@@ -34,6 +33,8 @@ namespace UseCases.ActivityType.Commands.Update
             entity.ParentId = request.ParentId;
 
             await _context.SaveChangesAsync(cancellationToken);
+
+            return _mapper.Map<ActivityTypeDto>(entity);
         }
         
     }

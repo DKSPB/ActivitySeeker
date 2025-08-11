@@ -40,11 +40,11 @@ namespace ActivitySeeker.Api
                 {
                     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
                 });
-
-                app.UseExceptionHandler("/ErrorHandling/ProcessError");
                 
                 app.UseSwaggerUiConfiguration(app.Environment);
-                
+
+                app.UseMiddleware<ExceptionHandlingMiddleware>();
+
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
 
