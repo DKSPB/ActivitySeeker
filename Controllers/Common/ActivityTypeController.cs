@@ -21,37 +21,23 @@ public class ActivityTypeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int limit = 20, int offset = 1)
     {
-        return Ok(await _mediator.Send(new GetActivityTypesQuery()));
+        return Ok(await _mediator.Send(new GetActivityTypesQuery(limit, offset)));
     }
-
-    /// <summary>
-    /// Получает тип активности по идентификатору.
-    /// </summary>
-    /// <param name="id">Идентификатор типа активности.</param>
-    /// <returns>Возвращает объект типа активности.</returns>
-    /// <response code="200">Тип активности найден и возвращён в ответе.</response>
-    /// <response code="404">Тип активности с указанным идентификатором не найден.</response>
+    
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id)
     {
         return Ok(await _mediator.Send(new GetActivityTypeByIdQuery(id)));
     }
-
-    /// <summary>
-    /// Создаёт новый тип активности.
-    /// </summary>
-    /// <param name="activityType">Данные нового типа активности.</param>
-    /// <returns>Возвращает созданный тип активности.</returns>
-    /// <response code="201">Тип активности успешно создан.</response>
-    /// <response code="400">Неверные входные данные.</response>
+    
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateActivityTypeCommand activityType)
     {
         var newActivityType = await _mediator.Send(activityType);
 
-        return CreatedAtAction(nameof(GetById), new { newActivityType.Id }, newActivityType);
+        return CreatedAtAction(nameof(GetById), new { Id = newActivityType.Id }, newActivityType);
     }
 
     [HttpPatch]

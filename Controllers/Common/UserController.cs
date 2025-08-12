@@ -26,7 +26,8 @@ namespace Controllers.Common
         [HttpGet("{userId:long}/exists")]
         public async Task<IActionResult> EnsureUserExists(long userId)
         {
-            await _mediator.Send(new EnsureUserExistsCommand(userId));
+            var (isCreated, user) = await _mediator.Send(new EnsureUserExistsCommand(userId));
+            
             return Ok();
         }
 
