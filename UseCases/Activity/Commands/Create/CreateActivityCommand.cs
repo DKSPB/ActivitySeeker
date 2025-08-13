@@ -1,9 +1,15 @@
 using MediatR;
-using UseCases.Activity.Commands.Common;
+using UseCases.Activity.Models;
 
 namespace UseCases.Activity.Commands.Create;
 
-public class CreateActivityCommand : ActivityCommandBase, IRequest
+public class CreateActivityCommand : IRequest<ActivityDto>
 {
-    public long UserId { get; init; }
+    public Guid ActivityTypeId { get; init; }
+    public string Description { get; init; } = string.Empty;
+    public DateTime StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+    public int Timezone { get; init; }
+    public bool IsOnline { get; init; }
+    public int? CityId { get; init; }
 }

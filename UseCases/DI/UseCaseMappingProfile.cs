@@ -18,6 +18,8 @@ public class UseCaseMappingProfile : Profile
             .ForMember(dto => dto.ActivityType, 
                 conf => 
                     conf.MapFrom(entity => entity.ActivityType.TypeName));
+        
+        
 
         CreateMap<CreateActivityCommand, ActivityEntity>();
 

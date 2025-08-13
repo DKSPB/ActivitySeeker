@@ -1,20 +1,24 @@
+using AutoMapper;
 using MediatR;
 using UseCases.Common;
 using DataAccess.Interfaces;
+using UseCases.Activity.Models;
 using Entities = Domain.Entities;
 
 namespace UseCases.Activity.Commands.Update;
 
-public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand>
+public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand, ActivityDto>
 {
+    private readonly IMapper _mapper;
     private readonly IDbContext _context;
 
-    public UpdateActivityHandler(IDbContext context)
+    public UpdateActivityHandler(IMapper mapper, IDbContext context)
     {
+        _mapper = mapper;
         _context = context;
     }
     
-    public async Task Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
+    public async Task<ActivityDto> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Activities
             .FindAsync(new object?[] { request.Id }, cancellationToken) ?? 
@@ -29,5 +33,7 @@ public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand>
         entity.CityId = request.CityId;
         
         await _context.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<ActivityDto>(entity);
     }
 }

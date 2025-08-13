@@ -1,5 +1,7 @@
 using AutoMapper;
 using Controllers.Models;
+using UseCases.Activity.Commands.Create;
+using UseCases.Activity.Commands.Update;
 using UseCases.Activity.Commands.UploadImage;
 using UseCases.Common;
 
@@ -19,6 +21,10 @@ public class ControllersMappingProfile : Profile
                         src.File.FileName
                     )
                 ));
+            
+            CreateMap<CreateActivityCommand, UpdateActivityCommand>()
+                .ForMember(dest => dest.Id, 
+                    opt => opt.Ignore());
         }
     }
 }

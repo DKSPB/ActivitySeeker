@@ -11,9 +11,12 @@ public static class SwaggerGenConfiguration
         
         services.AddSwaggerGen(options =>
         {
-            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-            options.IncludeXmlComments(xmlPath);
+            var xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+            
+            foreach (var xmlFile in xmlFiles)
+            {
+                options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
+            }
 
             options.SwaggerDoc("v1", new OpenApiInfo
             {

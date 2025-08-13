@@ -1,9 +1,8 @@
-using MediatR;
-using UseCases.Activity.Commands.Common;
+using UseCases.Activity.Commands.Create;
 
 namespace UseCases.Activity.Commands.Update;
 
-public class UpdateActivityCommand : ActivityCommandBase, IRequest
+public class UpdateActivityCommand : CreateActivityCommand
 {
-    public Guid Id { get; init; }
+    public Guid Id { get; set; }
 }

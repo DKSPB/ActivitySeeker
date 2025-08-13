@@ -1,13 +1,14 @@
 using MediatR;
 using AutoMapper;
 using DataAccess.Interfaces;
+using UseCases.Activity.Models;
 using UseCases.Interfaces;
 using ActivityEntity = Domain.Entities.Activity;
 
 
 namespace UseCases.Activity.Commands.Create;
 
-internal class CreateActivityHandler : IRequestHandler<CreateActivityCommand>
+internal class CreateActivityHandler : IRequestHandler<CreateActivityCommand, ActivityDto>
 {
     private readonly IMapper _mapper;
     private readonly IDbContext _dbContext;
@@ -20,14 +21,18 @@ internal class CreateActivityHandler : IRequestHandler<CreateActivityCommand>
         _timeConverter = timeConverter;
     }
     
-    public async Task Handle(CreateActivityCommand command, CancellationToken cancellationToken)
+    public async Task<ActivityDto> Handle(CreateActivityCommand command, CancellationToken cancellationToken)
     {
         command.StartDate = _timeConverter.ToUtc(command.StartDate, command.Timezone).GetValueOrDefault();
 
         command.EndDate = _timeConverter.ToUtc(command.EndDate, command.Timezone);
 
-        await _dbContext.Activities.AddAsync(_mapper.Map<ActivityEntity>(command), cancellationToken);
+        var entity = _mapper.Map<ActivityEntity>(command);
+        
+        await _dbContext.Activities.AddAsync(entity, cancellationToken);
         
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<ActivityDto>(entity);
     }
 }
