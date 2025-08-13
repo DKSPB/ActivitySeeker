@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UseCases.User.Models
 {
-    internal class UserDto
+    public class UserDto
     {
         public long Id { get; set; }
     }
