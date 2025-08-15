@@ -20,15 +20,7 @@ namespace UseCases.ActivityType.Commands.Update
             var entity = await _context.ActivityTypes
                 .FindAsync(new object?[] { request.Id }, cancellationToken) ??
                 throw new ObjectNotFoundException(nameof(Domain.Entities.ActivityType), request.Id);
-
             
-            if (request.ParentId is not null)
-            {
-                var parentEntity = await _context.ActivityTypes
-                    .FindAsync(new object?[] { request.ParentId }, cancellationToken) ??
-                    throw new ObjectNotFoundException(nameof(ActivityType), request.ParentId);
-            }
-
             entity.TypeName = request.TypeName;
             entity.ParentId = request.ParentId;
 

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FluentValidation;
+using Newtonsoft.Json;
 using UseCases.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,27 @@ namespace ActivitySeeker.Api.Extensions
             {
                 await _next(context);
             }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning(ex, "Validation error");
+
+                var errors = ex.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                var problemDetails = new ValidationProblemDetails(errors)
+                {
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Title = "One or more validation errors occurred.",
+                    Status = StatusCodes.Status400BadRequest,
+                    Instance = context.Request.Path
+                };
+
+                await WriteProblemDetailsAsync(context, problemDetails, StatusCodes.Status400BadRequest);
+            }
             catch (ObjectNotFoundException ex)
             {
                 _logger.LogWarning(ex, "Not found error");
@@ -42,18 +64,23 @@ namespace ActivitySeeker.Api.Extensions
 
         private async Task HandleExceptionAsync(HttpContext context, int statusCode, string message, Exception? ex = null)
         {
-            context.Response.ContentType = "application/problem+json";
-            context.Response.StatusCode = statusCode;
-
             var problemDetails = new ProblemDetails
             {
                 Status = statusCode,
                 Title = message,
                 Detail = _env.IsDevelopment() && ex != null ? ex.StackTrace : null,
-                Instance = context.Request.Path
+                Instance = context.Request.Path,
+                
             };
+            await WriteProblemDetailsAsync(context, problemDetails, statusCode);
+        }
+        
+        private async Task WriteProblemDetailsAsync(HttpContext context, ProblemDetails details, int statusCode)
+        {
+            context.Response.ContentType = "application/problem+json";
+            context.Response.StatusCode = statusCode;
 
-            var json = JsonConvert.SerializeObject(problemDetails, new JsonSerializerSettings
+            var json = JsonConvert.SerializeObject(details, new JsonSerializerSettings
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = _env.IsDevelopment() ? Formatting.Indented : Formatting.None,
