@@ -1,12 +1,14 @@
-using System.Text.Json.Serialization;
 using NLog;
 using NLog.Web;
 using UseCases.DI;
 using Auth.DI;
 using DataAccess.DI;
 using FileSystem.DI;
-using ActivitySeeker.Api.Extensions;
 using Controllers.DI;
+using ActivitySeeker.Api.Extensions;
+using System.Text.Json.Serialization;
+using ActivitySeeker.Api.Auth;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpOverrides;
 
 namespace ActivitySeeker.Api
@@ -21,6 +23,10 @@ namespace ActivitySeeker.Api
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
+                
+                builder.Services
+                    .AddAuthentication("VkScheme")
+                    .AddScheme<AuthenticationSchemeOptions, VkAuthenticationHandler>("VkScheme", options => { });
 
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();

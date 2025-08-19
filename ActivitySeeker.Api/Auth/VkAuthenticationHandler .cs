@@ -1,8 +1,8 @@
 ﻿using Auth;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication;
 
 namespace ActivitySeeker.Api.Auth
 {
@@ -20,20 +20,15 @@ namespace ActivitySeeker.Api.Auth
         }
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            var query = Context.Request.Query.ToDictionary(x => x.Key, x => x.Value.ToString());
+            var query = Context.Request.Query
+                .ToDictionary(x => x.Key, x => x.Value.ToString());
 
             if (!_launchParamsValidator.Validate(query))
-                return Task.FromResult(AuthenticateResult.Fail("Неверная подпись вк"));
-
-            var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, query["vk_user_id"]),
-                new Claim(ClaimTypes.AuthenticationMethod, "VK")
-            };
-
-            var identity = new ClaimsIdentity(claims, Scheme.Name);
-            var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, Scheme.Name);
+                return Task.FromResult(AuthenticateResult.Fail("Неверная подпись вк"));
+            }
+            
+            var ticket = new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name);
 
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
