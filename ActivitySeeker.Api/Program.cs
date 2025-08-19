@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using NLog;
 using NLog.Web;
 using UseCases.DI;
+using Auth.DI;
 using DataAccess.DI;
 using FileSystem.DI;
 using ActivitySeeker.Api.Extensions;
@@ -28,7 +29,8 @@ namespace ActivitySeeker.Api
                     .AddJsonOptions(opt => 
                         opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
                 
-                builder.Services.AddInfrastructure(builder.Configuration);
+                builder.Services.AddDataAccessInfrastructure(builder.Configuration);
+                builder.Services.AddAuthInfrastructure(builder.Configuration);
                 builder.Services.AddFileSystemInfrastructure(builder.Configuration);
                 builder.Services.AddApplicationServices();
                 builder.Services.AddControllersServices();

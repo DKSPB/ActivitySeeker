@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UseCases", "UseCases\UseCas
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystem", "FileSystem\FileSystem.csproj", "{923B263A-E726-486B-A1F8-2ACF8697963F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth", "Auth\Auth.csproj", "{CF35F503-B755-469A-A00F-9417A99A45AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{923B263A-E726-486B-A1F8-2ACF8697963F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{923B263A-E726-486B-A1F8-2ACF8697963F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{923B263A-E726-486B-A1F8-2ACF8697963F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF35F503-B755-469A-A00F-9417A99A45AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF35F503-B755-469A-A00F-9417A99A45AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF35F503-B755-469A-A00F-9417A99A45AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF35F503-B755-469A-A00F-9417A99A45AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +69,7 @@ Global
 		{6349EA29-743F-4635-BAA7-1C7E142E2741} = {63342C7C-33AB-45BD-9B45-84EC67824CFB}
 		{C951FAD4-EBEF-4A4D-8303-F42B04A3AC5F} = {63CCF981-FC65-48D9-B008-A32721954522}
 		{923B263A-E726-486B-A1F8-2ACF8697963F} = {61C7A9C3-6655-469C-90D2-99F87C6B0AF4}
+		{CF35F503-B755-469A-A00F-9417A99A45AD} = {61C7A9C3-6655-469C-90D2-99F87C6B0AF4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18D8462B-56F7-40FA-8407-E47797BF62CD}

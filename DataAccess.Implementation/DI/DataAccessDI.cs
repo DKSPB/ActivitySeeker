@@ -10,7 +10,7 @@ namespace DataAccess.DI
 {
     public static class Infrastructure
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddDataAccessInfrastructure(this IServiceCollection services, IConfiguration config)
         {
             services.Configure<DatabaseOptions>(config.GetSection(DatabaseOptions.SectionName));
             

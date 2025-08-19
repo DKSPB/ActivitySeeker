@@ -1,9 +1,9 @@
-using FluentValidation;
 using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using UseCases.Common;
+using FluentValidation;
 using UseCases.Extensions;
 using UseCases.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace UseCases.DI;
