@@ -55,7 +55,7 @@ export const App = () => {
     };
     const getActivityTypes = async () => {
       try {
-        const response = await axios.get('http://0.0.0.0:5199/api/activityType');
+        const response = await axios.get('http://localhost:5199/api/activityTypes?limit=20&offset=1');
         setActivityTypes(response.data);
         console.log(response.data);
       } catch (error) {
@@ -63,7 +63,7 @@ export const App = () => {
       }
     };
     fetchCities();
-    // getActivityTypes();
+    getActivityTypes();
     fetchUserData();
     
   }, []);

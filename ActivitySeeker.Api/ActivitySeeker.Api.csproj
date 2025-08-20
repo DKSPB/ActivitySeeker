@@ -44,10 +44,5 @@
       <Folder Include="images\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
-
-    <Target Name="BuildFrontend" AfterTargets="Build">
-        <Exec Command="npm install" WorkingDirectory="..\activity_seeker_vk" />
-        <Exec Command="npm run build" WorkingDirectory="..\activity_seeker_vk" />
-    </Target>
     
 </Project>

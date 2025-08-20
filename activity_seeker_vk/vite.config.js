@@ -1,7 +1,16 @@
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 import legacy from '@vitejs/plugin-legacy';
+import fs from 'fs';
 import path from 'path';
+
+let VK_TUNNEL_URL = 'http://localhost:5199';
+try {
+  const url = fs.readFileSync('.vk-tunnel-url', 'utf-8').trim();
+  if (url) VK_TUNNEL_URL = url;
+} catch (e) {
+  console.warn('Файл .vk-tunnel-url не найден. Используется localhost.');
+}
 
 function handleModuleDirectivesPlugin() {
   return {
@@ -48,6 +57,17 @@ export default defineConfig({
     }),
   ],
 
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5199',
+        changeOrigin: true,
+        secure: false
+      },
+    },
+  },
+
   optimizeDeps: {
     force: true,
     esbuildOptions: {
@@ -58,7 +78,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: path.resolve(__dirname, '../ActivitySeeker.Api/wwwroot'),
+    outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
   },
 });

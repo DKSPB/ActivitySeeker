@@ -27,6 +27,17 @@ namespace ActivitySeeker.Api
                 builder.Services
                     .AddAuthentication("VkScheme")
                     .AddScheme<AuthenticationSchemeOptions, VkAuthenticationHandler>("VkScheme", options => { });
+                
+                builder.Services.AddCors(options =>
+                {
+                   options.AddPolicy("VkMiniAppsPolicy", policy =>
+                   {
+                       policy.WithOrigins("http://localhost:5173")
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .AllowCredentials();
+                   }); 
+                });
 
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
@@ -43,6 +54,8 @@ namespace ActivitySeeker.Api
                 builder.Services.AddSwaggerGenConfiguration();
 
                 var app = builder.Build();
+                
+                app.UseCors("VkMiniAppsPolicy");
                 
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
