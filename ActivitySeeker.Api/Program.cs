@@ -32,7 +32,7 @@ namespace ActivitySeeker.Api
                 {
                    options.AddPolicy("VkMiniAppsPolicy", policy =>
                    {
-                       policy.WithOrigins("http://localhost:5173")
+                       policy.WithOrigins("http://localhost:5173", "https://user147945853-saxd7mr3.tunnel.vk-apps.com/")
                            .AllowAnyMethod()
                            .AllowAnyHeader()
                            .AllowCredentials();

@@ -55,7 +55,7 @@ export const App = () => {
     };
     const getActivityTypes = async () => {
       try {
-        const response = await axios.get('http://localhost:5199/api/activityTypes?limit=20&offset=1');
+        const response = await axios.get('/api/activityTypes?limit=20&offset=1');
         setActivityTypes(response.data);
         console.log(response.data);
       } catch (error) {
