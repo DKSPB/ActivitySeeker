@@ -1,15 +1,17 @@
 using NLog;
+using Auth.DI;
 using NLog.Web;
 using UseCases.DI;
-using Auth.DI;
-using DataAccess.DI;
 using FileSystem.DI;
+using DataAccess.DI;
 using Controllers.DI;
+using ActivitySeeker.Api.Auth;
 using ActivitySeeker.Api.Extensions;
 using System.Text.Json.Serialization;
-using ActivitySeeker.Api.Auth;
-using Microsoft.AspNetCore.Authentication;
+using ActivitySeeker.Api.Cors;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication;
+using UseCases.Interfaces;
 
 namespace ActivitySeeker.Api
 {
@@ -24,20 +26,14 @@ namespace ActivitySeeker.Api
             {
                 var builder = WebApplication.CreateBuilder(args);
                 
+                builder.Services.AddConfigureCors(builder.Configuration, builder.Environment);
+                
                 builder.Services
                     .AddAuthentication("VkScheme")
-                    .AddScheme<AuthenticationSchemeOptions, VkAuthenticationHandler>("VkScheme", options => { });
-                
-                builder.Services.AddCors(options =>
-                {
-                   options.AddPolicy("VkMiniAppsPolicy", policy =>
-                   {
-                       policy.WithOrigins("http://localhost:5173", "https://user147945853-saxd7mr3.tunnel.vk-apps.com/")
-                           .AllowAnyMethod()
-                           .AllowAnyHeader()
-                           .AllowCredentials();
-                   }); 
-                });
+                    .AddScheme<AuthenticationSchemeOptions, VkAuthenticationHandler>("VkScheme", _ => { });
+
+                builder.Services.AddHttpContextAccessor();
+                builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
                 builder.Logging.ClearProviders();
                 builder.Host.UseNLog();
@@ -55,7 +51,7 @@ namespace ActivitySeeker.Api
 
                 var app = builder.Build();
                 
-                app.UseCors("VkMiniAppsPolicy");
+                app.UseConfiguredCors();
                 
                 app.UseForwardedHeaders(new ForwardedHeadersOptions
                 {
@@ -68,12 +64,9 @@ namespace ActivitySeeker.Api
 
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
-
                 app.UseRouting();
                 app.MapControllers();
-                
                 app.MapFallbackToFile("index.html");
-
                 app.Run();
             }
             catch (Exception exception)

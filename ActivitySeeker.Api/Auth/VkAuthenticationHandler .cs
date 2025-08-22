@@ -27,8 +27,20 @@ namespace ActivitySeeker.Api.Auth
             {
                 return Task.FromResult(AuthenticateResult.Fail("Неверная подпись вк"));
             }
-            
-            var ticket = new AuthenticationTicket(new ClaimsPrincipal(), Scheme.Name);
+
+            if (!long.TryParse(query["vk_user_id"], out var userId))
+            {
+                return Task.FromResult(AuthenticateResult.Fail("Некорректный идентификатор пользователя"));
+            }
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+            };
+
+            var identity = new ClaimsIdentity(claims, Scheme.Name);
+            var principal = new ClaimsPrincipal(identity);
+            var ticket = new AuthenticationTicket(principal, Scheme.Name);
 
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
