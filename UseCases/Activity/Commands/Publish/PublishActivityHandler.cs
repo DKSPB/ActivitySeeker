@@ -14,8 +14,8 @@ namespace UseCases.Activity.Commands.Publish
 
         public async Task Handle(PublishActivityCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Activities.FindAsync(new object?[] { request.ActivityId }, cancellationToken) ??
-            throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.ActivityId);
+            var entity = await _context.Activities.FindAsync(new object?[] { request.Id }, cancellationToken) ??
+            throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.Id);
 
             entity.PublishActivity();
 

@@ -23,8 +23,8 @@ internal class UploadActivityImageHandler : IRequestHandler<UploadActivityImageC
     public async Task Handle(UploadActivityImageCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Activities
-            .FindAsync(new object?[] { request.ActivityId }, cancellationToken) ?? 
-            throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.ActivityId);
+            .FindAsync(new object?[] { request.Id }, cancellationToken) ?? 
+            throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.Id);
 
         var fileData = await _validator.ValidateAndGetStreamAsync(request.InputFile, cancellationToken);
         

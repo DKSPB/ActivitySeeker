@@ -19,5 +19,7 @@ public class CurrentUserService : ICurrentUserService
             var userIdStr = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return long.TryParse(userIdStr, out var userId) ? userId : null;
         }
-    } 
+    }
+
+    public bool IsAdmin => throw new NotImplementedException();
 }

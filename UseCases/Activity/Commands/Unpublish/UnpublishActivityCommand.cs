@@ -1,11 +1,12 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UseCases.Interfaces;
 
 namespace UseCases.Activity.Commands.Unpublish
 {
-    public record UnpublishActivityCommand(Guid ActivityId) : IRequest;
+    /// <summary>
+    /// Снятие активности с публикации
+    /// </summary>
+    /// <param name="Id">Идентификатор активности</param>
+    public record UnpublishActivityCommand(Guid Id) 
+        : IRequest, IRequireOwnership<Domain.Entities.Activity, Guid>;
 }

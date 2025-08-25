@@ -15,8 +15,8 @@ public class DeleteActivityHandler : IRequestHandler<DeleteActivityCommand>
     public async Task Handle(DeleteActivityCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Activities
-            .FindAsync(new object?[] { request.ActivityId }, cancellationToken: cancellationToken) ??
-                       throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.ActivityId);
+            .FindAsync(new object?[] { request.Id }, cancellationToken: cancellationToken) ??
+                       throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.Id);
 
         _context.Activities.Remove(entity);
 
