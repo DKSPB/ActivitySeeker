@@ -12,7 +12,7 @@ using UseCases.Activity.Queries.GetImage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using UseCases.Activity.Commands.Publish;
-using UseCases.Activity.Commands.Unpublish;
+using UseCases.Activity.Commands.UnPublish;
 using UseCases.Activity.Commands.UploadImage;
 using UseCases.Activity.Queries.GetImage.Models;
 
@@ -162,7 +162,7 @@ public class ActivityController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UnPublish(Guid activityId)
     {
-        await _mediator.Send(new UnpublishActivityCommand(activityId));
+        await _mediator.Send(new UnPublishActivityCommand(activityId));
         return NoContent();
     }
 }
