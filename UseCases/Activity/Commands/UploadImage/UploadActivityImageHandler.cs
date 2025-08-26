@@ -1,6 +1,6 @@
 using MediatR;
 using UseCases.Common;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Image;
 using DataAccess.Interfaces;
 using UseCases.Activity.Queries.GetImage.Models;
 

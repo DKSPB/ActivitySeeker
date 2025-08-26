@@ -4,7 +4,7 @@ using UseCases.Common;
 using DataAccess.Interfaces;
 using UseCases.Activity.Models;
 using Microsoft.EntityFrameworkCore;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Common;
 
 
 namespace UseCases.Activity.Queries.GetAll;

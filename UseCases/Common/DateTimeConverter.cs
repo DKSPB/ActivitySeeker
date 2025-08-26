@@ -1,4 +1,4 @@
-using UseCases.Interfaces;
+using UseCases.Interfaces.Common;
 
 namespace UseCases.Common;
 

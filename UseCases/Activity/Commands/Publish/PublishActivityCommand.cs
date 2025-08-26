@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Auth;
 
 namespace UseCases.Activity.Commands.Publish
 {
@@ -7,6 +7,5 @@ namespace UseCases.Activity.Commands.Publish
     /// Публикация активности
     /// </summary>
     /// <param name="Id">Идентификатор активности</param>
-    public record PublishActivityCommand(Guid Id) 
-        : IRequest, IRequireOwnership<Domain.Entities.Activity, Guid>;
+    public record PublishActivityCommand(Guid Id) : IRequest;
 }

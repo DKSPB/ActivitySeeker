@@ -1,6 +1,6 @@
 using UseCases.Activity.Queries.GetImage.Models;
 
-namespace UseCases.Interfaces;
+namespace UseCases.Interfaces.Image;
 
 public interface IFileStorage
 {

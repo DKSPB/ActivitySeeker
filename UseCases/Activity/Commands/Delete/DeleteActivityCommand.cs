@@ -1,11 +1,10 @@
 using MediatR;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Auth;
 
 namespace UseCases.Activity.Commands.Delete;
 
 /// <summary>
-/// Команда удаления активности
+/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 /// </summary>
-/// <param name="Id">Идентификатор активности</param>
-public record DeleteActivityCommand(Guid Id) 
-    : IRequest, IRequireOwnership<Domain.Entities.Activity, Guid>;
+/// <param name="Id">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+public record DeleteActivityCommand(Guid Id) : IRequest;

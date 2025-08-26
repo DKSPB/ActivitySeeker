@@ -1,13 +1,12 @@
 using MediatR;
 using UseCases.Common;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Auth;
 
 namespace UseCases.Activity.Commands.UploadImage;
 
 /// <summary>
-/// Добавление изображения для активности
+/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 /// </summary>
-/// <param name="Id">Идентификатор активности</param>
-/// <param name="InputFile">Объект - изображение</param>
-public record UploadActivityImageCommand(Guid Id, InputFile InputFile) 
-    : IRequest, IRequireOwnership<Domain.Entities.Activity, Guid>;
+/// <param name="Id">пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+/// <param name="InputFile">пїЅпїЅпїЅпїЅпїЅпїЅ - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ</param>
+public record UploadActivityImageCommand(Guid Id, InputFile InputFile) : IRequest;

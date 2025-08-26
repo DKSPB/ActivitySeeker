@@ -2,9 +2,8 @@ using MediatR;
 using AutoMapper;
 using DataAccess.Interfaces;
 using UseCases.Activity.Models;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Common;
 using ActivityEntity = Domain.Entities.Activity;
-
 
 namespace UseCases.Activity.Commands.Create;
 

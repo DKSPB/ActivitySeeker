@@ -1,6 +1,6 @@
 using UseCases.Common;
 
-namespace UseCases.Interfaces;
+namespace UseCases.Interfaces.Image;
 
 public interface IFileValidator
 {

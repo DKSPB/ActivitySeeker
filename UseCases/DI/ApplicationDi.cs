@@ -1,8 +1,10 @@
+using System.Reflection;
 using MediatR;
 using UseCases.Common;
 using FluentValidation;
+using MediatR.Behaviors.Authorization.Extensions.DependencyInjection;
 using UseCases.Extensions;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Common;
 using Microsoft.Extensions.DependencyInjection;
 
 
@@ -19,6 +21,9 @@ public static class ApplicationDi
 
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(IApplicationMarker).Assembly));
+        
+        services.AddMediatorAuthorization(typeof(IApplicationMarker).Assembly);
+        services.AddAuthorizersFromAssembly(typeof(IApplicationMarker).Assembly);
         
         services.AddScoped<IDateTimeConverter, DateTimeConverter>();
 

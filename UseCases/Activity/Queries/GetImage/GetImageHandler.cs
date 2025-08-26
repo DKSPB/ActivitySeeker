@@ -1,7 +1,7 @@
 using MediatR;
 using UseCases.Common;
-using UseCases.Interfaces;
 using DataAccess.Interfaces;
+using UseCases.Interfaces.Image;
 using UseCases.Activity.Queries.GetImage.Models;
 
 namespace UseCases.Activity.Queries.GetImage;

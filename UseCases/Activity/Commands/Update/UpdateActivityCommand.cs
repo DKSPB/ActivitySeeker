@@ -1,16 +1,15 @@
 using UseCases.Activity.Commands.Create;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Auth;
 
 namespace UseCases.Activity.Commands.Update;
 
 /// <summary>
-/// Обновление активности
+/// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 /// </summary>
-public class UpdateActivityCommand 
-    : CreateActivityCommand, IRequireOwnership<Domain.Entities.Activity, Guid>
+public class UpdateActivityCommand : CreateActivityCommand
 {
     /// <summary>
-    /// Идентификатор активности
+    /// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     /// </summary>
     public Guid Id { get; set; }
 }

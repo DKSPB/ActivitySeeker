@@ -1,4 +1,4 @@
-namespace UseCases.Interfaces;
+namespace UseCases.Interfaces.Auth;
 
 public interface ICurrentUserService
 {
