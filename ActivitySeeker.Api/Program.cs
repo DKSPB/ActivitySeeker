@@ -5,13 +5,14 @@ using UseCases.DI;
 using FileSystem.DI;
 using DataAccess.DI;
 using Controllers.DI;
-using UseCases.Interfaces;
-using ActivitySeeker.Api.Auth;
-using ActivitySeeker.Api.Cors;
-using ActivitySeeker.Api.Extensions;
+using UseCases.Interfaces.Auth;
 using System.Text.Json.Serialization;
+using ActivitySeeker.Api.Extensions.Auth;
+using ActivitySeeker.Api.Extensions.Cors;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication;
+using ActivitySeeker.Api.Extensions.Swagger;
+using ActivitySeeker.Api.Extensions.Exceptions;
 
 
 namespace ActivitySeeker.Api

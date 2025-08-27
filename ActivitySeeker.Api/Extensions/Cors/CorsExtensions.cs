@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace ActivitySeeker.Api.Cors;
+namespace ActivitySeeker.Api.Extensions.Cors;
 
 public static class CorsExtensions
 {

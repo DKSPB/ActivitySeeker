@@ -1,4 +1,4 @@
-namespace ActivitySeeker.Api.Cors;
+namespace ActivitySeeker.Api.Extensions.Cors;
 
 public class CorsSettings
 {

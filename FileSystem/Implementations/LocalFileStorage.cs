@@ -1,7 +1,7 @@
 using FileSystem.Di;
 using Microsoft.Extensions.Options;
 using UseCases.Activity.Queries.GetImage.Models;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Image;
 
 namespace FileSystem.Implementations;
 

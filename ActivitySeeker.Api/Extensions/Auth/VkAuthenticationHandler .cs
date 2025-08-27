@@ -4,7 +4,7 @@ using System.Text.Encodings.Web;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication;
 
-namespace ActivitySeeker.Api.Auth
+namespace ActivitySeeker.Api.Extensions.Auth
 {
     public class VkAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {

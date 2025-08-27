@@ -2,7 +2,7 @@ using FileSystem.Di;
 using FileSystem.Implementations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Image;
 
 
 namespace FileSystem.DI;

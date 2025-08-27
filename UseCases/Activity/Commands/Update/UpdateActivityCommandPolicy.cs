@@ -7,10 +7,10 @@ namespace UseCases.Activity.Commands.Update;
 
 public class MustBeAuthorRequirement : IAuthorizationRequirement
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     
-    public bool IsAdmin { get; set; }
-    public long? UserId { get; set; }
+    public bool IsAdmin { get; init; }
+    public long? UserId { get; init; }
 }
 
 public class MustBeAuthorRequirementHandler : IAuthorizationHandler<MustBeAuthorRequirement>

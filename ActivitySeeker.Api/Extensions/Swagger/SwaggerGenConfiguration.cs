@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-namespace ActivitySeeker.Api.Extensions;
+namespace ActivitySeeker.Api.Extensions.Swagger;
 
 
 public static class SwaggerGenConfiguration

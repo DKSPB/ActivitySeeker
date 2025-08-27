@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using UseCases.Common;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ActivitySeeker.Api.Extensions
+namespace ActivitySeeker.Api.Extensions.Exceptions
 {
     public class ExceptionHandlingMiddleware
     {

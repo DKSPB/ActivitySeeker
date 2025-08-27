@@ -1,7 +1,7 @@
 using System.Security.Claims;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Auth;
 
-namespace ActivitySeeker.Api.Auth;
+namespace ActivitySeeker.Api.Extensions.Auth;
 
 public class CurrentUserService : ICurrentUserService
 {

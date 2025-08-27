@@ -3,7 +3,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Png;
-using UseCases.Interfaces;
+using UseCases.Interfaces.Image;
 
 namespace FileSystem.Implementations
 {
