@@ -5,10 +5,10 @@ using UseCases.Activity.Models;
 
 namespace UseCases.Activity.Queries.GetAll;
 
-public record GetActivitiesQuery : IRequest<PagedResult<ActivityDto>>
+public class GetActivitiesQuery : IRequest<PagedResult<ActivityDto>>
 {
-    public int Limit { get; init; } = 20; 
-    public int Offset { get; init; } = 1;
+    public int Limit { get; set; } = 20; 
+    public int Offset { get; set; } = 1;
     public Guid? ActivityTypeId { get; init; }
     public long? UserId { get; set; }
     public DateTime? SearchFrom { get; set; }
