@@ -21,5 +21,5 @@ public class CurrentUserService : ICurrentUserService
         }
     }
 
-    public bool IsAdmin => throw new NotImplementedException();
+    public bool IsAdmin => true;
 }

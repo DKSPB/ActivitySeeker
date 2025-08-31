@@ -1,4 +1,3 @@
-using MediatR;
 using MediatR.Behaviors.Authorization;
 using MediatR.Behaviors.Authorization.Interfaces;
 

@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
+using MediatR.Behaviors.Authorization.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using UseCases.Common;
-using Microsoft.AspNetCore.Mvc;
 
 namespace ActivitySeeker.Api.Extensions.Exceptions
 {
@@ -44,6 +45,11 @@ namespace ActivitySeeker.Api.Extensions.Exceptions
                 };
 
                 await WriteProblemDetailsAsync(context, problemDetails, StatusCodes.Status400BadRequest);
+            }
+            catch(UnauthorizedException ex)
+            {
+                _logger.LogWarning(ex, "Try unauthorize access error");
+                await HandleExceptionAsync(context, StatusCodes.Status401Unauthorized, ex.Message);
             }
             catch (ObjectNotFoundException ex)
             {
