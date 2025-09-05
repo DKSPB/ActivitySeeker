@@ -68,7 +68,7 @@ public class ActivityController : ControllerBase
     public async Task<IActionResult> CreateActivity([FromBody] CreateActivityCommand command)
     {
         var newActivity = await _mediator.Send(command);
-        return CreatedAtAction(nameof(GetByActivityId), new { id = newActivity.Id}, newActivity);
+        return CreatedAtAction(nameof(GetByActivityId), new { activityId = newActivity.Id}, newActivity);
     }
 
     /// <summary>
