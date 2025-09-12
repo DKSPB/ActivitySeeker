@@ -1,11 +1,10 @@
-﻿using FluentValidation;
-using MediatR.Behaviors.Authorization.Exceptions;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using UseCases.Common;
-
-namespace ActivitySeeker.Api.Extensions.Exceptions
+﻿namespace ActivitySeeker.Api.Extensions.Exceptions
 {
+    using Newtonsoft.Json;
+    using FluentValidation;
+    using DataAccess.Common;
+    using Microsoft.AspNetCore.Mvc;
+    using MediatR.Behaviors.Authorization.Exceptions;
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;

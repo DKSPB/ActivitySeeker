@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UseCases.Common
+namespace DataAccess.Common
 {
     public class ObjectNotFoundException : Exception
     {

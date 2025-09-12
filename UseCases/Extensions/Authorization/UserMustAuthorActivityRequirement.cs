@@ -1,6 +1,4 @@
-using DataAccess.Interfaces;
 using MediatR.Behaviors.Authorization;
-using Microsoft.EntityFrameworkCore;
 
 namespace UseCases.Extensions.Authorization;
 

@@ -1,27 +1,24 @@
-﻿using DataAccess.Interfaces;
-using MediatR.Behaviors.Authorization;
-
-namespace UseCases.Extensions.Authorization
+﻿namespace UseCases.Extensions.Authorization
 {
+    using Interfaces.Repos;
+    using MediatR.Behaviors.Authorization;
     public class UserMustAuthorActivityRequirementHandler : IAuthorizationHandler<UserMustAuthorActivityRequirement>
     {
-        private readonly IDbContext _context;
+        private readonly IActivityRepository _repository;
 
-        public UserMustAuthorActivityRequirementHandler(IDbContext context)
+        public UserMustAuthorActivityRequirementHandler(IActivityRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
-
         public async Task<AuthorizationResult> Handle(UserMustAuthorActivityRequirement request, CancellationToken cancellationToken)
         {
-            var activity = await _context.Activities.FindAsync(new object[] { request.ActivityId }, cancellationToken);
+            var activity = await _repository.FindAsync(request.ActivityId, cancellationToken);
 
             if (activity == null)
             {
                 return AuthorizationResult.Fail("Activity not found");
             }
-
-
+            
             if (request.IsAdmin)
             { 
                 return AuthorizationResult.Succeed(); 

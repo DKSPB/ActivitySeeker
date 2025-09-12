@@ -1,27 +1,23 @@
-﻿using MediatR;
-using UseCases.Common;
-using DataAccess.Interfaces;
-
-namespace UseCases.ActivityType.Commands.Delete
+﻿namespace UseCases.ActivityType.Commands.Delete
 {
+    using MediatR;
+    using Interfaces.Repos;
     internal class DeleteActivityTypeHandler : IRequestHandler<DeleteActivityTypeCommand>
     {
-        private readonly IDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IActivityTypeRepository _repository;
 
-        public DeleteActivityTypeHandler(IDbContext context)
+        public DeleteActivityTypeHandler(IActivityTypeRepository repository, IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _repository = repository;
         }
 
         public async Task Handle(DeleteActivityTypeCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.ActivityTypes
-                .FindAsync(new object?[] { request.ActivityTypeId }, cancellationToken: cancellationToken) ??
-                throw new ObjectNotFoundException(nameof(Domain.Entities.ActivityType), request.ActivityTypeId);
+            await _repository.DeleteAsync(request.ActivityTypeId, cancellationToken);
 
-            _context.ActivityTypes.Remove(entity);
-
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

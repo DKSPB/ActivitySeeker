@@ -1,5 +1,4 @@
 namespace DataAccess.DI;
-
 internal class DatabaseOptions
 {
     public const string SectionName = "ConnectionStrings";

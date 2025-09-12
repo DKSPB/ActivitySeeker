@@ -1,39 +1,31 @@
-using AutoMapper;
-using MediatR;
-using UseCases.Common;
-using DataAccess.Interfaces;
-using UseCases.Activity.Models;
-using Entities = Domain.Entities;
-
-namespace UseCases.Activity.Commands.Update;
-
-public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand, ActivityDto>
+namespace UseCases.Activity.Commands.Update
 {
-    private readonly IMapper _mapper;
-    private readonly IDbContext _context;
+    using AutoMapper;
+    using MediatR;
+    using Models;
+    using Interfaces.Repos;
+    using Domain.Entities;
 
-    public UpdateActivityHandler(IMapper mapper, IDbContext context)
+    public class UpdateActivityHandler : IRequestHandler<UpdateActivityCommand, ActivityDto>
     {
-        _mapper = mapper;
-        _context = context;
-    }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IActivityRepository _repository;
+
+        public UpdateActivityHandler(IMapper mapper, IActivityRepository repository, IUnitOfWork unitOfWork)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _repository = repository;
+        }
     
-    public async Task<ActivityDto> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
-    {
-        var entity = await _context.Activities
-            .FindAsync(new object?[] { request.Id }, cancellationToken) ?? 
-            throw new ObjectNotFoundException(nameof(Entities.Activity), request.Id);
-
-        entity.ActivityTypeId = request.ActivityTypeId;
-        entity.Description = request.Description;
-        entity.StartDate = request.StartDate;
-        entity.EndDate = request.EndDate;
-        entity.Timezone = request.Timezone;
-        entity.IsOnline = request.IsOnline;
-        entity.CityId = request.CityId;
+        public async Task<ActivityDto> Handle(UpdateActivityCommand request, CancellationToken cancellationToken)
+        {
+            var entity = await _repository.UpdateAsync(_mapper.Map<Activity>(request), cancellationToken);
         
-        await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ActivityDto>(entity);
+            return _mapper.Map<ActivityDto>(entity);
+        }
     }
 }

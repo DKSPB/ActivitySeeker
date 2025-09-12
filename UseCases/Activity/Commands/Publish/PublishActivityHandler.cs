@@ -1,25 +1,24 @@
-﻿using MediatR;
-using UseCases.Common;
-using DataAccess.Interfaces;
-
-namespace UseCases.Activity.Commands.Publish
+﻿namespace UseCases.Activity.Commands.Publish
 {
+    using MediatR;
+    using Interfaces.Repos;
     internal class PublishActivityHandler : IRequestHandler<PublishActivityCommand>
     {
-        private readonly IDbContext _context;
-        public PublishActivityHandler(IDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IActivityRepository _repository;
+        public PublishActivityHandler(IActivityRepository repository, IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _repository = repository;
         }
 
         public async Task Handle(PublishActivityCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Activities.FindAsync(new object?[] { request.Id }, cancellationToken) ??
-            throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.Id);
+            var entity = await _repository.GetByIdAsync(request.Id, cancellationToken);
 
             entity.PublishActivity();
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

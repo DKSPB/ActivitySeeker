@@ -1,37 +1,41 @@
-using MediatR;
-using AutoMapper;
-using DataAccess.Interfaces;
-using UseCases.Activity.Models;
-using UseCases.Interfaces.Common;
-using ActivityEntity = Domain.Entities.Activity;
-
-namespace UseCases.Activity.Commands.Create;
-
-internal class CreateActivityHandler : IRequestHandler<CreateActivityCommand, ActivityDto>
+namespace UseCases.Activity.Commands.Create
 {
-    private readonly IMapper _mapper;
-    private readonly IDbContext _dbContext;
-    private readonly IDateTimeConverter _timeConverter;
-
-    public CreateActivityHandler(IDbContext dbContext, IMapper mapper, IDateTimeConverter timeConverter)
-    {
-        _mapper = mapper;
-        _dbContext = dbContext;
-        _timeConverter = timeConverter;
-    }
+    using Models;
+    using MediatR;
+    using AutoMapper;
+    using Domain.Entities;
+    using Interfaces.Repos;
+    using UseCases.Interfaces.Common;
     
-    public async Task<ActivityDto> Handle(CreateActivityCommand command, CancellationToken cancellationToken)
+    internal class CreateActivityHandler : IRequestHandler<CreateActivityCommand, ActivityDto>
     {
-        command.StartDate = _timeConverter.ToUtc(command.StartDate, command.Timezone).GetValueOrDefault();
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IActivityRepository _repository;
+        private readonly IDateTimeConverter _timeConverter;
 
-        command.EndDate = _timeConverter.ToUtc(command.EndDate, command.Timezone);
+        public CreateActivityHandler(IActivityRepository repository, IUnitOfWork unitOfWork, IMapper mapper, IDateTimeConverter timeConverter)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _repository = repository;
+            _timeConverter = timeConverter;
+        }
+    
+        public async Task<ActivityDto> Handle(CreateActivityCommand command, CancellationToken cancellationToken)
+        {
+            command.StartDate = _timeConverter.ToUtc(command.StartDate, command.Timezone).GetValueOrDefault();
 
-        var entity = _mapper.Map<ActivityEntity>(command);
+            command.EndDate = _timeConverter.ToUtc(command.EndDate, command.Timezone);
+
+            var entity = _mapper.Map<Activity>(command);
         
-        await _dbContext.Activities.AddAsync(entity, cancellationToken);
+            await _repository.CreateAsync(entity, cancellationToken);
         
-        await _dbContext.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return _mapper.Map<ActivityDto>(entity);
+            return _mapper.Map<ActivityDto>(entity);
+        }
     }
 }
+

@@ -1,20 +1,19 @@
-﻿using AutoMapper;
-using DataAccess.Interfaces;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using UseCases.ActivityType.Models;
-using UseCases.Common;
+﻿using UseCases.Interfaces.Repos;
 
 namespace UseCases.ActivityType.Queries.GetAll
 {
+    using AutoMapper;
+    using MediatR;
+    using Models;
+    using Common;
     public class GetActivityTypesHandler : IRequestHandler<GetActivityTypesQuery, PagedResult<ActivityTypeDto>>
     {
         private readonly IMapper _mapper;
-        private readonly IDbContext _context;
-        public GetActivityTypesHandler(IMapper mapper, IDbContext contex)
+        private readonly IActivityTypeRepository _repository;
+        public GetActivityTypesHandler(IMapper mapper, IActivityTypeRepository repository)
         {
             _mapper = mapper;
-            _context = contex;
+            _repository = repository;
         }
         public async Task<PagedResult<ActivityTypeDto>> Handle(GetActivityTypesQuery request, CancellationToken cancellationToken)
         {

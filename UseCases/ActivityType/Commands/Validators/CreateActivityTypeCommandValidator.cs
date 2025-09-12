@@ -1,26 +1,24 @@
-using DataAccess.Interfaces;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using UseCases.ActivityType.Commands.Create;
-
-namespace UseCases.ActivityType.Commands.Validators;
-
-public class CreateActivityTypeCommandValidator : AbstractValidator<CreateActivityTypeCommand>
+namespace UseCases.ActivityType.Commands.Validators
 {
-    public CreateActivityTypeCommandValidator(IDbContext context)
+    using Create;
+    using FluentValidation;
+    using Interfaces.Repos;
+    public class CreateActivityTypeCommandValidator : AbstractValidator<CreateActivityTypeCommand>
     {
-        RuleFor(x => x.TypeName).MaximumLength(50)
-            .WithMessage("Название типа активности не должно быть больше 50 символов");
+        public CreateActivityTypeCommandValidator(IActivityTypeRepository repository)
+        {
+            RuleFor(x => x.TypeName).MaximumLength(50)
+                .WithMessage("Название типа активности не должно быть больше 50 символов");
 
-        RuleFor(x => x.ParentId)
-            .MustAsync(async (parentId, ct) =>
-            {
-                if (parentId == null)
-                    return true;
+            RuleFor(x => x.ParentId)
+                .MustAsync(async (parentId, ct) =>
+                {
+                    if (parentId == null)
+                        return true;
 
-                return await context.ActivityTypes
-                    .AnyAsync(a => a.Id == parentId.Value, ct);
-            })
-            .WithMessage("Родительский тип активности не найден");
+                    return await repository.AnyAsync(parentId.Value, ct);
+                })
+                .WithMessage("Родительский тип активности не найден");
+        }
     }
 }

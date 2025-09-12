@@ -1,29 +1,22 @@
-﻿using MediatR;
-using AutoMapper;
-using UseCases.Common;
-using DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using UseCases.Activity.Models;
-using Entities = Domain.Entities;
-
-
-namespace UseCases.Activity.Queries.GetById
+﻿namespace UseCases.Activity.Queries.GetById
 {
+    using MediatR;
+    using AutoMapper;
+    using Models;
+    using Interfaces.Repos;
     internal class GetActivityByIdHandler : IRequestHandler<GetActivityByIdQuery, ActivityDto>
     {
         private readonly IMapper _mapper;
-        private readonly IDbContext _context;
-        public GetActivityByIdHandler(IMapper mapper, IDbContext context)
+        private readonly IActivityRepository _repository;
+        public GetActivityByIdHandler(IMapper mapper, IActivityRepository repository)
         {
             _mapper = mapper;
-            _context = context;
+            _repository = repository;
         }
         public async Task<ActivityDto> Handle(GetActivityByIdQuery request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Activities.Include(x => x.ActivityType)
-                             .FirstAsync(x => x.Id == request.Id, cancellationToken: cancellationToken) ?? 
-                throw new ObjectNotFoundException(nameof(Entities.Activity), request.Id);
-
+            var entity = await _repository.GetByIdAsync(request.Id, cancellationToken);
+            
             return _mapper.Map<ActivityDto>(entity);
         }
     }

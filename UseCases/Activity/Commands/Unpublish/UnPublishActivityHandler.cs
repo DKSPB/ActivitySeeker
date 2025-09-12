@@ -1,24 +1,23 @@
-﻿using DataAccess.Interfaces;
-using MediatR;
-using UseCases.Common;
-
-namespace UseCases.Activity.Commands.UnPublish
+﻿namespace UseCases.Activity.Commands.UnPublish
 {
+    using MediatR;
+    using Interfaces.Repos;
     internal class UnPublishActivityHandler : IRequestHandler<UnPublishActivityCommand>
     {
-        private readonly IDbContext _context;
-        public UnPublishActivityHandler(IDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IActivityRepository _repository;
+        public UnPublishActivityHandler(IActivityRepository repository, IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
+            _repository = repository;
         }
         public async Task Handle(UnPublishActivityCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Activities.FindAsync(new object?[] { request.Id }, cancellationToken) ??
-                throw new ObjectNotFoundException(nameof(Domain.Entities.Activity), request.Id);
+            var entity = await _repository.GetByIdAsync(request.Id, cancellationToken);
 
             entity.UnpublishActivity();
 
-            await _context.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         }
     }

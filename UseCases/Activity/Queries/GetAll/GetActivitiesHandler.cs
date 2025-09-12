@@ -5,6 +5,7 @@ using DataAccess.Interfaces;
 using UseCases.Activity.Models;
 using Microsoft.EntityFrameworkCore;
 using UseCases.Interfaces.Common;
+using UseCases.Interfaces.Repos;
 
 
 namespace UseCases.Activity.Queries.GetAll;
@@ -12,13 +13,13 @@ namespace UseCases.Activity.Queries.GetAll;
 internal class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedResult<ActivityDto>>
 {
     private readonly IMapper _mapper;
-    private readonly IDbContext _context;
+    private readonly IActivityRepository _repository;
     private readonly IDateTimeConverter _timeConverter;
 
-    public GetActivitiesHandler(IMapper mapper, IDbContext context, IDateTimeConverter timeConverter)
+    public GetActivitiesHandler(IMapper mapper, IActivityRepository repository, IDateTimeConverter timeConverter)
     {
         _mapper = mapper;
-        _context = context;
+        _repository = repository;
         _timeConverter = timeConverter;
     }
 
@@ -26,6 +27,8 @@ internal class GetActivitiesHandler : IRequestHandler<GetActivitiesQuery, PagedR
     {
         var searchFrom = _timeConverter.ToUtc(request.SearchFrom, request.Timestamp);
         var searchBy = _timeConverter.ToUtc(request.SearchTo, request.Timestamp);
+        
+        _repository.
         
         var entities = _context.Activities
             .Include(x => x.ActivityType)

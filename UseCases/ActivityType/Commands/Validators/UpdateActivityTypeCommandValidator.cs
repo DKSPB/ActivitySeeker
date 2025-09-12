@@ -1,31 +1,29 @@
-using DataAccess.Interfaces;
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using UseCases.ActivityType.Commands.Update;
-
-namespace UseCases.ActivityType.Commands.Validators;
-
-public class UpdateActivityTypeCommandValidator : AbstractValidator<UpdateActivityTypeCommand>
+namespace UseCases.ActivityType.Commands.Validators
 {
-    public UpdateActivityTypeCommandValidator(IDbContext context)
+    using Update;
+    using FluentValidation;
+    using Interfaces.Repos;
+    public class UpdateActivityTypeCommandValidator : AbstractValidator<UpdateActivityTypeCommand>
     {
-        RuleFor(x => x.Id)
-            .NotEmpty()
-            .WithMessage("Идентификатор активности не может быть пустым");
+        public UpdateActivityTypeCommandValidator(IActivityTypeRepository repository)
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage("Идентификатор активности не может быть пустым");
         
-        RuleFor(x => x.ParentId)
-            .Must((model, parentTypeId) => parentTypeId == null || model.Id != parentTypeId)
-            .WithMessage("Идентификатор типа не может совпадать с идентификатором родительского типа.");
+            RuleFor(x => x.ParentId)
+                .Must((model, parentTypeId) => parentTypeId == null || model.Id != parentTypeId)
+                .WithMessage("Идентификатор типа не может совпадать с идентификатором родительского типа.");
         
-        RuleFor(x => x.ParentId)
-            .MustAsync(async (parentId, ct) =>
-            {
-                if (parentId == null)
-                    return true;
+            RuleFor(x => x.ParentId)
+                .MustAsync(async (parentId, ct) =>
+                {
+                    if (parentId == null)
+                        return true;
 
-                return await context.ActivityTypes
-                    .AnyAsync(a => a.Id == parentId.Value, ct);
-            })
-            .WithMessage("Родительский тип активности не найден");
+                    return await repository.AnyAsync(parentId.Value, ct);
+                })
+                .WithMessage("Родительский тип активности не найден");
+        }
     }
 }

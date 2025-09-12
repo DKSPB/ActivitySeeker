@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DataAccess.Implementation\DataAccess.csproj" />
+      <ProjectReference Include="..\Domain\ActivitySeeker.Domain\Domain.csproj" />
     </ItemGroup>
 
 </Project>
