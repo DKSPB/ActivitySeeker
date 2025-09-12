@@ -14,6 +14,22 @@ namespace DataAccess.Seed
                 .HasOne(p => p.ActivityType)
                 .WithMany(x => x.Activities)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            List<Activity> activities = new()
+            {
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{}
+            };
+
+            builder.HasData(activities);
         }
     }
 }

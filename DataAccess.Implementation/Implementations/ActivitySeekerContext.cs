@@ -22,6 +22,7 @@ namespace DataAccess.Implementations
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new ConfigureActivityTypes());
+            //modelBuilder.ApplyConfiguration(new ConfigureAccount());
             modelBuilder.ApplyConfiguration(new ConfigureActivity());
         }
 
