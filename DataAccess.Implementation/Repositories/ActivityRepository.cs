@@ -1,12 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace DataAccess.Repositories
 {
     using Common;
     using Interfaces;
     using Domain.Entities;
-    using UseCases.Interfaces;
+    using UseCases.Common;
     using UseCases.Interfaces.Repos;
+    using UseCases.Interfaces.Common;
+    using Microsoft.EntityFrameworkCore;
     public class ActivityRepository : IActivityRepository
     {
         private readonly IDbContext _context;
@@ -28,11 +28,21 @@ namespace DataAccess.Repositories
                 new object?[] { id, cancellationToken }, cancellationToken: cancellationToken);
         }
 
-        public Task<List<Activity>> GetAll(ISpecification<Activity> specification, CancellationToken cancellationToken)
+        public async Task<PagedResult<Activity>> GetAllAsync(ISpecification<Activity> specification,
+            CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
+            var entities = _context.Activities.AsQueryable();
 
+            var total = await entities.CountAsync(cancellationToken);
+
+            var items = specification.Apply(entities);
+
+            return new PagedResult<Activity>
+            {
+                Items = items,
+                Total = total
+            };
+        }
         public async Task CreateAsync(Activity activity, CancellationToken cancellationToken)
         {
             await _context.Activities.AddAsync(activity, cancellationToken);

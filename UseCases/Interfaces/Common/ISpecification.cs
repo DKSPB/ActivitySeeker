@@ -1,4 +1,4 @@
-namespace UseCases.Interfaces;
+namespace UseCases.Interfaces.Common;
 
 public interface ISpecification<T>
 {

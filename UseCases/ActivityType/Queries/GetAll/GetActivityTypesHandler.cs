@@ -1,11 +1,11 @@
-﻿using UseCases.Interfaces.Repos;
-
-namespace UseCases.ActivityType.Queries.GetAll
+﻿namespace UseCases.ActivityType.Queries.GetAll
 {
     using AutoMapper;
     using MediatR;
     using Models;
     using Common;
+    using Interfaces.Repos;
+    using Domain.Entities;
     public class GetActivityTypesHandler : IRequestHandler<GetActivityTypesQuery, PagedResult<ActivityTypeDto>>
     {
         private readonly IMapper _mapper;
@@ -17,19 +17,14 @@ namespace UseCases.ActivityType.Queries.GetAll
         }
         public async Task<PagedResult<ActivityTypeDto>> Handle(GetActivityTypesQuery request, CancellationToken cancellationToken)
         {
-            var entities = _context.ActivityTypes;
+            var spec = new PagingSpecification<ActivityType>(request.Limit, request.Offset);
             
-            var total = await entities.CountAsync(cancellationToken);
-
-            var items = await entities
-                .Skip(Math.Max(0, (request.Offset - 1) * request.Limit))
-                .Take(request.Limit)
-                .ToListAsync(cancellationToken);
-        
+            var entities = await _repository.GetAllAsync(spec, cancellationToken);
+            
             return new PagedResult<ActivityTypeDto>
             {
-                Items = _mapper.Map<List<ActivityTypeDto>>(items),
-                Total = total
+                Items = _mapper.Map<List<ActivityTypeDto>>(entities.Items),
+                Total = entities.Total
             };
         }
     }

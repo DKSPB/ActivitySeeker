@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using UseCases.Common;
+using UseCases.Interfaces.Common;
 
 namespace DataAccess.Repositories
 {
@@ -12,6 +14,21 @@ namespace DataAccess.Repositories
         public ActivityTypeRepository(IDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<PagedResult<ActivityType>> GetAllAsync(ISpecification<ActivityType> spec, CancellationToken cancellationToken)
+        {
+            var entities = _context.ActivityTypes.AsQueryable();
+            
+            var total = await entities.CountAsync(cancellationToken);
+
+            var items = await spec.Apply(entities).ToListAsync(cancellationToken);;
+
+            return new PagedResult<ActivityType>
+            {
+                Items = items,
+                Total = total
+            };
         }
 
         public async Task<ActivityType> GetByIdAsync(Guid id, CancellationToken cancellationToken)

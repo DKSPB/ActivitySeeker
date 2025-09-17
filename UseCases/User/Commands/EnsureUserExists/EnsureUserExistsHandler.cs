@@ -1,6 +1,6 @@
 using AutoMapper;
-using DataAccess.Interfaces;
 using MediatR;
+using UseCases.Interfaces.Repos;
 using UseCases.User.Models;
 
 namespace UseCases.User.Commands.EnsureUserExists;
@@ -8,17 +8,19 @@ namespace UseCases.User.Commands.EnsureUserExists;
 internal class EnsureUserExistsHandler : IRequestHandler<EnsureUserExistsCommand, (bool, UserDto)>
 {
     private readonly IMapper _mapper;
-    private readonly IDbContext _context;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IUserRepository _repository;
 
-    public EnsureUserExistsHandler(IMapper mapper, IDbContext context)
+    public EnsureUserExistsHandler(IMapper mapper, IUserRepository repository, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
-        _context = context;
+        _unitOfWork = unitOfWork;
+        _repository = repository;
     }
         
     public async Task<(bool, UserDto)> Handle(EnsureUserExistsCommand command, CancellationToken cancellationToken)
     {
-        var entity = await _context.Users.FindAsync(new object?[] {command.UserId }, cancellationToken);
+        var entity = await _repository.FindAsync(command.UserId, cancellationToken);
         
         return entity is null ? (true, await CreateUser(command.UserId, cancellationToken)) :
             (false, new UserDto{ Id = entity.Id});
@@ -28,8 +30,8 @@ internal class EnsureUserExistsHandler : IRequestHandler<EnsureUserExistsCommand
     {
         var entity = new Domain.Entities.User { Id = userId };
         
-        await _context.Users.AddAsync(entity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
+        await _repository.CreateAsync(entity, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         return new UserDto {Id = entity.Id};
     }

@@ -1,34 +1,31 @@
-﻿using MediatR;
-using UseCases.Common;
-using UseCases.User.Models;
-using DataAccess.Interfaces;
-using Microsoft.EntityFrameworkCore;
-
-namespace UseCases.User.Queries.GetAll
+﻿namespace UseCases.User.Queries.GetAll
 {
+    using Common;
+    using Models;
+    using MediatR;
+    using AutoMapper;
+    using Domain.Entities;
+    using Interfaces.Repos;
     internal class GetUsersHandler : IRequestHandler<GetUsersQuery, PagedResult<UserDto>>
     {
-        private readonly IDbContext _contex;
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _repository;
 
-        public GetUsersHandler(IDbContext context)
+        public GetUsersHandler(IUserRepository repository, IMapper mapper)
         {
-            _contex = context;
+            _mapper = mapper;
+            _repository = repository;
         }
         public async Task<PagedResult<UserDto>> Handle(GetUsersQuery query, CancellationToken cancellationToken)
         {
-            var entities = _contex.Users;
-            
-            var total = await entities.CountAsync(cancellationToken);
+            var pagingSpecification = new PagingSpecification<User>(query.Limit, query.Offset);
 
-            var items = await entities
-                .Skip((query.Offset - 1) * query.Limit)
-                .Take(query.Limit)
-                .ToListAsync(cancellationToken);
+            var result = await _repository.GetAllAsync(pagingSpecification, cancellationToken);
 
             return new PagedResult<UserDto>
             {
-                Total = total,
-                Items = items.Select(x => new UserDto { Id = x.Id }).ToList(),
+                Total = result.Total,
+                Items = _mapper.Map<List<UserDto>>(result.Items)
             };
         }
     }

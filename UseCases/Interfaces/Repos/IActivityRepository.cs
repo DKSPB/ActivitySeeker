@@ -1,5 +1,8 @@
+using UseCases.Common;
+
 namespace UseCases.Interfaces.Repos
 {
+    using Common;
     using Domain.Entities;
     public interface IActivityRepository
     {
@@ -7,7 +10,7 @@ namespace UseCases.Interfaces.Repos
 
         Task<Activity?> FindAsync(Guid id, CancellationToken cancellationToken);
 
-        Task<List<Activity>> GetAll(ISpecification<Activity> specification, CancellationToken cancellationToken);
+        Task<PagedResult<Activity>> GetAllAsync(ISpecification<Activity> specification, CancellationToken cancellationToken);
 
         Task CreateAsync(Activity activity, CancellationToken cancellationToken);
 

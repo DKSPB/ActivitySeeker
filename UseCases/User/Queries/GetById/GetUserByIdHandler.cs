@@ -1,28 +1,23 @@
-﻿using MediatR;
-using UseCases.Common;
-using UseCases.User.Models;
-using DataAccess.Interfaces;
-using User = Domain.Entities.User;
-
-namespace UseCases.User.Queries.GetById
+﻿namespace UseCases.User.Queries.GetById
 {
+    using AutoMapper;
+    using MediatR;
+    using Models;
+    using Interfaces.Repos;
     internal class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
     {
-        private readonly IDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IUserRepository _repository;
 
-        public GetUserByIdHandler(IDbContext context)
+        public GetUserByIdHandler(IUserRepository repository, IMapper mapper)
         {
-            _context = context;
+            _mapper = mapper;
+            _repository = repository;
         }
 
         public async Task<UserDto> Handle(GetUserByIdQuery query, CancellationToken cancellationToken)
         {
-            var entity = await _context.Users
-                .FindAsync(new object?[] { query.UserId }, cancellationToken: cancellationToken);
-
-            return entity is null
-                ? throw new ObjectNotFoundException(nameof(User), query.UserId)
-                : new UserDto { Id = entity.Id };
+            return _mapper.Map<UserDto>(await _repository.GetByIdAsync(query.UserId, cancellationToken));
         }
     }
 }
