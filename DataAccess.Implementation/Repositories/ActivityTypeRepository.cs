@@ -1,12 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using UseCases.Common;
-using UseCases.Interfaces.Common;
-
 namespace DataAccess.Repositories
 {
     using Interfaces;
     using Domain.Entities;
+    using UseCases.Common;
     using UseCases.Interfaces.Repos;
+    using UseCases.Interfaces.Common;
+    using Microsoft.EntityFrameworkCore;
+
     public class ActivityTypeRepository : IActivityTypeRepository
     {
         private readonly IDbContext _context;
