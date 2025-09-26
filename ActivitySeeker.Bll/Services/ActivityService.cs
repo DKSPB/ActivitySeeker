@@ -1,15 +1,15 @@
 ﻿using ActivitySeeker.Bll.Interfaces;
 using ActivitySeeker.Bll.Models;
-using ActivitySeeker.Domain;
-using ActivitySeeker.Domain.Entities;
+using Domain.Entities;
+using DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ActivitySeeker.Bll.Services
 {
     public class ActivityService: IActivityService
     {
-        private readonly ActivitySeekerContext _context;
-        public ActivityService(ActivitySeekerContext context)
+        private readonly IDbContext _context;
+        public ActivityService(IDbContext context)
         {
             _context = context;
         }
@@ -151,7 +151,7 @@ namespace ActivitySeeker.Bll.Services
             var oldActivities = GetActivities(request)!
                 .Where(x => DateTime.Compare(x.StartDate, DateTime.Now) <= 0);
             
-            _context.RemoveRange(oldActivities);
+            _context.Activities.RemoveRange(oldActivities);
 
             await _context.SaveChangesAsync();
         }

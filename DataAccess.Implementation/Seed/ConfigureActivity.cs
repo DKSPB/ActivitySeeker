@@ -1,0 +1,35 @@
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace DataAccess.Seed
+{
+    public class ConfigureActivity : IEntityTypeConfiguration<Activity>
+    {
+        public void Configure(EntityTypeBuilder<Activity> builder)
+        {
+            builder.HasKey(k => k.Id);
+
+            builder
+                .HasOne(p => p.ActivityType)
+                .WithMany(x => x.Activities)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            List<Activity> activities = new()
+            {
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{},
+                new Activity{}
+            };
+
+            builder.HasData(activities);
+        }
+    }
+}

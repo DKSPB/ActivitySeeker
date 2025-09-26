@@ -7,14 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ActivitySeeker.Domain\ActivitySeeker.Domain.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.33" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="Quartz" Version="3.13.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DataAccess.Implementation\DataAccess.csproj" />
+      <ProjectReference Include="..\Domain\ActivitySeeker.Domain\Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>

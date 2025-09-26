@@ -1,7 +1,30 @@
-*node_modules/*
+# Build
 bin/
-.vs/
 obj/
-/packages/
+
+# User-specific
+.vs/
+_ReSharper.Caches/
 riderModule.iml
-/_ReSharper.Caches/
+
+# Packages
+node_modules/
+packages/
+
+# Logs
+*.log
+
+# Generated files
+wwwroot/
+ActivitySeeker.Api/images/
+
+# Secrets
+*.user
+*.suo
+*.swp
+*.tmp
+*.temp
+
+# OS files
+.DS_Store
+Thumbs.db
